@@ -1,0 +1,59 @@
+You are an expert Android Architect and Kotlin developer. We are building a native Android English Football Quiz App using a hybrid offline-first architecture that supports both dynamically generated trivia and custom-curated questions.
+
+### 1. App Architecture & Hosting
+* **UI Toolkit:** Jetpack Compose with Material 3.
+* **Architecture:** Unidirectional Data Flow (UDF) with MVVM, Repository Pattern, and Kotlin Coroutines/Flow.
+* **Local Storage:** Android Jetpack Room pre-populated from an assets SQLite file (`.createFromAsset("database/clubs.db")`). Room is the Single Source of Truth (SSOT).
+* **Remote Sync Host:** GitHub Pages (or static HTTP server).
+  - Base URL configurable via `BuildConfig.DATA_SYNC_BASE_URL` (e.g., `https://<username>.github.io/<repo>/data/`).
+  - Endpoints: `version.json` (metadata & version code) and `deltas_v{N}.json` (modified/new records).
+* **Sync Engine:** WorkManager + Retrofit/OkHttp + Kotlinx Serialization. The worker polls `version.json`, verifies against local DataStore version, downloads deltas, and performs an `@Upsert` on Room.
+* **Badges & Visuals:** Pre-bundled vector drawables in `/res/drawable` as baseline. For delta updates or new assets, use Coil with `SvgDecoder` caching remote URLs to internal app storage.
+
+### 2. Dual-Engine Data Layer & Room Schema
+Design the database to support both automated dynamic trivia and hand-written custom questions:
+
+* **Entity 1: `ClubEntity`** (for dynamic generation)
+  - `id: String` (Primary Key, e.g., "arsenal-fc")
+  - `name: String`
+  - `shortName: String`
+  - `nickname: String`
+  - `stadiumName: String`
+  - `stadiumCapacity: Int`
+  - `foundedYear: Int`
+  - `city: String`
+  - `badgeDrawableName: String?`
+  - `badgeRemoteUrl: String?`
+  - `version: Int`
+  - `manager: String`
+
+* **Entity 2: `CustomQuestionEntity`** (for future hand-crafted trivia)
+  - `id: String` (Primary Key, UUID or slug)
+  - `questionText: String`
+  - `category: String` (e.g., "HISTORY", "TRANSFERS", "RIVALRIES")
+  - `correctAnswer: String`
+  - `wrongAnswers: List<String>` (stored via Room TypeConverter)
+  - `explanation: String?`
+  - `imageUriOrUrl: String?`
+  - `version: Int`
+
+### 3. Unified Quiz Domain Engine
+* **Unified Domain Model:** A `QuizQuestion` sealed interface / data class:
+  - `id: String`, `prompt: String`, `options: List<String>`, `correctOptionIndex: Int`, `category: QuizCategory`, `explanation: String?`.
+* **Hybrid Quiz Provider:** A domain use case `GetQuizRoundUseCase` that can construct a 10-question round by:
+  1. Dynamically generating questions from `ClubEntity` (stadium name, nickname match, founding era, badge silhouette).
+  2. Interleaving custom questions fetched from `CustomQuestionEntity`.
+  3. Generating distractor options dynamically from random non-matching clubs in the database.
+
+### 4. Implementation Tasks
+Please generate the implementation in distinct, modular steps:
+1. **Room Layer:** `ClubEntity`, `CustomQuestionEntity`, Room TypeConverters, DAOs with `@Upsert` and random-distractor queries, and `QuizDatabase` with asset pre-population.
+2. **Delta Sync Layer:** Network models for delta payloads (supporting updates to both clubs and custom questions), `SyncRepository`, and `SyncWorker` targeting the GitHub Pages static endpoint.
+3. **Domain & Quiz Engine:** `QuizQuestion` model, dynamic question generators, and `GetQuizRoundUseCase` combining dynamic and curated questions.
+4. **Compose UI Layer:**
+   - Mode / Category Picker
+   - Active Quiz Screen (Score counter, timer/turn indicators, 4-option cards with instant green/red feedback)
+   - Results Screen
+5. **Data Pipeline Spec:** JSON format for `deltas.json` and instructions for pushing updates to GitHub to trigger client syncs.
+
+Begin with **Step 1: Room Layer & Schema Setup**. Write clean, idiomatic Kotlin code following Google's official offline-first guidelines.

@@ -1,0 +1,24 @@
+*.iml
+.gradle/
+/local.properties
+.idea/
+.DS_Store
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+
+# Android Studio / Gradle build outputs
+app/build/
+app/schemas/
+app/release/
+
+# Instrumented-test seed tool output, if ever run locally
+*.db-journal
+
+__pycache__/
+*.pyc
+
+# Claude Code session/agent bookkeeping — not project source
+.claude/
