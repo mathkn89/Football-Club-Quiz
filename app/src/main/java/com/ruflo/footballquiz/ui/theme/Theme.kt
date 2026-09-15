@@ -9,10 +9,30 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val LightColors = lightColorScheme(primary = PitchGreen, secondary = AccentGold)
-private val DarkColors = darkColorScheme(primary = PitchGreenDark, secondary = AccentGold)
+private val LightColors = lightColorScheme(
+    primary = PitchGreen,
+    onPrimary = Color.White,
+    primaryContainer = CorrectGreenContainer,
+    secondary = FloodlightGold,
+    onSecondary = Color.Black,
+    tertiary = SkyBlue,
+    onTertiary = Color.White,
+    error = IncorrectRed,
+    errorContainer = IncorrectRedContainer,
+)
+
+private val DarkColors = darkColorScheme(
+    primary = PitchGreenDark,
+    onPrimary = Color.Black,
+    secondary = FloodlightGoldDark,
+    onSecondary = Color.Black,
+    tertiary = SkyBlueDark,
+    onTertiary = Color.Black,
+    error = Color(0xFFEF9A9A),
+)
 
 @Composable
 fun FootballQuizTheme(

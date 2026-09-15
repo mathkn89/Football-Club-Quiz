@@ -12,3 +12,14 @@ fun QuizCategory.displayName(): String = when (this) {
     QuizCategory.RIVALRIES -> "Rivalries"
     QuizCategory.GENERAL -> "General"
 }
+
+fun QuizCategory.emoji(): String = when (this) {
+    QuizCategory.STADIUM -> "🏟️"
+    QuizCategory.NICKNAME -> "🎽"
+    QuizCategory.FOUNDED_YEAR -> "📅"
+    QuizCategory.BADGE -> "🛡️"
+    QuizCategory.HISTORY -> "📜"
+    QuizCategory.TRANSFERS -> "🔄"
+    QuizCategory.RIVALRIES -> "⚔️"
+    QuizCategory.GENERAL -> "⭐"
+}

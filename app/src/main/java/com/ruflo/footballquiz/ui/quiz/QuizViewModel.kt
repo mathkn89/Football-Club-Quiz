@@ -6,11 +6,8 @@ import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.usecase.GetQuizRoundUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -22,10 +19,6 @@ class QuizViewModel(
 
     private val _uiState = MutableStateFlow<QuizUiState>(QuizUiState.Loading)
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
-
-    /** (score, total) emitted once, when the round is complete. */
-    private val _finishedEvent = MutableSharedFlow<Pair<Int, Int>>(extraBufferCapacity = 1)
-    val finishedEvent: SharedFlow<Pair<Int, Int>> = _finishedEvent.asSharedFlow()
 
     private var timerJob: Job? = null
 
@@ -63,7 +56,7 @@ class QuizViewModel(
         val state = _uiState.value as? QuizUiState.InProgress ?: return
         val nextIndex = state.currentIndex + 1
         if (nextIndex >= state.totalQuestions) {
-            _finishedEvent.tryEmit(state.score to state.totalQuestions)
+            _uiState.value = QuizUiState.Finished(score = state.score, total = state.totalQuestions)
             return
         }
         _uiState.value = state.copy(

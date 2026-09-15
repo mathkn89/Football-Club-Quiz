@@ -22,3 +22,6 @@ __pycache__/
 
 # Claude Code session/agent bookkeeping — not project source
 .claude/
+
+# Windows->WSL copy artifact (NTFS alternate data stream)
+*:Zone.Identifier

@@ -11,6 +11,8 @@ sealed interface QuizUiState {
     /** No questions could be generated — e.g. the local database hasn't synced yet. */
     data object Empty : QuizUiState
 
+    data class Finished(val score: Int, val total: Int) : QuizUiState
+
     data class InProgress(
         val questions: List<QuizQuestion>,
         val currentIndex: Int,

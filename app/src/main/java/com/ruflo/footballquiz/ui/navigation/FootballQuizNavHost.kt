@@ -69,6 +69,9 @@ fun FootballQuizNavHost(
                         popUpTo(ROUTE_PICKER) { inclusive = false }
                     }
                 },
+                onExit = {
+                    navController.popBackStack(ROUTE_PICKER, inclusive = false)
+                },
             )
         }
 
