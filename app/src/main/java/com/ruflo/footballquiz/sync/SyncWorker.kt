@@ -23,7 +23,7 @@ class SyncWorker(
             syncPreferences = SyncPreferences(applicationContext),
         )
 
-        return when (val result = repository.sync()) {
+        return when (repository.sync()) {
             is SyncResult.UpToDate,
             is SyncResult.Updated,
             -> Result.success()
