@@ -10,11 +10,11 @@ Sources:
     `lookup_all_teams` league endpoint proved unreliable, so it is used defensively, per
     club, not as the roster source.
 
-Roster: the Premier League's 20 members change every season (promotion/relegation), and
-Wikidata's per-club "current league" property (P118) lags and is sometimes wrong or even
-attached to non-club items (players, season articles). So the roster below is a hardcoded,
-manually-verified list of the 2025-26 season — update it each summer after the transfer
-window, then rerun this script.
+Roster: league membership changes every season (promotion/relegation), and Wikidata's per-club
+"current league" property (P118) lags and is sometimes wrong or even attached to non-club items
+(players, season articles). So the rosters below are hardcoded, manually-verified lists for the
+2026-27 season (cross-checked against Wikipedia's 2026-27 Premier League / EFL Championship
+season pages) — update them each summer after the transfer window, then rerun this script.
 
 Output (matches DeltaResponseDto / ClubDeltaDto in
 app/src/main/java/com/ruflo/footballquiz/data/remote/dto/):
@@ -41,18 +41,20 @@ USER_AGENT = "FootballClubQuizDataPipeline/1.0 (contact: mathkn@gmail.com)"
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "data"
 
-# 2025-26 Premier League roster (20 clubs). Update after each promotion/relegation cycle.
+# 2026-27 Premier League roster (20 clubs). Update after each promotion/relegation cycle.
 PREMIER_LEAGUE_CLUBS = [
     "Arsenal F.C.",
     "Aston Villa F.C.",
     "AFC Bournemouth",
     "Brentford F.C.",
     "Brighton & Hove Albion F.C.",
-    "Burnley F.C.",
     "Chelsea F.C.",
+    "Coventry City F.C.",
     "Crystal Palace F.C.",
     "Everton F.C.",
     "Fulham F.C.",
+    "Hull City A.F.C.",
+    "Ipswich Town F.C.",
     "Leeds United F.C.",
     "Liverpool F.C.",
     "Manchester City F.C.",
@@ -61,8 +63,34 @@ PREMIER_LEAGUE_CLUBS = [
     "Nottingham Forest F.C.",
     "Sunderland A.F.C.",
     "Tottenham Hotspur F.C.",
+]
+
+# 2026-27 EFL Championship roster (24 clubs). Update after each promotion/relegation cycle.
+CHAMPIONSHIP_CLUBS = [
+    "Birmingham City F.C.",
+    "Blackburn Rovers F.C.",
+    "Bolton Wanderers F.C.",
+    "Bristol City F.C.",
+    "Burnley F.C.",
+    "Cardiff City F.C.",
+    "Charlton Athletic F.C.",
+    "Derby County F.C.",
+    "Lincoln City F.C.",
+    "Middlesbrough F.C.",
+    "Millwall F.C.",
+    "Norwich City F.C.",
+    "Portsmouth F.C.",
+    "Preston North End F.C.",
+    "Queens Park Rangers F.C.",
+    "Sheffield United F.C.",
+    "Southampton F.C.",
+    "Stoke City F.C.",
+    "Swansea City A.F.C.",
+    "Watford F.C.",
+    "West Bromwich Albion F.C.",
     "West Ham United F.C.",
     "Wolverhampton Wanderers F.C.",
+    "Wrexham A.F.C.",
 ]
 
 SPARQL_DETAILS_QUERY_TEMPLATE = """
@@ -209,7 +237,7 @@ def fetch_current_managers(qids: list[str]) -> dict[str, str]:
     return current_manager_by_qid
 
 
-def build_club(official_name: str, wikidata_row: dict | None, manager: str) -> dict:
+def build_club(official_name: str, wikidata_row: dict | None, manager: str, league: str) -> dict:
     sportsdb_team = fetch_sportsdb_team(short_name_from_official(official_name))
     row = wikidata_row or {}
 
@@ -256,13 +284,20 @@ def build_club(official_name: str, wikidata_row: dict | None, manager: str) -> d
         "badgeRemoteUrl": badge_remote_url,
         "version": 1,
         "manager": manager or "Unknown",
+        "league": league,
     }
 
 
 def main() -> None:
-    print(f"Resolving Wikidata QIDs for {len(PREMIER_LEAGUE_CLUBS)} clubs...", flush=True)
+    roster: list[tuple[str, str]] = (
+        [(name, "Premier League") for name in PREMIER_LEAGUE_CLUBS]
+        + [(name, "Championship") for name in CHAMPIONSHIP_CLUBS]
+    )
+    league_by_name = dict(roster)
+
+    print(f"Resolving Wikidata QIDs for {len(roster)} clubs...", flush=True)
     qids: dict[str, str | None] = {}
-    for name in PREMIER_LEAGUE_CLUBS:
+    for name, _league in roster:
         qid = resolve_qid(name)
         qids[name] = qid
         print(f"  {name} -> {qid}", flush=True)
@@ -276,14 +311,15 @@ def main() -> None:
     manager_by_qid = fetch_current_managers(resolved_qids) if resolved_qids else {}
 
     clubs = []
-    for i, name in enumerate(PREMIER_LEAGUE_CLUBS, start=1):
+    for i, (name, _league) in enumerate(roster, start=1):
         qid = qids[name]
-        print(f"[{i}/{len(PREMIER_LEAGUE_CLUBS)}] building {name!r} (enriching via TheSportsDB)...", flush=True)
+        print(f"[{i}/{len(roster)}] building {name!r} (enriching via TheSportsDB)...", flush=True)
         clubs.append(
             build_club(
                 name,
                 details_by_qid.get(qid) if qid else None,
                 manager_by_qid.get(qid, ""),
+                league_by_name[name],
             )
         )
         time.sleep(0.2)

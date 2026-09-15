@@ -33,7 +33,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DELTAS_PATH = ROOT / "docs" / "data" / "deltas_v1.json"
 OUTPUT_PATH = ROOT / "app" / "src" / "main" / "assets" / "database" / "clubs.db"
 
-DATABASE_VERSION = 1
+DATABASE_VERSION = 2
 
 CREATE_CLUBS_TABLE = """
 CREATE TABLE `clubs` (
@@ -49,6 +49,7 @@ CREATE TABLE `clubs` (
     `badgeRemoteUrl` TEXT,
     `version` INTEGER NOT NULL,
     `manager` TEXT NOT NULL,
+    `league` TEXT NOT NULL,
     PRIMARY KEY(`id`)
 )
 """
@@ -69,7 +70,7 @@ CREATE TABLE `custom_questions` (
 
 CLUB_COLUMNS = [
     "id", "name", "shortName", "nickname", "stadiumName", "stadiumCapacity",
-    "foundedYear", "city", "badgeDrawableName", "badgeRemoteUrl", "version", "manager",
+    "foundedYear", "city", "badgeDrawableName", "badgeRemoteUrl", "version", "manager", "league",
 ]
 
 QUESTION_COLUMNS = [

@@ -16,4 +16,5 @@ data class ClubDeltaDto(
     val badgeRemoteUrl: String? = null,
     val version: Int,
     val manager: String,
+    val league: String,
 )

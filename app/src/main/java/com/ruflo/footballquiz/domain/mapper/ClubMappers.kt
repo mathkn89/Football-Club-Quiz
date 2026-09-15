@@ -13,5 +13,6 @@ fun ClubEntity.toDomain(): Club = Club(
     foundedYear = foundedYear,
     city = city,
     manager = manager,
+    league = league,
     badgeImageRef = badgeDrawableName?.let { "${BadgeQuestionGenerator.DRAWABLE_SCHEME}$it" } ?: badgeRemoteUrl,
 )

@@ -80,6 +80,7 @@ private fun ClubDetailContent(club: Club, modifier: Modifier = Modifier) {
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
+                DetailRow("League", club.league)
                 DetailRow("Stadium", club.stadiumName)
                 DetailRow("Capacity", NumberFormat.getIntegerInstance().format(club.stadiumCapacity))
                 DetailRow("Founded", "${club.foundedYear}")

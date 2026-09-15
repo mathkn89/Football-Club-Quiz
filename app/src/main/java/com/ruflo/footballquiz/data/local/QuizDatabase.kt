@@ -13,7 +13,7 @@ import com.ruflo.footballquiz.data.local.entity.CustomQuestionEntity
 
 @Database(
     entities = [ClubEntity::class, CustomQuestionEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)

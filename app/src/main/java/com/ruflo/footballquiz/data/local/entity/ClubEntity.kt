@@ -18,4 +18,5 @@ data class ClubEntity(
     val badgeRemoteUrl: String?,
     val version: Int,
     val manager: String,
+    val league: String,
 )

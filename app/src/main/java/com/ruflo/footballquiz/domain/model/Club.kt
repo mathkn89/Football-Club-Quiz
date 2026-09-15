@@ -9,5 +9,6 @@ data class Club(
     val foundedYear: Int,
     val city: String,
     val manager: String,
+    val league: String,
     val badgeImageRef: String?,
 )

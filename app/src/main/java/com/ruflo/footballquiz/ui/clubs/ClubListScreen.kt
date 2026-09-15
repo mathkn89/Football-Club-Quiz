@@ -82,7 +82,11 @@ private fun ClubRow(club: Club, onClick: () -> Unit) {
             Spacer(Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(club.name, style = MaterialTheme.typography.titleMedium)
-                Text(club.city, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    "${club.city} · ${club.league}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
             Icon(Icons.Default.ChevronRight, contentDescription = null)
         }

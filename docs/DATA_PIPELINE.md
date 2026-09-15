@@ -57,6 +57,7 @@ since it's the bootstrap payload — see below).
 | `badgeRemoteUrl`     | String?  | Fallback when no bundled drawable exists yet. Fetched via Coil (SVG-capable).       |
 | `version`            | Int      | Per-row revision counter — bump it whenever you touch this row. Informational only; the client always upserts regardless of this value, so it does not gate whether an update is applied. |
 | `manager`            | String   | Current head coach.                                              |
+| `league`             | String   | Division name, e.g. `Premier League` / `Championship`. Free text, not an enum — the client displays it as-is. |
 
 ### `CustomQuestionDeltaDto`
 
@@ -125,3 +126,8 @@ can write a hash it will accept. Before a real device/emulator run, regenerate i
 `app/src/androidTest/java/.../tools/SeedDatabaseGenerator.kt` — see that file's doc comment for
 the exact `connectedAndroidTest` + `adb pull` steps. Not part of this spec; flagging so it doesn't
 get missed.
+
+This applies again after every `ClubEntity`/`CustomQuestionEntity` schema change (most recently:
+adding the `league` column bumped `QuizDatabase` to version 2) — the seed asset and the
+`SeedDatabaseGenerator` regeneration step both need rerunning any time the schema changes, not
+just once.
