@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalLayoutApi::class)
+
 package com.ruflo.footballquiz.ui.history
 
 import androidx.compose.foundation.layout.Arrangement
@@ -48,7 +50,7 @@ import java.time.format.DateTimeFormatter
 
 private val DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy · HH:mm")
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(onBack: () -> Unit, viewModel: HistoryViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
