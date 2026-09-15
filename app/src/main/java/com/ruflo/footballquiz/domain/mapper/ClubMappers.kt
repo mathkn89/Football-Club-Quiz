@@ -14,5 +14,7 @@ fun ClubEntity.toDomain(): Club = Club(
     city = city,
     manager = manager,
     league = league,
-    badgeImageRef = badgeDrawableName?.let { "${BadgeQuestionGenerator.DRAWABLE_SCHEME}$it" } ?: badgeRemoteUrl,
+    // No res/drawable/badge_*.xml files are bundled yet, so a badgeDrawableName never resolves —
+    // prefer the network URL until real vector art ships.
+    badgeImageRef = badgeRemoteUrl ?: badgeDrawableName?.let { "${BadgeQuestionGenerator.DRAWABLE_SCHEME}$it" },
 )

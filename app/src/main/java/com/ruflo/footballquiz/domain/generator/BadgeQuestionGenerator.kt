@@ -10,8 +10,10 @@ class BadgeQuestionGenerator : DynamicQuestionGenerator {
     override val category = QuizCategory.BADGE
 
     override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
-        val badge = target.badgeDrawableName?.let { "$DRAWABLE_SCHEME$it" }
-            ?: target.badgeRemoteUrl
+        // No res/drawable/badge_*.xml files are bundled yet, so a badgeDrawableName never
+        // resolves — prefer the network URL until real vector art ships.
+        val badge = target.badgeRemoteUrl
+            ?: target.badgeDrawableName?.let { "$DRAWABLE_SCHEME$it" }
             ?: return null
         val options = buildOptions(target.name, distractorPool.map { it.name }) ?: return null
         return QuizQuestion(
