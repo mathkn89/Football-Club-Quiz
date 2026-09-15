@@ -2,8 +2,11 @@ package com.ruflo.footballquiz.ui.quiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ruflo.footballquiz.data.local.dao.QuizAttemptDao
+import com.ruflo.footballquiz.data.local.entity.QuizAttemptEntity
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.usecase.GetQuizRoundUseCase
+import java.util.UUID
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +16,7 @@ import kotlinx.coroutines.launch
 
 class QuizViewModel(
     private val getQuizRoundUseCase: GetQuizRoundUseCase,
+    private val quizAttemptDao: QuizAttemptDao,
     private val roundSize: Int,
     private val categories: Set<QuizCategory>,
 ) : ViewModel() {
@@ -56,6 +60,7 @@ class QuizViewModel(
         val state = _uiState.value as? QuizUiState.InProgress ?: return
         val nextIndex = state.currentIndex + 1
         if (nextIndex >= state.totalQuestions) {
+            recordAttempt(score = state.score, total = state.totalQuestions)
             _uiState.value = QuizUiState.Finished(score = state.score, total = state.totalQuestions)
             return
         }
@@ -66,6 +71,20 @@ class QuizViewModel(
             timeRemainingSeconds = QUESTION_TIME_SECONDS,
         )
         startTimer()
+    }
+
+    private fun recordAttempt(score: Int, total: Int) {
+        viewModelScope.launch {
+            quizAttemptDao.insert(
+                QuizAttemptEntity(
+                    id = UUID.randomUUID().toString(),
+                    completedAtMillis = System.currentTimeMillis(),
+                    score = score,
+                    total = total,
+                    categories = categories.map { it.name },
+                )
+            )
+        }
     }
 
     private fun startTimer() {

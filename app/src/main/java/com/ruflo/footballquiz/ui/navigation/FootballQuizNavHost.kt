@@ -10,7 +10,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ruflo.footballquiz.core.AppContainer
 import com.ruflo.footballquiz.domain.model.QuizCategory
+import com.ruflo.footballquiz.ui.clubs.ClubDetailScreen
+import com.ruflo.footballquiz.ui.clubs.ClubDetailViewModel
+import com.ruflo.footballquiz.ui.clubs.ClubListScreen
+import com.ruflo.footballquiz.ui.clubs.ClubListViewModel
 import com.ruflo.footballquiz.ui.core.ViewModelFactory
+import com.ruflo.footballquiz.ui.history.HistoryScreen
+import com.ruflo.footballquiz.ui.history.HistoryViewModel
 import com.ruflo.footballquiz.ui.picker.PickerScreen
 import com.ruflo.footballquiz.ui.quiz.QuizScreen
 import com.ruflo.footballquiz.ui.quiz.QuizViewModel
@@ -19,7 +25,12 @@ import com.ruflo.footballquiz.ui.results.ResultsScreen
 private const val ROUTE_PICKER = "picker"
 private const val ROUTE_QUIZ = "quiz/{roundSize}/{categories}"
 private const val ROUTE_RESULTS = "results/{score}/{total}"
+private const val ROUTE_HISTORY = "history"
+private const val ROUTE_CLUBS = "clubs"
+private const val ROUTE_CLUB_DETAIL = "clubs/{clubId}"
 private const val ARG_DEFAULT_ROUND_SIZE = 10
+
+private fun clubDetailRoute(clubId: String): String = "clubs/$clubId"
 
 private fun quizRoute(roundSize: Int, categories: Set<QuizCategory>): String {
     val categoriesArg = categories.joinToString(",") { it.name }
@@ -39,7 +50,40 @@ fun FootballQuizNavHost(
                 onStartQuiz = { roundSize, categories ->
                     navController.navigate(quizRoute(roundSize, categories))
                 },
+                onOpenHistory = { navController.navigate(ROUTE_HISTORY) },
+                onOpenClubs = { navController.navigate(ROUTE_CLUBS) },
             )
+        }
+
+        composable(ROUTE_HISTORY) {
+            val historyViewModel: HistoryViewModel = viewModel(
+                factory = ViewModelFactory {
+                    HistoryViewModel(container.quizAttemptDao, container.userProfilePreferences)
+                },
+            )
+            HistoryScreen(onBack = { navController.popBackStack() }, viewModel = historyViewModel)
+        }
+
+        composable(ROUTE_CLUBS) {
+            val clubListViewModel: ClubListViewModel = viewModel(
+                factory = ViewModelFactory { ClubListViewModel(container.clubDao) },
+            )
+            ClubListScreen(
+                onBack = { navController.popBackStack() },
+                onClubSelected = { clubId -> navController.navigate(clubDetailRoute(clubId)) },
+                viewModel = clubListViewModel,
+            )
+        }
+
+        composable(
+            route = ROUTE_CLUB_DETAIL,
+            arguments = listOf(navArgument("clubId") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val clubId = backStackEntry.arguments?.getString("clubId").orEmpty()
+            val clubDetailViewModel: ClubDetailViewModel = viewModel(
+                factory = ViewModelFactory { ClubDetailViewModel(container.clubDao, clubId) },
+            )
+            ClubDetailScreen(onBack = { navController.popBackStack() }, viewModel = clubDetailViewModel)
         }
 
         composable(
@@ -58,7 +102,7 @@ fun FootballQuizNavHost(
 
             val quizViewModel: QuizViewModel = viewModel(
                 factory = ViewModelFactory {
-                    QuizViewModel(container.getQuizRoundUseCase, roundSize, categories)
+                    QuizViewModel(container.getQuizRoundUseCase, container.quizAttemptDao, roundSize, categories)
                 },
             )
 

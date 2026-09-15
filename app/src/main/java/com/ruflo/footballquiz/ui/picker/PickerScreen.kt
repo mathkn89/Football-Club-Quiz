@@ -15,8 +15,10 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -61,6 +63,8 @@ private val ROUND_SIZE_LABELS = mapOf(5 to "Quick", 10 to "Standard", 15 to "Ext
 @Composable
 fun PickerScreen(
     onStartQuiz: (roundSize: Int, categories: Set<QuizCategory>) -> Unit,
+    onOpenHistory: () -> Unit,
+    onOpenClubs: () -> Unit,
     viewModel: PickerViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -75,6 +79,12 @@ fun PickerScreen(
             FootballQuizTopBar(
                 title = "⚽ Football Club Quiz",
                 actions = {
+                    IconButton(onClick = onOpenClubs) {
+                        Icon(Icons.Default.Shield, contentDescription = "Club directory")
+                    }
+                    IconButton(onClick = onOpenHistory) {
+                        Icon(Icons.Default.History, contentDescription = "History")
+                    }
                     IconButton(onClick = { showOverflowMenu = true }) {
                         Icon(Icons.Default.MoreVert, contentDescription = "More options")
                     }
