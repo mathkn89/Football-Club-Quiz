@@ -3,10 +3,13 @@ package com.ruflo.footballquiz.ui.clubs
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,6 +22,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +38,7 @@ import com.ruflo.footballquiz.domain.model.Club
 import com.ruflo.footballquiz.ui.common.FootballQuizTopBar
 import com.ruflo.footballquiz.ui.common.QuizImage
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ClubListScreen(onBack: () -> Unit, onClubSelected: (String) -> Unit, viewModel: ClubListViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -54,12 +58,26 @@ fun ClubListScreen(onBack: () -> Unit, onClubSelected: (String) -> Unit, viewMod
         when (val state = uiState) {
             ClubListUiState.Loading -> {}
             is ClubListUiState.Content -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    items(state.clubs, key = { it.id }) { club ->
-                        ClubRow(club = club, onClick = { onClubSelected(club.id) })
+                Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 24.dp)) {
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FilterChip(
+                            selected = state.selectedLeague == null,
+                            onClick = { viewModel.onLeagueSelected(null) },
+                            label = { Text("All leagues") },
+                        )
+                        state.availableLeagues.forEach { league ->
+                            FilterChip(
+                                selected = state.selectedLeague == league,
+                                onClick = { viewModel.onLeagueSelected(league) },
+                                label = { Text(league) },
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(16.dp))
+                    LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        items(state.clubs, key = { it.id }) { club ->
+                            ClubRow(club = club, onClick = { onClubSelected(club.id) })
+                        }
                     }
                 }
             }

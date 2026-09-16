@@ -27,6 +27,9 @@ interface ClubDao {
     @Query("SELECT MAX(version) FROM clubs")
     suspend fun latestVersion(): Int?
 
+    @Query("SELECT DISTINCT league FROM clubs ORDER BY league ASC")
+    suspend fun getDistinctLeagues(): List<String>
+
     /** Random clubs for a quiz round; [excludeIds] keeps the correct-answer club out of the pool. */
     @Query("SELECT * FROM clubs WHERE id NOT IN (:excludeIds) ORDER BY RANDOM() LIMIT :limit")
     suspend fun getRandomClubs(excludeIds: List<String>, limit: Int): List<ClubEntity>

@@ -18,23 +18,28 @@ import com.ruflo.footballquiz.ui.core.ViewModelFactory
 import com.ruflo.footballquiz.ui.history.HistoryScreen
 import com.ruflo.footballquiz.ui.history.HistoryViewModel
 import com.ruflo.footballquiz.ui.picker.PickerScreen
+import com.ruflo.footballquiz.ui.picker.PickerViewModel
 import com.ruflo.footballquiz.ui.quiz.QuizScreen
 import com.ruflo.footballquiz.ui.quiz.QuizViewModel
 import com.ruflo.footballquiz.ui.results.ResultsScreen
+import java.net.URLDecoder
+import java.net.URLEncoder
 
 private const val ROUTE_PICKER = "picker"
-private const val ROUTE_QUIZ = "quiz/{roundSize}/{categories}"
+private const val ROUTE_QUIZ = "quiz/{roundSize}/{categories}/{league}"
 private const val ROUTE_RESULTS = "results/{score}/{total}"
 private const val ROUTE_HISTORY = "history"
 private const val ROUTE_CLUBS = "clubs"
 private const val ROUTE_CLUB_DETAIL = "clubs/{clubId}"
 private const val ARG_DEFAULT_ROUND_SIZE = 10
+private const val ARG_ALL_LEAGUES = "ALL"
 
 private fun clubDetailRoute(clubId: String): String = "clubs/$clubId"
 
-private fun quizRoute(roundSize: Int, categories: Set<QuizCategory>): String {
+private fun quizRoute(roundSize: Int, categories: Set<QuizCategory>, league: String?): String {
     val categoriesArg = categories.joinToString(",") { it.name }
-    return "quiz/$roundSize/$categoriesArg"
+    val leagueArg = league?.let { URLEncoder.encode(it, "UTF-8") } ?: ARG_ALL_LEAGUES
+    return "quiz/$roundSize/$categoriesArg/$leagueArg"
 }
 
 private fun resultsRoute(score: Int, total: Int): String = "results/$score/$total"
@@ -46,12 +51,16 @@ fun FootballQuizNavHost(
 ) {
     NavHost(navController = navController, startDestination = ROUTE_PICKER) {
         composable(ROUTE_PICKER) {
+            val pickerViewModel: PickerViewModel = viewModel(
+                factory = ViewModelFactory { PickerViewModel(container.clubDao) },
+            )
             PickerScreen(
-                onStartQuiz = { roundSize, categories ->
-                    navController.navigate(quizRoute(roundSize, categories))
+                onStartQuiz = { roundSize, categories, league ->
+                    navController.navigate(quizRoute(roundSize, categories, league))
                 },
                 onOpenHistory = { navController.navigate(ROUTE_HISTORY) },
                 onOpenClubs = { navController.navigate(ROUTE_CLUBS) },
+                viewModel = pickerViewModel,
             )
         }
 
@@ -91,6 +100,7 @@ fun FootballQuizNavHost(
             arguments = listOf(
                 navArgument("roundSize") { type = NavType.IntType },
                 navArgument("categories") { type = NavType.StringType },
+                navArgument("league") { type = NavType.StringType },
             ),
         ) { backStackEntry ->
             val roundSize = backStackEntry.arguments?.getInt("roundSize") ?: ARG_DEFAULT_ROUND_SIZE
@@ -99,10 +109,13 @@ fun FootballQuizNavHost(
                 .mapNotNull { runCatching { QuizCategory.valueOf(it) }.getOrNull() }
                 .toSet()
                 .ifEmpty { QuizCategory.entries.toSet() }
+            val league = backStackEntry.arguments?.getString("league")
+                ?.takeIf { it != ARG_ALL_LEAGUES }
+                ?.let { URLDecoder.decode(it, "UTF-8") }
 
             val quizViewModel: QuizViewModel = viewModel(
                 factory = ViewModelFactory {
-                    QuizViewModel(container.getQuizRoundUseCase, container.quizAttemptDao, roundSize, categories)
+                    QuizViewModel(container.getQuizRoundUseCase, container.quizAttemptDao, roundSize, categories, league)
                 },
             )
 

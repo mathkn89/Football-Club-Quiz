@@ -32,6 +32,7 @@ class GetQuizRoundUseCase(
         roundSize: Int = DEFAULT_ROUND_SIZE,
         customRatio: Float = DEFAULT_CUSTOM_RATIO,
         categories: Set<QuizCategory> = QuizCategory.entries.toSet(),
+        leagues: Set<String>? = null,
     ): List<QuizQuestion> {
         val customCount = (roundSize * customRatio).roundToInt().coerceIn(0, roundSize)
         val customPoolSize = customCount * CUSTOM_OVERFETCH_FACTOR
@@ -41,18 +42,23 @@ class GetQuizRoundUseCase(
             .take(customCount)
 
         val dynamicCount = roundSize - customQuestions.size
-        val dynamicQuestions = buildDynamicQuestions(dynamicCount, categories)
+        val dynamicQuestions = buildDynamicQuestions(dynamicCount, categories, leagues)
 
         return (customQuestions + dynamicQuestions).shuffled()
     }
 
-    private suspend fun buildDynamicQuestions(count: Int, categories: Set<QuizCategory>): List<QuizQuestion> {
+    private suspend fun buildDynamicQuestions(
+        count: Int,
+        categories: Set<QuizCategory>,
+        leagues: Set<String>?,
+    ): List<QuizQuestion> {
         if (count <= 0) return emptyList()
 
         val activeGenerators = generators.filter { it.category in categories }
         if (activeGenerators.isEmpty()) return emptyList()
 
         val pool = clubDao.getRandomClubs(excludeIds = emptyList(), limit = DYNAMIC_POOL_SIZE)
+            .let { clubs -> if (leagues.isNullOrEmpty()) clubs else clubs.filter { it.league in leagues } }
         if (pool.size < MIN_POOL_SIZE) return emptyList()
 
         val combos = pool.flatMap { target -> activeGenerators.map { target to it } }.shuffled()

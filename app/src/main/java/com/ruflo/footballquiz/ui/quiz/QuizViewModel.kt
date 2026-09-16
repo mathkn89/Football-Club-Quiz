@@ -19,6 +19,7 @@ class QuizViewModel(
     private val quizAttemptDao: QuizAttemptDao,
     private val roundSize: Int,
     private val categories: Set<QuizCategory>,
+    private val league: String?,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<QuizUiState>(QuizUiState.Loading)
@@ -33,7 +34,11 @@ class QuizViewModel(
     private fun loadRound() {
         viewModelScope.launch {
             _uiState.value = QuizUiState.Loading
-            val questions = getQuizRoundUseCase(roundSize = roundSize, categories = categories)
+            val questions = getQuizRoundUseCase(
+                roundSize = roundSize,
+                categories = categories,
+                leagues = league?.let { setOf(it) },
+            )
             _uiState.value = if (questions.isEmpty()) {
                 QuizUiState.Empty
             } else {

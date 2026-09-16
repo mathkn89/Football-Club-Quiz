@@ -48,7 +48,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ruflo.footballquiz.BuildConfig
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.sync.SyncScheduler
@@ -62,10 +61,10 @@ private val ROUND_SIZE_LABELS = mapOf(5 to "Quick", 10 to "Standard", 15 to "Ext
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PickerScreen(
-    onStartQuiz: (roundSize: Int, categories: Set<QuizCategory>) -> Unit,
+    onStartQuiz: (roundSize: Int, categories: Set<QuizCategory>, league: String?) -> Unit,
     onOpenHistory: () -> Unit,
     onOpenClubs: () -> Unit,
-    viewModel: PickerViewModel = viewModel(),
+    viewModel: PickerViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -122,7 +121,7 @@ fun PickerScreen(
         ) {
             Spacer(Modifier.height(8.dp))
             Text(
-                "Test your Premier League knowledge",
+                "Test your football knowledge",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -146,6 +145,24 @@ fun PickerScreen(
             }
 
             Spacer(Modifier.height(32.dp))
+            Text("League", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(12.dp))
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(
+                    selected = uiState.selectedLeague == null,
+                    onClick = { viewModel.onLeagueSelected(null) },
+                    label = { Text("All leagues") },
+                )
+                uiState.availableLeagues.forEach { league ->
+                    FilterChip(
+                        selected = uiState.selectedLeague == league,
+                        onClick = { viewModel.onLeagueSelected(league) },
+                        label = { Text(league) },
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(32.dp))
             Text("Categories", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(12.dp))
             FlowRow(
@@ -163,7 +180,7 @@ fun PickerScreen(
 
             Spacer(Modifier.weight(1f))
             Button(
-                onClick = { onStartQuiz(uiState.roundSize, uiState.selectedCategories) },
+                onClick = { onStartQuiz(uiState.roundSize, uiState.selectedCategories, uiState.selectedLeague) },
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(16.dp),
             ) {

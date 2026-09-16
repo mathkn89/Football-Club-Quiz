@@ -1,16 +1,26 @@
 package com.ruflo.footballquiz.ui.picker
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ruflo.footballquiz.data.local.dao.ClubDao
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class PickerViewModel : ViewModel() {
+class PickerViewModel(private val clubDao: ClubDao) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PickerUiState())
     val uiState: StateFlow<PickerUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val leagues = clubDao.getDistinctLeagues()
+            _uiState.update { it.copy(availableLeagues = leagues) }
+        }
+    }
 
     fun onRoundSizeSelected(size: Int) {
         _uiState.update { it.copy(roundSize = size) }
@@ -27,5 +37,10 @@ class PickerViewModel : ViewModel() {
             }
             state.copy(selectedCategories = updated)
         }
+    }
+
+    /** Null selects "all leagues". */
+    fun onLeagueSelected(league: String?) {
+        _uiState.update { it.copy(selectedLeague = league) }
     }
 }
