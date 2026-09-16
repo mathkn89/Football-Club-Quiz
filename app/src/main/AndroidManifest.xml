@@ -5,6 +5,8 @@
     <application
         android:name=".FootballQuizApplication"
         android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="Football Club Quiz"
         android:theme="@style/Theme.FootballClubQuiz"
         android:supportsRtl="true">
