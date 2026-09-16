@@ -76,7 +76,8 @@ fun PickerScreen(
     Scaffold(
         topBar = {
             FootballQuizTopBar(
-                title = "⚽ Football Club Quiz",
+                title = "Football Club Quiz",
+                showAppLogo = true,
                 actions = {
                     IconButton(onClick = onOpenClubs) {
                         Icon(Icons.Default.Shield, contentDescription = "Club directory")
