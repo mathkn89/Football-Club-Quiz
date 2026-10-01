@@ -117,17 +117,13 @@ dataset, not for pushing routine updates. For an incremental update (new season,
 new curated question), hand-edit a new `deltas_v{N}.json` following the diff rules above instead
 of rerunning the script.
 
-## Known gap
+## Bundled seed database
 
-`app/src/main/assets/database/clubs.db` exists (built from `docs/data/deltas_v1.json` via
-`scripts/build_clubs_db.py`), but it's not yet safe to ship: Room validates a `room_master_table`
-identity hash on every open, including for a `createFromAsset`-copied file, and only Room itself
-can write a hash it will accept. Before a real device/emulator run, regenerate it properly using
-`app/src/androidTest/java/.../tools/SeedDatabaseGenerator.kt` — see that file's doc comment for
-the exact `connectedAndroidTest` + `adb pull` steps. Not part of this spec; flagging so it doesn't
-get missed.
+`app/src/main/assets/database/clubs.db` is built by `scripts/build_clubs_db.py`, which applies every
+`deltas_v1..v{latestVersion}.json` in order and creates the tables from Room's exported schema
+(`app/schemas/.../QuizDatabase/<version>.json`), including the `room_master_table` identity hash Room
+checks on open. So the file is shippable as-is with no device or emulator step needed.
 
-This applies again after every `ClubEntity`/`CustomQuestionEntity` schema change (most recently:
-adding the `league` column bumped `QuizDatabase` to version 2) — the seed asset and the
-`SeedDatabaseGenerator` regeneration step both need rerunning any time the schema changes, not
-just once.
+Rerun it after publishing a new delta (so fresh installs start up to date offline) and after any
+`ClubEntity`/`CustomQuestionEntity` schema change. In the schema-change case, build the app first so KSP
+exports the new schema JSON, and bump `DATABASE_VERSION` in the script to match `QuizDatabase`.

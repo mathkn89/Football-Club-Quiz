@@ -13,8 +13,8 @@ Sources:
 Roster: league membership changes every season (promotion/relegation), and Wikidata's per-club
 "current league" property (P118) lags and is sometimes wrong or even attached to non-club items
 (players, season articles). So the rosters below are hardcoded, manually-verified lists for the
-2026-27 season (cross-checked against Wikipedia's 2026-27 Premier League / EFL Championship
-season pages) — update them each summer after the transfer window, then rerun this script.
+2026-27 season (cross-checked against the stadium tables on Wikipedia's 2026-27 Premier League,
+EFL Championship, EFL League One, EFL League Two and National League season pages) — update them each summer after the transfer window, then rerun this script.
 
 Output (matches DeltaResponseDto / ClubDeltaDto in
 app/src/main/java/com/ruflo/footballquiz/data/remote/dto/):
@@ -22,8 +22,12 @@ app/src/main/java/com/ruflo/footballquiz/data/remote/dto/):
   - docs/data/deltas_v1.json
 
 Run: python3 scripts/fetch_initial_data.py
+     python3 scripts/fetch_initial_data.py --leagues "League One,League Two" --clubs-only out.json
+       (fetches just those leagues and writes only the club list to out.json — for building an
+       incremental deltas_v{N}.json by hand without overwriting the v1 bootstrap)
 """
 
+import argparse
 import json
 import re
 import time
@@ -92,6 +96,98 @@ CHAMPIONSHIP_CLUBS = [
     "Wolverhampton Wanderers F.C.",
     "Wrexham A.F.C.",
 ]
+
+# 2026-27 EFL League One roster (24 clubs). Update after each promotion/relegation cycle.
+LEAGUE_ONE_CLUBS = [
+    "AFC Wimbledon",
+    "Barnsley F.C.",
+    "Blackpool F.C.",
+    "Bradford City A.F.C.",
+    "Bromley F.C.",
+    "Burton Albion F.C.",
+    "Cambridge United F.C.",
+    "Doncaster Rovers F.C.",
+    "Huddersfield Town A.F.C.",
+    "Leicester City F.C.",
+    "Leyton Orient F.C.",
+    "Luton Town F.C.",
+    "Mansfield Town F.C.",
+    "Milton Keynes Dons F.C.",
+    "Notts County F.C.",
+    "Oxford United F.C.",
+    "Peterborough United F.C.",
+    "Plymouth Argyle F.C.",
+    "Reading F.C.",
+    "Sheffield Wednesday F.C.",
+    "Stevenage F.C.",
+    "Stockport County F.C.",
+    "Wigan Athletic F.C.",
+    "Wycombe Wanderers F.C.",
+]
+
+# 2026-27 EFL League Two roster (24 clubs). Update after each promotion/relegation cycle.
+LEAGUE_TWO_CLUBS = [
+    "Accrington Stanley F.C.",
+    "Barnet F.C.",
+    "Bristol Rovers F.C.",
+    "Cheltenham Town F.C.",
+    "Chesterfield F.C.",
+    "Colchester United F.C.",
+    "Crawley Town F.C.",
+    "Crewe Alexandra F.C.",
+    "Exeter City F.C.",
+    "Fleetwood Town F.C.",
+    "Gillingham F.C.",
+    "Grimsby Town F.C.",
+    "Newport County A.F.C.",
+    "Northampton Town F.C.",
+    "Oldham Athletic A.F.C.",
+    "Port Vale F.C.",
+    "Rochdale A.F.C.",
+    "Rotherham United F.C.",
+    "Salford City F.C.",
+    "Shrewsbury Town F.C.",
+    "Swindon Town F.C.",
+    "Tranmere Rovers F.C.",
+    "Walsall F.C.",
+    "York City F.C.",
+]
+
+# 2026-27 National League roster (24 clubs, tier 5). Update after each promotion/relegation cycle.
+NATIONAL_LEAGUE_CLUBS = [
+    "AFC Fylde",
+    "Aldershot Town F.C.",
+    "Altrincham F.C.",
+    "Barrow A.F.C.",
+    "Boreham Wood F.C.",
+    "Boston United F.C.",
+    "Carlisle United F.C.",
+    "Eastleigh F.C.",
+    "FC Halifax Town",
+    "Forest Green Rovers F.C.",
+    "Gateshead F.C.",
+    "Harrogate Town A.F.C.",
+    "Hartlepool United F.C.",
+    "Hornchurch F.C.",
+    "Kidderminster Harriers F.C.",
+    "Scunthorpe United F.C.",
+    "Solihull Moors F.C.",
+    "Southend United F.C.",
+    "Sutton United F.C.",
+    "Tamworth F.C.",
+    "Wealdstone F.C.",
+    "Woking F.C.",
+    "Worthing F.C.",
+    "Yeovil Town F.C.",
+]
+
+ROSTERS: dict[str, list[str]] = {
+    "Premier League": PREMIER_LEAGUE_CLUBS,
+    "Championship": CHAMPIONSHIP_CLUBS,
+    "League One": LEAGUE_ONE_CLUBS,
+    "League Two": LEAGUE_TWO_CLUBS,
+    "National League": NATIONAL_LEAGUE_CLUBS,
+}
 
 SPARQL_DETAILS_QUERY_TEMPLATE = """
 SELECT ?club ?clubLabel ?venueLabel ?cityLabel ?logo
@@ -289,10 +385,16 @@ def build_club(official_name: str, wikidata_row: dict | None, manager: str, leag
 
 
 def main() -> None:
-    roster: list[tuple[str, str]] = (
-        [(name, "Premier League") for name in PREMIER_LEAGUE_CLUBS]
-        + [(name, "Championship") for name in CHAMPIONSHIP_CLUBS]
-    )
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--leagues", help="Comma-separated subset of ROSTERS keys (default: all)")
+    parser.add_argument("--clubs-only", type=Path, help="Write just the clubs list here instead of v1")
+    args = parser.parse_args()
+
+    leagues = [l.strip() for l in args.leagues.split(",")] if args.leagues else list(ROSTERS)
+    unknown = [l for l in leagues if l not in ROSTERS]
+    if unknown:
+        parser.error(f"unknown league(s): {unknown}; expected any of {list(ROSTERS)}")
+    roster: list[tuple[str, str]] = [(name, league) for league in leagues for name in ROSTERS[league]]
     league_by_name = dict(roster)
 
     print(f"Resolving Wikidata QIDs for {len(roster)} clubs...", flush=True)
@@ -323,6 +425,11 @@ def main() -> None:
             )
         )
         time.sleep(0.2)
+
+    if args.clubs_only:
+        args.clubs_only.write_text(json.dumps(clubs, indent=2, ensure_ascii=False))
+        print(f"\nWrote {len(clubs)} clubs to {args.clubs_only}")
+        return
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 

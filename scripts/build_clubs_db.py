@@ -1,72 +1,34 @@
 #!/usr/bin/env python3
 """
-Builds app/src/main/assets/database/clubs.db from docs/data/deltas_v1.json, for
+Builds app/src/main/assets/database/clubs.db for
 QuizDatabase.createFromAsset("database/clubs.db").
 
-Table layout mirrors ClubEntity / CustomQuestionEntity + Converters exactly (see
-app/src/main/java/com/ruflo/footballquiz/data/local/{entity,converter}/).
+Applies every docs/data/deltas_v{N}.json in version order (upserts, then deletions), so the
+bundled seed matches what a device would hold after syncing up to latestVersion.
 
-CAVEAT: this writes real schema + data but does NOT (cannot, without Room itself) write a
-correct `room_master_table` identity hash. Room validates that hash on every open, including
-for a createFromAsset-copied file, so this file alone is expected to fail that check at runtime
-(IllegalStateException: "Pre-packaged database has an invalid schema"). To get a hash Room will
-accept, regenerate the asset the standard way once Android tooling is available:
+Schema and identity hash come straight from Room's exported schema JSON
+(app/schemas/com.ruflo.footballquiz.data.local.QuizDatabase/<version>.json, written by KSP on
+every build). Using Room's own createSql + setupQueries means the tables match exactly and
+`room_master_table` carries the identity hash Room validates on open — so this file is
+shippable as-is, no device/emulator round-trip needed.
 
-  1. Run the app/src/androidTest/.../SeedDatabaseGenerator instrumented test on a device/emulator
-     — it builds the same QuizDatabase via plain Room.databaseBuilder (no createFromAsset), so
-     Room itself writes a correct room_master_table, then upserts this same deltas_v1.json data
-     and copies the finished file to external cache storage.
-  2. `adb pull /sdcard/Android/data/com.ruflo.footballquiz/cache/clubs_seed.db <tmp>`
-  3. `cp <tmp> app/src/main/assets/database/clubs.db`
-
-Until step 1-3 is done, this script's output is still useful for inspecting the data/schema by
-hand (`sqlite3 clubs.db .dump`), just not for shipping.
+Prerequisite: build the app once after any schema change (`./gradlew assembleDebug`) so the
+schema JSON for the current QuizDatabase version exists.
 
 Run: python3 scripts/build_clubs_db.py
 """
 
 import json
+import re
 import sqlite3
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-DELTAS_PATH = ROOT / "docs" / "data" / "deltas_v1.json"
+DATA_DIR = ROOT / "docs" / "data"
+SCHEMA_DIR = ROOT / "app" / "schemas" / "com.ruflo.footballquiz.data.local.QuizDatabase"
 OUTPUT_PATH = ROOT / "app" / "src" / "main" / "assets" / "database" / "clubs.db"
 
 DATABASE_VERSION = 2
-
-CREATE_CLUBS_TABLE = """
-CREATE TABLE `clubs` (
-    `id` TEXT NOT NULL,
-    `name` TEXT NOT NULL,
-    `shortName` TEXT NOT NULL,
-    `nickname` TEXT NOT NULL,
-    `stadiumName` TEXT NOT NULL,
-    `stadiumCapacity` INTEGER NOT NULL,
-    `foundedYear` INTEGER NOT NULL,
-    `city` TEXT NOT NULL,
-    `badgeDrawableName` TEXT,
-    `badgeRemoteUrl` TEXT,
-    `version` INTEGER NOT NULL,
-    `manager` TEXT NOT NULL,
-    `league` TEXT NOT NULL,
-    PRIMARY KEY(`id`)
-)
-"""
-
-CREATE_CUSTOM_QUESTIONS_TABLE = """
-CREATE TABLE `custom_questions` (
-    `id` TEXT NOT NULL,
-    `questionText` TEXT NOT NULL,
-    `category` TEXT NOT NULL,
-    `correctAnswer` TEXT NOT NULL,
-    `wrongAnswers` TEXT NOT NULL,
-    `explanation` TEXT,
-    `imageUriOrUrl` TEXT,
-    `version` INTEGER NOT NULL,
-    PRIMARY KEY(`id`)
-)
-"""
 
 CLUB_COLUMNS = [
     "id", "name", "shortName", "nickname", "stadiumName", "stadiumCapacity",
@@ -79,44 +41,73 @@ QUESTION_COLUMNS = [
 ]
 
 
+def load_schema() -> dict:
+    schema_path = SCHEMA_DIR / f"{DATABASE_VERSION}.json"
+    if not schema_path.exists():
+        raise SystemExit(f"{schema_path} not found — build the app once so KSP exports it.")
+    database = json.loads(schema_path.read_text())["database"]
+    if database["version"] != DATABASE_VERSION:
+        raise SystemExit(f"Schema version {database['version']} != DATABASE_VERSION {DATABASE_VERSION}")
+    return database
+
+
+def delta_files() -> list[Path]:
+    latest = json.loads((DATA_DIR / "version.json").read_text())["latestVersion"]
+    files = [DATA_DIR / f"deltas_v{n}.json" for n in range(1, latest + 1)]
+    missing = [f.name for f in files if not f.exists()]
+    if missing:
+        raise SystemExit(f"Missing delta files: {missing}")
+    return files
+
+
+def upsert(conn: sqlite3.Connection, table: str, columns: list[str], rows: list[tuple]) -> None:
+    conn.executemany(
+        f"INSERT OR REPLACE INTO {table} ({', '.join(columns)}) VALUES ({', '.join('?' * len(columns))})",
+        rows,
+    )
+
+
 def main() -> None:
-    deltas = json.loads(DELTAS_PATH.read_text())
+    schema = load_schema()
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.unlink(missing_ok=True)
 
     conn = sqlite3.connect(OUTPUT_PATH)
     try:
-        conn.execute(CREATE_CLUBS_TABLE)
-        conn.execute(CREATE_CUSTOM_QUESTIONS_TABLE)
+        for entity in schema["entities"]:
+            conn.execute(entity["createSql"].replace("${TABLE_NAME}", entity["tableName"]))
+            for index in entity.get("indices", []):
+                conn.execute(index["createSql"].replace("${TABLE_NAME}", entity["tableName"]))
+        for query in schema["setupQueries"]:
+            conn.execute(query)
 
-        conn.executemany(
-            f"INSERT INTO clubs ({', '.join(CLUB_COLUMNS)}) VALUES ({', '.join('?' * len(CLUB_COLUMNS))})",
-            [tuple(club[col] for col in CLUB_COLUMNS) for club in deltas["clubs"]],
-        )
+        for path in delta_files():
+            deltas = json.loads(path.read_text())
+            if deltas["version"] != int(re.search(r"\d+", path.stem).group()):
+                raise SystemExit(f"{path.name}: version field doesn't match filename")
 
-        conn.executemany(
-            f"INSERT INTO custom_questions ({', '.join(QUESTION_COLUMNS)}) "
-            f"VALUES ({', '.join('?' * len(QUESTION_COLUMNS))})",
-            [
-                tuple(
-                    json.dumps(question[col]) if col == "wrongAnswers" else question[col]
-                    for col in QUESTION_COLUMNS
-                )
-                for question in deltas["customQuestions"]
-            ],
-        )
+            upsert(conn, "clubs", CLUB_COLUMNS,
+                   [tuple(club[col] for col in CLUB_COLUMNS) for club in deltas["clubs"]])
+            upsert(conn, "custom_questions", QUESTION_COLUMNS, [
+                tuple(json.dumps(q[col]) if col == "wrongAnswers" else q[col] for col in QUESTION_COLUMNS)
+                for q in deltas["customQuestions"]
+            ])
+            conn.executemany("DELETE FROM clubs WHERE id = ?", [(i,) for i in deltas["deletedClubIds"]])
+            conn.executemany("DELETE FROM custom_questions WHERE id = ?",
+                             [(i,) for i in deltas["deletedQuestionIds"]])
+            print(f"Applied {path.name}")
 
         conn.execute(f"PRAGMA user_version = {DATABASE_VERSION}")
         conn.commit()
+
+        clubs = conn.execute("SELECT COUNT(*) FROM clubs").fetchone()[0]
+        questions = conn.execute("SELECT COUNT(*) FROM custom_questions").fetchone()[0]
     finally:
         conn.close()
 
-    print(f"Wrote {len(deltas['clubs'])} clubs and {len(deltas['customQuestions'])} custom "
-          f"questions to {OUTPUT_PATH}")
-    print("Reminder: this file still needs a Room-generated room_master_table identity hash "
-          "before it will pass createFromAsset validation on device — see this script's "
-          "docstring.")
+    print(f"Wrote {clubs} clubs and {questions} custom questions to {OUTPUT_PATH} "
+          f"(identity hash {schema['identityHash']})")
 
 
 if __name__ == "__main__":
