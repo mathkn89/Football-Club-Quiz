@@ -28,11 +28,11 @@ DATA_DIR = ROOT / "docs" / "data"
 SCHEMA_DIR = ROOT / "app" / "schemas" / "com.ruflo.footballquiz.data.local.QuizDatabase"
 OUTPUT_PATH = ROOT / "app" / "src" / "main" / "assets" / "database" / "clubs.db"
 
-DATABASE_VERSION = 2
+DATABASE_VERSION = 3
 
 CLUB_COLUMNS = [
     "id", "name", "shortName", "nickname", "stadiumName", "stadiumCapacity",
-    "foundedYear", "city", "badgeDrawableName", "badgeRemoteUrl", "version", "manager", "league",
+    "foundedYear", "city", "badgeDrawableName", "badgeRemoteUrl", "version", "manager", "league", "badgeQuizUrl",
 ]
 
 QUESTION_COLUMNS = [
@@ -88,7 +88,7 @@ def main() -> None:
                 raise SystemExit(f"{path.name}: version field doesn't match filename")
 
             upsert(conn, "clubs", CLUB_COLUMNS,
-                   [tuple(club[col] for col in CLUB_COLUMNS) for club in deltas["clubs"]])
+                   [tuple(club.get(col) for col in CLUB_COLUMNS) for club in deltas["clubs"]])
             upsert(conn, "custom_questions", QUESTION_COLUMNS, [
                 tuple(json.dumps(q[col]) if col == "wrongAnswers" else q[col] for col in QUESTION_COLUMNS)
                 for q in deltas["customQuestions"]

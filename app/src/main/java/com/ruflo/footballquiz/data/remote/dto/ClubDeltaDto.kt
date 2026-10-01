@@ -17,4 +17,5 @@ data class ClubDeltaDto(
     val version: Int,
     val manager: String,
     val league: String,
+    val badgeQuizUrl: String? = null,
 )

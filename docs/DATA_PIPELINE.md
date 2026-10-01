@@ -58,6 +58,7 @@ since it's the bootstrap payload — see below).
 | `version`            | Int      | Per-row revision counter — bump it whenever you touch this row. Informational only; the client always upserts regardless of this value, so it does not gate whether an update is applied. |
 | `manager`            | String   | Current head coach.                                              |
 | `league`             | String   | Division name, e.g. `Premier League` / `Championship`. Free text, not an enum — the client displays it as-is. |
+| `badgeQuizUrl`       | String?  | Same badge with its lettering painted out (`scripts/redact_badges.py` → `docs/data/badges/<id>.png`). Badge questions only use this; clubs without one get no badge question. Older app versions ignore the field. |
 
 ### `CustomQuestionDeltaDto`
 
@@ -116,6 +117,16 @@ writes `version: 1`) from Wikidata/TheSportsDB — it's meant for the initial ge
 dataset, not for pushing routine updates. For an incremental update (new season, manager change,
 new curated question), hand-edit a new `deltas_v{N}.json` following the diff rules above instead
 of rerunning the script.
+
+## Redacted quiz badges
+
+Most crests spell out the club name, so badge questions use a copy with the lettering painted out.
+`scripts/redact_badges.py` downloads every `badgeRemoteUrl`, detects text with easyocr, inpaints
+it, and writes `docs/data/badges/<club-id>.png` plus side-by-side review sheets in
+`build/badge-review/`. Check every sheet before publishing; tune a club via `OVERRIDES` in the
+script and rerun just that club (`python3 scripts/redact_badges.py <club-id>`). When adding a
+club, generate its badge too and set `badgeQuizUrl` in the delta to
+`<DATA_SYNC_BASE_URL>badges/<club-id>.png`.
 
 ## Bundled seed database
 

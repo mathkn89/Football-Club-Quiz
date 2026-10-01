@@ -4,6 +4,13 @@ import com.ruflo.footballquiz.data.local.dao.ClubDao
 import com.ruflo.footballquiz.data.local.dao.CustomQuestionDao
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
 import com.ruflo.footballquiz.domain.generator.BadgeQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.CapacityQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.CityQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.LeagueQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.ManagerQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.NicknameClubQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.OldestClubQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.StadiumClubQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.DynamicQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.FoundedYearQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.NicknameQuestionGenerator
@@ -22,9 +29,16 @@ class GetQuizRoundUseCase(
     private val customQuestionDao: CustomQuestionDao,
     private val generators: List<DynamicQuestionGenerator> = listOf(
         StadiumQuestionGenerator(),
+        StadiumClubQuestionGenerator(),
+        CapacityQuestionGenerator(),
         NicknameQuestionGenerator(),
+        NicknameClubQuestionGenerator(),
         FoundedYearQuestionGenerator(),
+        OldestClubQuestionGenerator(),
         BadgeQuestionGenerator(),
+        LeagueQuestionGenerator(),
+        CityQuestionGenerator(),
+        ManagerQuestionGenerator(),
     ),
 ) {
 
@@ -34,12 +48,20 @@ class GetQuizRoundUseCase(
         categories: Set<QuizCategory> = QuizCategory.entries.toSet(),
         leagues: Set<String>? = null,
     ): List<QuizQuestion> {
-        val customCount = (roundSize * customRatio).roundToInt().coerceIn(0, roundSize)
-        val customPoolSize = customCount * CUSTOM_OVERFETCH_FACTOR
-        val customQuestions = customQuestionDao.getRandom(customPoolSize)
-            .map { it.toDomain() }
-            .filter { it.category in categories }
-            .take(customCount)
+        // Curated questions aren't tied to a league, so a single-league round leaves them out.
+        val customCount = if (leagues.isNullOrEmpty()) {
+            (roundSize * customRatio).roundToInt().coerceIn(0, roundSize)
+        } else {
+            0
+        }
+        val customQuestions = if (customCount == 0) {
+            emptyList()
+        } else {
+            customQuestionDao.getRandom(customCount * CUSTOM_OVERFETCH_FACTOR)
+                .map { it.toDomain() }
+                .filter { it.category in categories }
+                .take(customCount)
+        }
 
         val dynamicCount = roundSize - customQuestions.size
         val dynamicQuestions = buildDynamicQuestions(dynamicCount, categories, leagues)
@@ -47,6 +69,10 @@ class GetQuizRoundUseCase(
         return (customQuestions + dynamicQuestions).shuffled()
     }
 
+    /**
+     * Cycles through the selected categories so a round mixes topics evenly (rather than favouring
+     * categories with more generators), and asks about each club at most once.
+     */
     private suspend fun buildDynamicQuestions(
         count: Int,
         categories: Set<QuizCategory>,
@@ -54,8 +80,8 @@ class GetQuizRoundUseCase(
     ): List<QuizQuestion> {
         if (count <= 0) return emptyList()
 
-        val activeGenerators = generators.filter { it.category in categories }
-        if (activeGenerators.isEmpty()) return emptyList()
+        val generatorsByCategory = generators.filter { it.category in categories }.groupBy { it.category }
+        if (generatorsByCategory.isEmpty()) return emptyList()
 
         val pool = if (leagues.isNullOrEmpty()) {
             clubDao.getRandomClubs(excludeIds = emptyList(), limit = DYNAMIC_POOL_SIZE)
@@ -64,14 +90,37 @@ class GetQuizRoundUseCase(
         }
         if (pool.size < MIN_POOL_SIZE) return emptyList()
 
-        val combos = pool.flatMap { target -> activeGenerators.map { target to it } }.shuffled()
+        val usedClubIds = mutableSetOf<String>()
         val questions = mutableListOf<QuizQuestion>()
-        for ((target, generator) in combos) {
-            if (questions.size >= count) break
-            val distractors = pool.filter { it.id != target.id }
-            generator.generate(target, distractors)?.let { questions += it }
+        val categoryCycle = generatorsByCategory.keys.shuffled()
+        var madeProgress = true
+        while (questions.size < count && madeProgress) {
+            madeProgress = false
+            for (category in categoryCycle) {
+                if (questions.size >= count) break
+                val question = generateOne(generatorsByCategory.getValue(category), pool, usedClubIds) ?: continue
+                questions += question
+                madeProgress = true
+            }
         }
         return questions
+    }
+
+    private fun generateOne(
+        generators: List<DynamicQuestionGenerator>,
+        pool: List<ClubEntity>,
+        usedClubIds: MutableSet<String>,
+    ): QuizQuestion? {
+        for (target in pool.shuffled()) {
+            if (target.id in usedClubIds) continue
+            val distractors = pool.filter { it.id != target.id }
+            for (generator in generators.shuffled()) {
+                val question = generator.generate(target, distractors) ?: continue
+                usedClubIds += target.id
+                return question
+            }
+        }
+        return null
     }
 
     private companion object {

@@ -19,4 +19,6 @@ data class ClubEntity(
     val version: Int,
     val manager: String,
     val league: String,
+    /** Badge with its lettering painted out, for badge questions. Null until one is published. */
+    val badgeQuizUrl: String? = null,
 )

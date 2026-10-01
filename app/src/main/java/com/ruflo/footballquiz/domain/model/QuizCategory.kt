@@ -5,6 +5,9 @@ enum class QuizCategory {
     NICKNAME,
     FOUNDED_YEAR,
     BADGE,
+    LEAGUE,
+    LOCATION,
+    MANAGER,
     HISTORY,
     TRANSFERS,
     RIVALRIES,
@@ -13,7 +16,7 @@ enum class QuizCategory {
 
     companion object {
         /** Categories generated from club data — always playable once clubs exist. */
-        val DYNAMIC: Set<QuizCategory> = setOf(STADIUM, NICKNAME, FOUNDED_YEAR, BADGE)
+        val DYNAMIC: Set<QuizCategory> = setOf(STADIUM, NICKNAME, FOUNDED_YEAR, BADGE, LEAGUE, LOCATION, MANAGER)
 
         /** Maps a free-text [CustomQuestionEntity.category] value onto a known category. */
         fun fromRaw(raw: String): QuizCategory =

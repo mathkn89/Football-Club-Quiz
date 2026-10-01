@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ruflo.footballquiz.data.local.converter.Converters
 import com.ruflo.footballquiz.data.local.dao.ClubDao
 import com.ruflo.footballquiz.data.local.dao.CustomQuestionDao
@@ -13,7 +15,7 @@ import com.ruflo.footballquiz.data.local.entity.CustomQuestionEntity
 
 @Database(
     entities = [ClubEntity::class, CustomQuestionEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -25,6 +27,13 @@ abstract class QuizDatabase : RoomDatabase() {
     companion object {
         private const val DATABASE_NAME = "quiz.db"
         private const val ASSET_DATABASE_PATH = "database/clubs.db"
+
+        /** Adds [ClubEntity.badgeQuizUrl]; existing rows get it on the next delta sync. */
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE clubs ADD COLUMN badgeQuizUrl TEXT")
+            }
+        }
 
         @Volatile
         private var instance: QuizDatabase? = null
@@ -41,6 +50,7 @@ abstract class QuizDatabase : RoomDatabase() {
                 DATABASE_NAME,
             )
                 .createFromAsset(ASSET_DATABASE_PATH)
+                .addMigrations(MIGRATION_2_3)
                 .fallbackToDestructiveMigration()
                 .build()
     }
