@@ -57,8 +57,11 @@ class GetQuizRoundUseCase(
         val activeGenerators = generators.filter { it.category in categories }
         if (activeGenerators.isEmpty()) return emptyList()
 
-        val pool = clubDao.getRandomClubs(excludeIds = emptyList(), limit = DYNAMIC_POOL_SIZE)
-            .let { clubs -> if (leagues.isNullOrEmpty()) clubs else clubs.filter { it.league in leagues } }
+        val pool = if (leagues.isNullOrEmpty()) {
+            clubDao.getRandomClubs(excludeIds = emptyList(), limit = DYNAMIC_POOL_SIZE)
+        } else {
+            clubDao.getRandomClubsInLeagues(leagues, limit = DYNAMIC_POOL_SIZE)
+        }
         if (pool.size < MIN_POOL_SIZE) return emptyList()
 
         val combos = pool.flatMap { target -> activeGenerators.map { target to it } }.shuffled()

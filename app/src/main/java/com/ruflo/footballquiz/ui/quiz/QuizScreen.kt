@@ -1,5 +1,6 @@
 package com.ruflo.footballquiz.ui.quiz
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,21 +10,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,7 +34,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruflo.footballquiz.ui.common.FootballQuizTopBar
@@ -50,29 +53,53 @@ fun QuizScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showExitConfirm by remember { mutableStateOf(false) }
+    val inProgress = uiState as? QuizUiState.InProgress
+
+    // Back mid-round asks first instead of silently throwing the round away.
+    BackHandler(enabled = inProgress != null) { showExitConfirm = true }
 
     Scaffold(
         topBar = {
             FootballQuizTopBar(
-                title = "",
+                title = inProgress?.let { "${it.questionNumber} of ${it.totalQuestions}" }.orEmpty(),
                 navigationIcon = {
-                    IconButton(onClick = { showExitConfirm = true }) {
+                    IconButton(onClick = { if (inProgress != null) showExitConfirm = true else onExit() }) {
                         Icon(Icons.Default.Close, contentDescription = "Exit quiz")
                     }
                 },
+                actions = {
+                    if (inProgress != null) {
+                        Text(
+                            "Score ${inProgress.score}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(end = 16.dp),
+                        )
+                    }
+                },
             )
+        },
+        bottomBar = {
+            if (inProgress?.isAnswerRevealed == true) {
+                Button(
+                    onClick = viewModel::nextQuestion,
+                    modifier = Modifier.fillMaxWidth().padding(20.dp).height(56.dp),
+                    shape = RoundedCornerShape(16.dp),
+                ) {
+                    Text(
+                        if (inProgress.isLastQuestion) "See results" else "Next question",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                }
+            }
         },
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             when (val state = uiState) {
                 QuizUiState.Loading -> LoadingContent()
-                QuizUiState.Empty -> EmptyContent()
+                QuizUiState.Empty -> EmptyContent(onExit)
                 is QuizUiState.Finished -> LaunchedEffect(state) { onFinished(state.score, state.total) }
-                is QuizUiState.InProgress -> QuizContent(
-                    state = state,
-                    onOptionSelected = viewModel::selectOption,
-                    onNext = viewModel::nextQuestion,
-                )
+                is QuizUiState.InProgress -> QuizContent(state = state, onOptionSelected = viewModel::selectOption)
             }
         }
     }
@@ -83,10 +110,10 @@ fun QuizScreen(
             title = { Text("Leave quiz?") },
             text = { Text("Your progress in this round will be lost.") },
             confirmButton = {
-                Button(onClick = { showExitConfirm = false; onExit() }) { Text("Leave") }
+                TextButton(onClick = { showExitConfirm = false; onExit() }) { Text("Leave") }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showExitConfirm = false }) { Text("Keep playing") }
+                TextButton(onClick = { showExitConfirm = false }) { Text("Keep playing") }
             },
         )
     }
@@ -95,34 +122,33 @@ fun QuizScreen(
 @Composable
 private fun LoadingContent() {
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text("Building your quiz round…", style = MaterialTheme.typography.bodyLarge)
+        CircularProgressIndicator()
     }
 }
 
 @Composable
-private fun EmptyContent() {
+private fun EmptyContent(onBack: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            "No questions available for the selected categories yet.",
+            "Not enough questions for this selection yet. Try another league or more topics.",
             style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
         )
+        Spacer(Modifier.height(16.dp))
+        TextButton(onClick = onBack) { Text("Change options") }
     }
 }
 
 @Composable
-private fun QuizContent(
-    state: QuizUiState.InProgress,
-    onOptionSelected: (Int) -> Unit,
-    onNext: () -> Unit,
-) {
+private fun QuizContent(state: QuizUiState.InProgress, onOptionSelected: (Int) -> Unit) {
     val question = state.currentQuestion
     val timeFraction = state.timeRemainingSeconds / QUESTION_TIME_SECONDS.toFloat()
     val timerColor by animateColorAsState(
@@ -134,40 +160,36 @@ private fun QuizContent(
         label = "timerColor",
     )
 
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
-                "Question ${state.questionNumber}/${state.totalQuestions}",
-                style = MaterialTheme.typography.labelLarge,
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            LinearProgressIndicator(
+                progress = { timeFraction },
+                modifier = Modifier.weight(1f).height(6.dp).clip(RoundedCornerShape(3.dp)),
+                color = timerColor,
+                trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
             )
             Text(
-                "Score: ${state.score}",
+                "${state.timeRemainingSeconds}s",
                 style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.End,
+                modifier = Modifier.padding(start = 12.dp),
             )
         }
-        Spacer(Modifier.height(8.dp))
-        LinearProgressIndicator(
-            progress = { timeFraction },
-            modifier = Modifier.fillMaxWidth().height(6.dp),
-            color = timerColor,
-            trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        )
 
-        Spacer(Modifier.height(20.dp))
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-        ) {
-            Column(modifier = Modifier.padding(20.dp)) {
-                QuizImage(imageUrl = question.imageUrl, modifier = Modifier.fillMaxWidth().height(140.dp))
-                if (question.imageUrl != null) Spacer(Modifier.height(16.dp))
-                Text(question.prompt, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
-            }
+        Spacer(Modifier.height(28.dp))
+        if (question.imageUrl != null) {
+            QuizImage(imageUrl = question.imageUrl, modifier = Modifier.fillMaxWidth().height(140.dp))
+            Spacer(Modifier.height(20.dp))
         }
+        Text(question.prompt, style = MaterialTheme.typography.headlineSmall)
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(24.dp))
         question.options.forEachIndexed { index, option ->
             OptionCard(
                 text = option,
@@ -175,25 +197,22 @@ private fun QuizContent(
                 enabled = !state.isAnswerRevealed,
                 onClick = { onOptionSelected(index) },
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(10.dp))
         }
 
         if (state.isAnswerRevealed) {
+            val feedback = when {
+                state.selectedOptionIndex == null -> "Time's up."
+                state.selectedOptionIndex == question.correctOptionIndex -> "Correct!"
+                else -> "Not quite."
+            }
+            Spacer(Modifier.height(6.dp))
+            Text(feedback, style = MaterialTheme.typography.titleMedium)
             question.explanation?.let {
-                Text(it, style = MaterialTheme.typography.bodyMedium)
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(4.dp))
+                Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Spacer(Modifier.weight(1f))
-            Button(
-                onClick = onNext,
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-            ) {
-                Text(if (state.isLastQuestion) "See results" else "Next question")
-            }
-            Spacer(Modifier.height(16.dp))
-        } else {
-            Spacer(Modifier.weight(1f))
         }
+        Spacer(Modifier.height(16.dp))
     }
 }

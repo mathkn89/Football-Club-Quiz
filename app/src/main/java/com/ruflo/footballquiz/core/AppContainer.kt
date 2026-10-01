@@ -13,11 +13,12 @@ class AppContainer(context: Context) {
     private val historyDatabase = HistoryDatabase.getInstance(context)
 
     val clubDao = database.clubDao()
+    val customQuestionDao = database.customQuestionDao()
     val quizAttemptDao = historyDatabase.quizAttemptDao()
     val userProfilePreferences = UserProfilePreferences(context)
 
     val getQuizRoundUseCase = GetQuizRoundUseCase(
-        clubDao = database.clubDao(),
-        customQuestionDao = database.customQuestionDao(),
+        clubDao = clubDao,
+        customQuestionDao = customQuestionDao,
     )
 }

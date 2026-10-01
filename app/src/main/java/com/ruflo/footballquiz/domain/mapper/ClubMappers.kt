@@ -7,6 +7,7 @@ import com.ruflo.footballquiz.domain.model.Club
 fun ClubEntity.toDomain(): Club = Club(
     id = id,
     name = name,
+    shortName = shortName,
     nickname = nickname,
     stadiumName = stadiumName,
     stadiumCapacity = stadiumCapacity,

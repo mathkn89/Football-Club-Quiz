@@ -6,11 +6,15 @@ sealed interface ClubListUiState {
     data object Loading : ClubListUiState
 
     data class Content(
-        val allClubs: List<Club>,
+        /** Clubs matching the current filter + query, grouped by league in pyramid order. */
+        val sections: List<LeagueSection>,
         val availableLeagues: List<String>,
         /** Null means "all leagues" — no filter. */
         val selectedLeague: String?,
+        val query: String,
     ) : ClubListUiState {
-        val clubs: List<Club> get() = if (selectedLeague == null) allClubs else allClubs.filter { it.league == selectedLeague }
+        val isEmpty: Boolean get() = sections.isEmpty()
     }
 }
+
+data class LeagueSection(val league: String, val clubs: List<Club>)

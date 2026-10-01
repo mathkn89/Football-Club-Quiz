@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruflo.footballquiz.data.local.dao.ClubDao
 import com.ruflo.footballquiz.domain.mapper.toDomain
+import com.ruflo.footballquiz.domain.model.Club
+import com.ruflo.footballquiz.domain.model.Leagues
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,15 +18,22 @@ class ClubListViewModel(private val clubDao: ClubDao) : ViewModel() {
     val uiState: StateFlow<ClubListUiState> = _uiState.asStateFlow()
 
     private val _selectedLeague = MutableStateFlow<String?>(null)
+    private val _query = MutableStateFlow("")
 
     init {
         viewModelScope.launch {
-            combine(clubDao.observeAll(), _selectedLeague) { entities, selectedLeague ->
+            combine(clubDao.observeAll(), _selectedLeague, _query) { entities, selectedLeague, query ->
                 val clubs = entities.map { it.toDomain() }
+                val sections = clubs
+                    .filter { (selectedLeague == null || it.league == selectedLeague) && it.matches(query) }
+                    .groupBy { it.league }
+                    .toSortedMap(Leagues.pyramidOrder)
+                    .map { (league, leagueClubs) -> LeagueSection(league, leagueClubs.sortedBy { it.shortName }) }
                 ClubListUiState.Content(
-                    allClubs = clubs,
-                    availableLeagues = clubs.map { it.league }.distinct().sorted(),
+                    sections = sections,
+                    availableLeagues = clubs.map { it.league }.distinct().sortedWith(Leagues.pyramidOrder),
                     selectedLeague = selectedLeague,
+                    query = query,
                 )
             }.collect { _uiState.value = it }
         }
@@ -33,5 +42,15 @@ class ClubListViewModel(private val clubDao: ClubDao) : ViewModel() {
     /** Null selects "all leagues". */
     fun onLeagueSelected(league: String?) {
         _selectedLeague.value = league
+    }
+
+    fun onQueryChanged(query: String) {
+        _query.value = query
+    }
+
+    private fun Club.matches(query: String): Boolean {
+        val q = query.trim()
+        if (q.isEmpty()) return true
+        return listOf(name, nickname, city, stadiumName).any { it.contains(q, ignoreCase = true) }
     }
 }

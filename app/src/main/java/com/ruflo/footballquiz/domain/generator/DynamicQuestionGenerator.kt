@@ -13,9 +13,13 @@ interface DynamicQuestionGenerator {
     fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion?
 }
 
-/** Builds a 4-option list from [correct] plus up to 3 distinct values from [candidates], shuffled. */
+/**
+ * Builds a 4-option list from [correct] plus 3 distinct values from [candidates], shuffled.
+ * Null when [correct] is blank (missing data) or there aren't 3 usable distractors.
+ */
 internal fun buildOptions(correct: String, candidates: List<String>): List<String>? {
-    val distractors = candidates.filter { it != correct }.distinct().shuffled().take(3)
+    if (correct.isBlank()) return null
+    val distractors = candidates.filter { it.isNotBlank() && it != correct }.distinct().shuffled().take(3)
     if (distractors.size < 3) return null
     return (distractors + correct).shuffled()
 }

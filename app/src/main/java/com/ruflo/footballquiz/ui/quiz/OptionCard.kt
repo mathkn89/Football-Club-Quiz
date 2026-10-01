@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ruflo.footballquiz.ui.theme.CorrectGreen
 import com.ruflo.footballquiz.ui.theme.IncorrectRed
@@ -47,11 +48,11 @@ fun OptionCard(
     val targetContainerColor = when (visualState) {
         OptionVisualState.CORRECT -> CorrectGreen
         OptionVisualState.INCORRECT -> IncorrectRed
-        OptionVisualState.DEFAULT -> MaterialTheme.colorScheme.surfaceContainerHigh
+        OptionVisualState.DEFAULT -> MaterialTheme.colorScheme.surfaceContainer
     }
     val targetContentColor = when (visualState) {
-        OptionVisualState.DEFAULT -> MaterialTheme.colorScheme.onSurfaceVariant
-        else -> MaterialTheme.colorScheme.onPrimary
+        OptionVisualState.DEFAULT -> MaterialTheme.colorScheme.onSurface
+        else -> Color.White
     }
     val containerColor by animateColorAsState(targetContainerColor, tween(250), label = "optionContainer")
     val contentColor by animateColorAsState(targetContentColor, tween(250), label = "optionContent")
@@ -60,10 +61,9 @@ fun OptionCard(
         modifier = modifier.fillMaxWidth().clickable(enabled = enabled, onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor, contentColor = contentColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (visualState == OptionVisualState.DEFAULT) 0.dp else 2.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 18.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {

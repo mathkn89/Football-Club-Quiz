@@ -1,238 +1,205 @@
 package com.ruflo.footballquiz.ui.picker
 
-import androidx.compose.foundation.border
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.Sync
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ruflo.footballquiz.BuildConfig
 import com.ruflo.footballquiz.domain.model.QuizCategory
-import com.ruflo.footballquiz.sync.SyncScheduler
 import com.ruflo.footballquiz.ui.common.FootballQuizTopBar
+import com.ruflo.footballquiz.ui.common.LeagueFilterRow
 import com.ruflo.footballquiz.ui.common.displayName
-import com.ruflo.footballquiz.ui.common.emoji
-import kotlinx.coroutines.launch
 
-private val ROUND_SIZE_LABELS = mapOf(5 to "Quick", 10 to "Standard", 15 to "Extended")
+private val SCREEN_PADDING = 20.dp
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickerScreen(
     onStartQuiz: (roundSize: Int, categories: Set<QuizCategory>, league: String?) -> Unit,
-    onOpenHistory: () -> Unit,
-    onOpenClubs: () -> Unit,
     viewModel: PickerViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-    var showOverflowMenu by remember { mutableStateOf(false) }
-    var showAboutDialog by remember { mutableStateOf(false) }
+    var showOptions by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
-        topBar = {
-            FootballQuizTopBar(
-                title = "Football Club Quiz",
-                showAppLogo = true,
-                actions = {
-                    IconButton(onClick = onOpenClubs) {
-                        Icon(Icons.Default.Shield, contentDescription = "Club directory")
-                    }
-                    IconButton(onClick = onOpenHistory) {
-                        Icon(Icons.Default.History, contentDescription = "History")
-                    }
-                    IconButton(onClick = { showOverflowMenu = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More options")
-                    }
-                    DropdownMenu(expanded = showOverflowMenu, onDismissRequest = { showOverflowMenu = false }) {
-                        DropdownMenuItem(
-                            text = { Text("Sync now") },
-                            leadingIcon = { Icon(Icons.Default.Sync, contentDescription = null) },
-                            onClick = {
-                                showOverflowMenu = false
-                                SyncScheduler.syncNow(context)
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar("Syncing club data in the background…")
-                                }
-                            },
-                        )
-                        DropdownMenuItem(
-                            text = { Text("About") },
-                            leadingIcon = { Icon(Icons.Default.Info, contentDescription = null) },
-                            onClick = {
-                                showOverflowMenu = false
-                                showAboutDialog = true
-                            },
-                        )
-                    }
-                },
-            )
+        topBar = { FootballQuizTopBar(title = "Football Club Quiz", showAppLogo = true) },
+        bottomBar = {
+            Button(
+                onClick = { onStartQuiz(uiState.roundSize, uiState.activeCategories, uiState.selectedLeague) },
+                enabled = uiState.clubCount > 0,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(SCREEN_PADDING)
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Icon(Icons.Default.PlayArrow, contentDescription = null)
+                Spacer(Modifier.padding(4.dp))
+                Text("Play", style = MaterialTheme.typography.titleMedium)
+            }
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) { Snackbar(it) } },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 24.dp),
+                .verticalScroll(rememberScrollState()),
         ) {
-            Spacer(Modifier.height(8.dp))
-            Text(
-                "Test your football knowledge",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            Column(Modifier.padding(horizontal = SCREEN_PADDING)) {
+                Spacer(Modifier.height(16.dp))
+                Text("Ready to play?", style = MaterialTheme.typography.headlineMedium)
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    if (uiState.clubCount > 0) {
+                        "${uiState.clubCount} clubs across ${uiState.availableLeagues.size} leagues"
+                    } else {
+                        "Loading club data…"
+                    },
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(32.dp))
+                SectionLabel("League")
+            }
+            LeagueFilterRow(
+                leagues = uiState.availableLeagues,
+                selected = uiState.selectedLeague,
+                onSelected = viewModel::onLeagueSelected,
+                contentPadding = PaddingValues(horizontal = SCREEN_PADDING),
             )
 
-            Spacer(Modifier.height(32.dp))
-            Text("Round length", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            Spacer(Modifier.height(12.dp))
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.selectableGroup(),
-            ) {
-                PickerUiState.ROUND_SIZE_OPTIONS.forEach { size ->
-                    RoundSizeCard(
-                        size = size,
-                        label = ROUND_SIZE_LABELS[size].orEmpty(),
-                        selected = uiState.roundSize == size,
-                        onClick = { viewModel.onRoundSizeSelected(size) },
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(32.dp))
-            Text("League", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            Spacer(Modifier.height(12.dp))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(
-                    selected = uiState.selectedLeague == null,
-                    onClick = { viewModel.onLeagueSelected(null) },
-                    label = { Text("All leagues") },
-                )
-                uiState.availableLeagues.forEach { league ->
-                    FilterChip(
-                        selected = uiState.selectedLeague == league,
-                        onClick = { viewModel.onLeagueSelected(league) },
-                        label = { Text(league) },
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(32.dp))
-            Text("Categories", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            Spacer(Modifier.height(12.dp))
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                QuizCategory.entries.forEach { category ->
-                    FilterChip(
-                        selected = category in uiState.selectedCategories,
-                        onClick = { viewModel.onCategoryToggled(category) },
-                        label = { Text("${category.emoji()} ${category.displayName()}") },
-                    )
-                }
-            }
-
-            Spacer(Modifier.weight(1f))
-            Button(
-                onClick = { onStartQuiz(uiState.roundSize, uiState.selectedCategories, uiState.selectedLeague) },
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-            ) {
-                Text("Start Quiz", style = MaterialTheme.typography.titleMedium)
-            }
             Spacer(Modifier.height(24.dp))
-        }
-    }
-
-    if (showAboutDialog) {
-        AlertDialog(
-            onDismissRequest = { showAboutDialog = false },
-            confirmButton = {
-                Button(onClick = { showAboutDialog = false }) { Text("OK") }
-            },
-            title = { Text("Football Club Quiz") },
-            text = {
-                Text(
-                    "Version ${BuildConfig.VERSION_NAME}\n\n" +
-                        "Trivia about English football clubs — stadiums, nicknames, history, and more. " +
-                        "Club data syncs in the background from GitHub Pages.",
+            HorizontalDivider(Modifier.padding(horizontal = SCREEN_PADDING), color = MaterialTheme.colorScheme.outlineVariant)
+            OptionsHeader(
+                summary = optionsSummary(uiState),
+                expanded = showOptions,
+                onToggle = { showOptions = !showOptions },
+            )
+            AnimatedVisibility(visible = showOptions) {
+                OptionsContent(
+                    uiState = uiState,
+                    onRoundSizeSelected = viewModel::onRoundSizeSelected,
+                    onCategoryToggled = viewModel::onCategoryToggled,
                 )
-            },
-        )
+            }
+            Spacer(Modifier.height(16.dp))
+        }
     }
 }
 
 @Composable
-private fun RoundSizeCard(
-    size: Int,
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh
-    val borderColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+private fun SectionLabel(text: String) {
+    Text(
+        text,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(bottom = 8.dp),
+    )
+}
 
-    Card(
-        modifier = modifier
-            .selectable(selected = selected, onClick = onClick)
-            .border(width = if (selected) 2.dp else 1.dp, color = borderColor, shape = RoundedCornerShape(16.dp)),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = containerColor),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+private fun optionsSummary(state: PickerUiState): String {
+    val topics = if (state.activeCategories.size == state.availableCategories.size) {
+        "All topics"
+    } else {
+        state.availableCategories.filter { it in state.activeCategories }.joinToString { it.displayName() }
+    }
+    return "${state.roundSize} questions · $topics"
+}
+
+@Composable
+private fun OptionsHeader(summary: String, expanded: Boolean, onToggle: () -> Unit) {
+    val arrowRotation by animateFloatAsState(if (expanded) 180f else 0f, label = "optionsArrow")
+    Surface(onClick = onToggle, color = MaterialTheme.colorScheme.background) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = SCREEN_PADDING, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text("$size", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-            Text(label, style = MaterialTheme.typography.labelMedium)
+            Column(Modifier.weight(1f)) {
+                Text("Options", style = MaterialTheme.typography.titleMedium)
+                Text(summary, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Icon(
+                Icons.Default.ExpandMore,
+                contentDescription = if (expanded) "Hide options" else "Show options",
+                modifier = Modifier.rotate(arrowRotation),
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+private fun OptionsContent(
+    uiState: PickerUiState,
+    onRoundSizeSelected: (Int) -> Unit,
+    onCategoryToggled: (QuizCategory) -> Unit,
+) {
+    Column(Modifier.padding(horizontal = SCREEN_PADDING)) {
+        SectionLabel("Questions")
+        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+            val options = PickerUiState.ROUND_SIZE_OPTIONS
+            options.forEachIndexed { index, size ->
+                SegmentedButton(
+                    selected = uiState.roundSize == size,
+                    onClick = { onRoundSizeSelected(size) },
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
+                ) {
+                    Text("$size")
+                }
+            }
+        }
+
+        Spacer(Modifier.height(24.dp))
+        SectionLabel("Topics")
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            uiState.availableCategories.forEach { category ->
+                FilterChip(
+                    selected = category in uiState.activeCategories,
+                    onClick = { onCategoryToggled(category) },
+                    label = { Text(category.displayName()) },
+                )
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package com.ruflo.footballquiz.domain.model
 data class Club(
     val id: String,
     val name: String,
+    val shortName: String,
     val nickname: String,
     val stadiumName: String,
     val stadiumCapacity: Int,
