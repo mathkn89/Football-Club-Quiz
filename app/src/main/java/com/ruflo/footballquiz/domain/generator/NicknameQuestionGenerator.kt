@@ -1,6 +1,7 @@
 package com.ruflo.footballquiz.domain.generator
 
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.model.QuizQuestion
 import java.util.UUID
@@ -10,7 +11,7 @@ class NicknameQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.NICKNAME
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (target.giveaway(target.nickname)) return null
         // Leave out other clubs that share this nickname, else two options would read the same.
         val candidates = distractorPool.filter { nicknameKey(it.nickname) != nicknameKey(target.nickname) }
@@ -31,7 +32,7 @@ class NicknameClubQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.NICKNAME
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (target.nickname.isBlank() || target.giveaway(target.nickname)) return null
         val key = nicknameKey(target.nickname)
         if (distractorPool.any { it.id != target.id && nicknameKey(it.nickname) == key }) return null

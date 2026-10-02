@@ -1,6 +1,7 @@
 package com.ruflo.footballquiz.domain.generator
 
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.model.QuizQuestion
 import java.util.UUID
@@ -14,7 +15,7 @@ class BadgeQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.BADGE
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         val badge = target.badgeQuizUrl ?: return null
         val options = buildClubOptions(target, distractorPool) ?: return null
         return QuizQuestion(

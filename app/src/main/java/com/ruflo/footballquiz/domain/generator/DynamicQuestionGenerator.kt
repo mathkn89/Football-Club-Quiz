@@ -1,6 +1,7 @@
 package com.ruflo.footballquiz.domain.generator
 
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.model.QuizQuestion
 
@@ -9,8 +10,11 @@ interface DynamicQuestionGenerator {
 
     val category: QuizCategory
 
-    /** Null when [distractorPool] can't supply enough distinct wrong answers for [target]. */
-    fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion?
+    /**
+     * Null when [distractorPool] can't supply enough distinct wrong answers for [target].
+     * [difficulty] tunes how close numeric wrong answers sit to the right one.
+     */
+    fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty = Difficulty.MEDIUM): QuizQuestion?
 }
 
 /**

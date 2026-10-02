@@ -2,8 +2,6 @@ package com.ruflo.footballquiz.ui.quiz
 
 import com.ruflo.footballquiz.domain.model.QuizQuestion
 
-const val QUESTION_TIME_SECONDS = 15
-
 sealed interface QuizUiState {
 
     data object Loading : QuizUiState
@@ -19,8 +17,10 @@ sealed interface QuizUiState {
         val score: Int,
         val selectedOptionIndex: Int? = null,
         val isAnswerRevealed: Boolean = false,
-        val timeRemainingSeconds: Int = QUESTION_TIME_SECONDS,
+        val secondsPerQuestion: Int,
+        val timeRemainingSeconds: Int = secondsPerQuestion,
     ) : QuizUiState {
+        val timeFraction: Float get() = timeRemainingSeconds / secondsPerQuestion.toFloat()
         val currentQuestion: QuizQuestion get() = questions[currentIndex]
         val questionNumber: Int get() = currentIndex + 1
         val totalQuestions: Int get() = questions.size

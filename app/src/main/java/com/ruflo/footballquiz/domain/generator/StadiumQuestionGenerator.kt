@@ -1,6 +1,7 @@
 package com.ruflo.footballquiz.domain.generator
 
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.model.QuizQuestion
 import java.util.UUID
@@ -10,7 +11,7 @@ class StadiumQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.STADIUM
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (target.giveaway(target.stadiumName)) return null
         val candidates = distractorPool.filter { nameKey(it.stadiumName) != nameKey(target.stadiumName) }
         val options = buildOptions(target.stadiumName, candidates.map { it.stadiumName }) ?: return null
@@ -30,7 +31,7 @@ class StadiumClubQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.STADIUM
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (target.stadiumName.isBlank() || target.giveaway(target.stadiumName)) return null
         // Near-identical ground names (St James' Park / St James Park) would make two answers right.
         if (distractorPool.any { it.id != target.id && nameKey(it.stadiumName) == nameKey(target.stadiumName) }) return null
@@ -51,11 +52,16 @@ class CapacityQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.STADIUM
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (target.stadiumCapacity <= 0 || target.stadiumName.isBlank()) return null
-        // At least 15% smaller: published capacities vary between sources, so close calls aren't fair.
+        // Published capacities vary between sources, so always leave a margin; widest on Easy.
+        val maxPercent = when (difficulty) {
+            Difficulty.EASY -> 60
+            Difficulty.MEDIUM -> 85
+            Difficulty.HARD -> 90
+        }
         val smaller = distractorPool
-            .filter { it.stadiumCapacity in 1..(target.stadiumCapacity * 85 / 100) && it.stadiumName.isNotBlank() }
+            .filter { it.stadiumCapacity in 1..(target.stadiumCapacity * maxPercent / 100) && it.stadiumName.isNotBlank() }
             .distinctBy { nameKey(it.stadiumName) }
             .shuffled()
             .take(3)

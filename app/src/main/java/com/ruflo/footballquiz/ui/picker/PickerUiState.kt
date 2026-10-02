@@ -1,9 +1,11 @@
 package com.ruflo.footballquiz.ui.picker
 
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 
 data class PickerUiState(
     val roundSize: Int = DEFAULT_ROUND_SIZE,
+    val difficulty: Difficulty = Difficulty.MEDIUM,
     val selectedCategories: Set<QuizCategory> = QuizCategory.entries.toSet(),
     /** Categories with questions behind them: the dynamic ones plus any custom ones synced. */
     val availableCategories: List<QuizCategory> = QuizCategory.DYNAMIC.toList(),
@@ -15,6 +17,16 @@ data class PickerUiState(
 ) {
     /** Selected categories that are actually shown — what the round will be built from. */
     val activeCategories: Set<QuizCategory> get() = selectedCategories.intersect(availableCategories.toSet())
+
+    val allCategoriesSelected: Boolean get() = activeCategories.size == availableCategories.size
+
+    /** Club-data topics, shown as the first group. */
+    val clubFactCategories: List<QuizCategory> get() = availableCategories.filter { it in QuizCategory.DYNAMIC }
+
+    /** Hand-written trivia topics, shown as the second group. */
+    val triviaCategories: List<QuizCategory> get() = availableCategories.filterNot { it in QuizCategory.DYNAMIC }
+
+    val canStart: Boolean get() = clubCount > 0 && activeCategories.isNotEmpty()
 
     companion object {
         const val DEFAULT_ROUND_SIZE = 10

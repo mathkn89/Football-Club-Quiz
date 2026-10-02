@@ -35,7 +35,7 @@ fun FootballQuizTopBar(
                     Image(
                         painter = painterResource(R.drawable.ic_app_logo),
                         contentDescription = null,
-                        modifier = Modifier.size(28.dp).clip(RoundedCornerShape(8.dp)),
+                        modifier = Modifier.size(40.dp).clip(RoundedCornerShape(10.dp)),
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(title, style = MaterialTheme.typography.titleLarge)

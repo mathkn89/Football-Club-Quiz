@@ -1,6 +1,7 @@
 package com.ruflo.footballquiz.domain.generator
 
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.model.QuizQuestion
 import java.util.UUID
@@ -10,7 +11,7 @@ class LeagueQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.LEAGUE
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         val options = buildOptions(target.league, distractorPool.map { it.league }) ?: return null
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
@@ -31,7 +32,7 @@ class CityQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.LOCATION
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (target.giveaway(target.city)) return null
         val options = buildOptions(target.city, distractorPool.map { it.city }) ?: return null
         return QuizQuestion(
@@ -50,7 +51,7 @@ class ManagerQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.MANAGER
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (!target.manager.isSingleNamedManager()) return null
         val candidates = distractorPool.map { it.manager }.filter { it.isSingleNamedManager() }
         val options = buildOptions(target.manager, candidates) ?: return null

@@ -29,6 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ruflo.footballquiz.core.AppContainer
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.ui.clubs.ClubDetailScreen
 import com.ruflo.footballquiz.ui.clubs.ClubDetailViewModel
@@ -47,7 +48,7 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 
 private const val ROUTE_PICKER = "picker"
-private const val ROUTE_QUIZ = "quiz/{roundSize}/{categories}/{league}"
+private const val ROUTE_QUIZ = "quiz/{roundSize}/{categories}/{league}/{difficulty}"
 private const val ROUTE_RESULTS = "results/{score}/{total}"
 private const val ROUTE_HISTORY = "history"
 private const val ROUTE_CLUBS = "clubs"
@@ -71,10 +72,10 @@ private val TAB_FOR_ROUTE = mapOf(
 
 private fun clubDetailRoute(clubId: String): String = "clubs/$clubId"
 
-private fun quizRoute(roundSize: Int, categories: Set<QuizCategory>, league: String?): String {
+private fun quizRoute(roundSize: Int, categories: Set<QuizCategory>, league: String?, difficulty: Difficulty): String {
     val categoriesArg = categories.joinToString(",") { it.name }
     val leagueArg = league?.let { URLEncoder.encode(it, "UTF-8") } ?: ARG_ALL_LEAGUES
-    return "quiz/$roundSize/$categoriesArg/$leagueArg"
+    return "quiz/$roundSize/$categoriesArg/$leagueArg/${difficulty.name}"
 }
 
 private fun resultsRoute(score: Int, total: Int): String = "results/$score/$total"
@@ -127,7 +128,9 @@ fun FootballQuizNavHost(
                     factory = ViewModelFactory { PickerViewModel(container.clubDao, container.customQuestionDao) },
                 )
                 PickerScreen(
-                    onStartQuiz = { roundSize, categories, league -> startQuiz(quizRoute(roundSize, categories, league)) },
+                    onStartQuiz = { roundSize, categories, league, difficulty ->
+                        startQuiz(quizRoute(roundSize, categories, league, difficulty))
+                    },
                     viewModel = pickerViewModel,
                 )
             }
@@ -162,7 +165,7 @@ fun FootballQuizNavHost(
                 ClubDetailScreen(
                     onBack = { navController.popBackStack() },
                     onPlayLeague = { league ->
-                        startQuiz(quizRoute(PickerUiState.DEFAULT_ROUND_SIZE, QuizCategory.entries.toSet(), league))
+                        startQuiz(quizRoute(PickerUiState.DEFAULT_ROUND_SIZE, QuizCategory.entries.toSet(), league, Difficulty.MEDIUM))
                     },
                     viewModel = clubDetailViewModel,
                 )
@@ -174,6 +177,7 @@ fun FootballQuizNavHost(
                     navArgument("roundSize") { type = NavType.IntType },
                     navArgument("categories") { type = NavType.StringType },
                     navArgument("league") { type = NavType.StringType },
+                    navArgument("difficulty") { type = NavType.StringType },
                 ),
             ) { backStackEntry ->
                 val roundSize = backStackEntry.arguments?.getInt("roundSize") ?: ARG_DEFAULT_ROUND_SIZE
@@ -185,10 +189,13 @@ fun FootballQuizNavHost(
                 val league = backStackEntry.arguments?.getString("league")
                     ?.takeIf { it != ARG_ALL_LEAGUES }
                     ?.let { URLDecoder.decode(it, "UTF-8") }
+                val difficulty = backStackEntry.arguments?.getString("difficulty")
+                    ?.let { runCatching { Difficulty.valueOf(it) }.getOrNull() }
+                    ?: Difficulty.MEDIUM
 
                 val quizViewModel: QuizViewModel = viewModel(
                     factory = ViewModelFactory {
-                        QuizViewModel(container.getQuizRoundUseCase, container.quizAttemptDao, roundSize, categories, league)
+                        QuizViewModel(container.getQuizRoundUseCase, container.quizAttemptDao, roundSize, categories, league, difficulty)
                     },
                 )
 

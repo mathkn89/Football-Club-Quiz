@@ -150,7 +150,7 @@ private fun EmptyContent(onBack: () -> Unit) {
 @Composable
 private fun QuizContent(state: QuizUiState.InProgress, onOptionSelected: (Int) -> Unit) {
     val question = state.currentQuestion
-    val timeFraction = state.timeRemainingSeconds / QUESTION_TIME_SECONDS.toFloat()
+    val timeFraction = state.timeFraction
     val timerColor by animateColorAsState(
         targetValue = when {
             timeFraction > 0.5f -> TimerSafe

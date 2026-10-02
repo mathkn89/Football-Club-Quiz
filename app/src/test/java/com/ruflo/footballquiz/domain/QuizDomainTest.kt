@@ -11,6 +11,7 @@ import com.ruflo.footballquiz.domain.generator.NicknameQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.OldestClubQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.StadiumClubQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.StadiumQuestionGenerator
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.Leagues
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -64,6 +65,16 @@ class QuizDomainTest {
             assertEquals(4, question.options.toSet().size)
             assertTrue(question.options.all { abs(it.toInt() - 1886) <= 12 })
             assertEquals("1886", question.options[question.correctOptionIndex])
+        }
+    }
+
+    @Test
+    fun `difficulty sets how close founded-year options are`() {
+        repeat(20) {
+            val hard = FoundedYearQuestionGenerator().generate(club("x", founded = 1886), pool, Difficulty.HARD)!!
+            assertTrue(hard.options.all { abs(it.toInt() - 1886) <= 4 })
+            val easy = FoundedYearQuestionGenerator().generate(club("x", founded = 1886), pool, Difficulty.EASY)!!
+            assertTrue(easy.options.filter { it != "1886" }.all { abs(it.toInt() - 1886) in 10..40 })
         }
     }
 

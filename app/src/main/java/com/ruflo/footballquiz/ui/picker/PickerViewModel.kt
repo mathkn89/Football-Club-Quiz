@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruflo.footballquiz.data.local.dao.ClubDao
 import com.ruflo.footballquiz.data.local.dao.CustomQuestionDao
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.Leagues
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,16 +51,24 @@ class PickerViewModel(
         _uiState.update { it.copy(roundSize = size) }
     }
 
-    /** No-op if [category] is the last visible one selected — a round needs at least one category. */
+    fun onDifficultySelected(difficulty: Difficulty) {
+        _uiState.update { it.copy(difficulty = difficulty) }
+    }
+
+    /** Can leave nothing selected — the screen then disables Play and says why. */
     fun onCategoryToggled(category: QuizCategory) {
         _uiState.update { state ->
-            val updated = when {
-                category !in state.selectedCategories -> state.selectedCategories + category
-                state.activeCategories.size > 1 -> state.selectedCategories - category
-                else -> state.selectedCategories
-            }
-            state.copy(selectedCategories = updated)
+            val selected = state.selectedCategories
+            state.copy(selectedCategories = if (category in selected) selected - category else selected + category)
         }
+    }
+
+    fun onSelectAllCategories() {
+        _uiState.update { it.copy(selectedCategories = QuizCategory.entries.toSet()) }
+    }
+
+    fun onClearCategories() {
+        _uiState.update { it.copy(selectedCategories = emptySet()) }
     }
 
     /** Null selects "all leagues". */

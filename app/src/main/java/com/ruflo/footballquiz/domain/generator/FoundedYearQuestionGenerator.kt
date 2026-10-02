@@ -1,6 +1,7 @@
 package com.ruflo.footballquiz.domain.generator
 
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.model.QuizQuestion
 import java.util.UUID
@@ -11,11 +12,18 @@ class FoundedYearQuestionGenerator(private val random: Random = Random.Default) 
 
     override val category = QuizCategory.FOUNDED_YEAR
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (target.foundedYear <= 0) return null
         val correct = target.foundedYear
-        val nearbyYears = ((correct - MAX_OFFSET)..(correct + MAX_OFFSET))
-            .filter { it != correct && it <= LATEST_YEAR }
+        val maxOffset = when (difficulty) {
+            Difficulty.EASY -> 40
+            Difficulty.MEDIUM -> 12
+            Difficulty.HARD -> 4
+        }
+        // On Easy, keep wrong years at least a decade away so the era alone gives it away.
+        val minOffset = if (difficulty == Difficulty.EASY) 10 else 1
+        val nearbyYears = ((correct - maxOffset)..(correct + maxOffset))
+            .filter { kotlin.math.abs(it - correct) >= minOffset && it <= LATEST_YEAR }
             .shuffled(random)
             .take(3)
         val options = (nearbyYears + correct).shuffled(random).map { it.toString() }
@@ -30,7 +38,6 @@ class FoundedYearQuestionGenerator(private val random: Random = Random.Default) 
     }
 
     private companion object {
-        const val MAX_OFFSET = 12
         const val LATEST_YEAR = 2026
     }
 }
@@ -40,11 +47,16 @@ class OldestClubQuestionGenerator : DynamicQuestionGenerator {
 
     override val category = QuizCategory.FOUNDED_YEAR
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>): QuizQuestion? {
+    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
         if (target.foundedYear <= 0) return null
-        // At least 3 years younger, so disputed founding dates can't flip the answer.
+        // A minimum gap so disputed founding dates can't flip the answer; wider on Easy.
+        val minGap = when (difficulty) {
+            Difficulty.EASY -> 25
+            Difficulty.MEDIUM -> 8
+            Difficulty.HARD -> 3
+        }
         val younger = distractorPool
-            .filter { it.id != target.id && it.foundedYear >= target.foundedYear + 3 }
+            .filter { it.id != target.id && it.foundedYear >= target.foundedYear + minGap }
             .distinctBy { it.shortName }
             .shuffled()
             .take(3)

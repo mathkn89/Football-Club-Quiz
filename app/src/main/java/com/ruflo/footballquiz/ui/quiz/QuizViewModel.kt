@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruflo.footballquiz.data.local.dao.QuizAttemptDao
 import com.ruflo.footballquiz.data.local.entity.QuizAttemptEntity
+import com.ruflo.footballquiz.domain.model.Difficulty
 import com.ruflo.footballquiz.domain.model.QuizCategory
 import com.ruflo.footballquiz.domain.usecase.GetQuizRoundUseCase
 import java.util.UUID
@@ -20,6 +21,7 @@ class QuizViewModel(
     private val roundSize: Int,
     private val categories: Set<QuizCategory>,
     private val league: String?,
+    private val difficulty: Difficulty,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<QuizUiState>(QuizUiState.Loading)
@@ -38,11 +40,17 @@ class QuizViewModel(
                 roundSize = roundSize,
                 categories = categories,
                 leagues = league?.let { setOf(it) },
+                difficulty = difficulty,
             )
             _uiState.value = if (questions.isEmpty()) {
                 QuizUiState.Empty
             } else {
-                QuizUiState.InProgress(questions = questions, currentIndex = 0, score = 0)
+                QuizUiState.InProgress(
+                    questions = questions,
+                    currentIndex = 0,
+                    score = 0,
+                    secondsPerQuestion = difficulty.secondsPerQuestion,
+                )
             }
             if (questions.isNotEmpty()) startTimer()
         }
@@ -73,7 +81,7 @@ class QuizViewModel(
             currentIndex = nextIndex,
             selectedOptionIndex = null,
             isAnswerRevealed = false,
-            timeRemainingSeconds = QUESTION_TIME_SECONDS,
+            timeRemainingSeconds = state.secondsPerQuestion,
         )
         startTimer()
     }
@@ -95,7 +103,8 @@ class QuizViewModel(
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            for (remaining in QUESTION_TIME_SECONDS downTo 0) {
+            val start = (_uiState.value as? QuizUiState.InProgress)?.secondsPerQuestion ?: return@launch
+            for (remaining in start downTo 0) {
                 val current = _uiState.value as? QuizUiState.InProgress ?: return@launch
                 _uiState.value = current.copy(timeRemainingSeconds = remaining)
                 if (remaining == 0) {
