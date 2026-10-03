@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruflo.footballquiz.ui.common.FootballQuizTopBar
+import com.ruflo.footballquiz.ui.common.KitShirt
 import com.ruflo.footballquiz.ui.common.QuizImage
 import com.ruflo.footballquiz.ui.theme.TimerCritical
 import com.ruflo.footballquiz.ui.theme.TimerSafe
@@ -183,7 +184,10 @@ private fun QuizContent(state: QuizUiState.InProgress, onOptionSelected: (Int) -
         }
 
         Spacer(Modifier.height(28.dp))
-        if (question.imageUrl != null) {
+        if (question.kit != null) {
+            KitShirt(question.kit, Modifier.height(170.dp).align(Alignment.CenterHorizontally))
+            Spacer(Modifier.height(20.dp))
+        } else if (question.imageUrl != null) {
             QuizImage(imageUrl = question.imageUrl, modifier = Modifier.fillMaxWidth().height(140.dp))
             Spacer(Modifier.height(20.dp))
         }

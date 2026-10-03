@@ -7,6 +7,7 @@ fun QuizCategory.displayName(): String = when (this) {
     QuizCategory.NICKNAME -> "Nicknames"
     QuizCategory.FOUNDED_YEAR -> "Founded"
     QuizCategory.BADGE -> "Badges"
+    QuizCategory.KIT -> "Kits"
     QuizCategory.LEAGUE -> "Leagues"
     QuizCategory.LOCATION -> "Cities"
     QuizCategory.MANAGER -> "Managers"

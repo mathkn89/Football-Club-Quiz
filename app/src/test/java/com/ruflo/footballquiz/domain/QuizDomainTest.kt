@@ -1,10 +1,10 @@
 package com.ruflo.footballquiz.domain
 
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
-import com.ruflo.footballquiz.domain.generator.BadgeQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.CapacityQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.CityQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.FoundedYearQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.KitQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.ManagerQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.NicknameClubQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.NicknameQuestionGenerator
@@ -12,6 +12,7 @@ import com.ruflo.footballquiz.domain.generator.OldestClubQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.StadiumClubQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.StadiumQuestionGenerator
 import com.ruflo.footballquiz.domain.model.Difficulty
+import com.ruflo.footballquiz.domain.model.Kit
 import com.ruflo.footballquiz.domain.model.Leagues
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -32,11 +33,12 @@ class QuizDomainTest {
         city: String = "Town $id",
         founded: Int = 1900,
         manager: String = "Manager $id",
-        badgeQuizUrl: String? = "https://example.com/$id.png",
+        kit: Array<String?>? = arrayOf("PLAIN", "RED", null, "WHITE"),
     ) = ClubEntity(
         id = id, name = "$shortName F.C.", shortName = shortName, nickname = nickname, stadiumName = stadium,
         stadiumCapacity = capacity, foundedYear = founded, city = city, badgeDrawableName = null,
-        badgeRemoteUrl = null, version = 1, manager = manager, league = "League One", badgeQuizUrl = badgeQuizUrl,
+        badgeRemoteUrl = null, version = 1, manager = manager, league = "League One",
+        kitPattern = kit?.get(0), kitPrimary = kit?.get(1), kitSecondary = kit?.get(2), kitShorts = kit?.get(3),
     )
 
     private val pool = listOf(club("a"), club("b"), club("c"), club("d"))
@@ -125,11 +127,35 @@ class QuizDomainTest {
     }
 
     @Test
-    fun `badge question only uses the redacted badge`() {
-        assertNull(BadgeQuestionGenerator().generate(club("x", badgeQuizUrl = null), pool))
-        val question = BadgeQuestionGenerator().generate(club("x"), pool)!!
-        assertEquals("https://example.com/x.png", question.imageUrl)
-        assertEquals("Club X", question.options[question.correctOptionIndex])
+    fun `kit question never offers another club sharing a shirt colour`() {
+        val arsenal = club("ars", kit = arrayOf("SLEEVES", "RED", "WHITE", "WHITE"))
+        val others = listOf(
+            club("liv", kit = arrayOf("PLAIN", "RED", null, "RED")),
+            club("spu", kit = arrayOf("PLAIN", "WHITE", null, "NAVY")),
+            club("sou", kit = arrayOf("STRIPES", "RED", "WHITE", "BLACK")),
+            club("che", kit = arrayOf("PLAIN", "BLUE", null, "BLUE")),
+            club("mil", kit = arrayOf("PLAIN", "NAVY", null, "WHITE")),
+            club("nor", kit = arrayOf("PLAIN", "YELLOW", null, "GREEN")),
+            club("mci", kit = arrayOf("PLAIN", "SKY", null, "WHITE")),
+            club("avl", kit = arrayOf("SLEEVES", "CLARET", "SKY", "SKY")),
+        )
+        repeat(30) {
+            val question = KitQuestionGenerator().generate(arsenal, others)!!
+            assertEquals("Club ARS", question.options[question.correctOptionIndex])
+            val wrong = question.options - "Club ARS"
+            assertFalse(wrong.any { it in setOf("Club LIV", "Club SPU", "Club SOU") })
+            // Navy counts as blue, so Chelsea and Millwall never both appear.
+            assertFalse("Club CHE" in wrong && "Club MIL" in wrong)
+        }
+        assertNull(KitQuestionGenerator().generate(club("x", kit = null), others))
+    }
+
+    @Test
+    fun `kit describes itself in words`() {
+        val kit = Kit.from("sleeves", "red", "white", "white")!!
+        assertEquals("Red with white sleeves", kit.shirtDescription)
+        assertEquals("Blue and white hoops", Kit.from("hoops", "blue", "white", "white")!!.shirtDescription)
+        assertNull(Kit.from("stripes", "red", null, "black"))
     }
 
     @Test

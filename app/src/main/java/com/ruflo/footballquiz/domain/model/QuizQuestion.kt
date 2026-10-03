@@ -8,4 +8,6 @@ data class QuizQuestion(
     val category: QuizCategory,
     val explanation: String? = null,
     val imageUrl: String? = null,
+    /** Kit to draw above the question (kit questions). */
+    val kit: Kit? = null,
 )

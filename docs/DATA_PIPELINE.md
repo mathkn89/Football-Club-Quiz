@@ -53,12 +53,16 @@ since it's the bootstrap payload — see below).
 | `stadiumCapacity`    | Int      |                                                                    |
 | `foundedYear`        | Int      |                                                                    |
 | `city`               | String   |                                                                    |
-| `badgeDrawableName`  | String?  | Name of a bundled `res/drawable/<name>.xml` an artist adds locally. Prefer this over `badgeRemoteUrl` when both exist — bundled assets don't need network. |
-| `badgeRemoteUrl`     | String?  | Fallback when no bundled drawable exists yet. Fetched via Coil (SVG-capable).       |
+| `badgeDrawableName`  | String?  | Unused — always `null`. Club crests are trademarked; the app draws its own shield and kit instead. |
+| `badgeRemoteUrl`     | String?  | Unused — always `null` from v6 on (earlier deltas pointed at third-party crest images). |
 | `version`            | Int      | Per-row revision counter — bump it whenever you touch this row. Informational only; the client always upserts regardless of this value, so it does not gate whether an update is applied. |
 | `manager`            | String   | Current head coach.                                              |
 | `league`             | String   | Division name, e.g. `Premier League` / `Championship`. Free text, not an enum — the client displays it as-is. |
-| `badgeQuizUrl`       | String?  | Same badge with its lettering painted out (`scripts/redact_badges.py` → `docs/data/badges/<id>.png`). Badge questions only use this; clubs without one get no badge question. Older app versions ignore the field. |
+| `badgeQuizUrl`       | String?  | Unused — always `null` from v6 on (badge questions were retired). |
+| `kitPattern`         | String   | Home shirt pattern: `plain`, `sleeves`, `stripes`, `hoops`, `halves` or `quarters`. |
+| `kitPrimary`         | String   | Main shirt colour — one of the colour names in `scripts/club_kits.py`. |
+| `kitSecondary`       | String?  | Second shirt colour (sleeves/stripes/…); `null` for `plain`. |
+| `kitShorts`          | String   | Shorts colour. The app draws the shield and kit from these four fields and uses them for "Whose home kit is this?" questions. |
 
 ### `CustomQuestionDeltaDto`
 
@@ -118,15 +122,12 @@ dataset, not for pushing routine updates. For an incremental update (new season,
 new curated question), hand-edit a new `deltas_v{N}.json` following the diff rules above instead
 of rerunning the script.
 
-## Redacted quiz badges
+## Kit colours
 
-Most crests spell out the club name, so badge questions use a copy with the lettering painted out.
-`scripts/redact_badges.py` downloads every `badgeRemoteUrl`, detects text with easyocr, inpaints
-it, and writes `docs/data/badges/<club-id>.png` plus side-by-side review sheets in
-`build/badge-review/`. Check every sheet before publishing; tune a club via `OVERRIDES` in the
-script and rerun just that club (`python3 scripts/redact_badges.py <club-id>`). When adding a
-club, generate its badge too and set `badgeQuizUrl` in the delta to
-`<DATA_SYNC_BASE_URL>badges/<club-id>.png`.
+Home kits live in `scripts/club_kits.py` (pattern + colour names per club), hand-curated from each
+club's traditional colours and cross-checked with the kit colours in Wikipedia infoboxes. Update
+an entry when a club changes its home colours and publish it in a new delta. When adding a club,
+add its kit there too — `fetch_initial_data.py` refuses to build a club without one.
 
 ## Bundled seed database
 

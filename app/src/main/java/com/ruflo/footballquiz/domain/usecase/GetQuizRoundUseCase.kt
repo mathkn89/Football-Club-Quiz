@@ -3,7 +3,6 @@ package com.ruflo.footballquiz.domain.usecase
 import com.ruflo.footballquiz.data.local.dao.ClubDao
 import com.ruflo.footballquiz.data.local.dao.CustomQuestionDao
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
-import com.ruflo.footballquiz.domain.generator.BadgeQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.CapacityQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.CityQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.LeagueQuestionGenerator
@@ -13,6 +12,7 @@ import com.ruflo.footballquiz.domain.generator.OldestClubQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.StadiumClubQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.DynamicQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.FoundedYearQuestionGenerator
+import com.ruflo.footballquiz.domain.generator.KitQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.NicknameQuestionGenerator
 import com.ruflo.footballquiz.domain.generator.StadiumQuestionGenerator
 import com.ruflo.footballquiz.domain.mapper.toDomain
@@ -36,7 +36,7 @@ class GetQuizRoundUseCase(
         NicknameClubQuestionGenerator(),
         FoundedYearQuestionGenerator(),
         OldestClubQuestionGenerator(),
-        BadgeQuestionGenerator(),
+        KitQuestionGenerator(),
         LeagueQuestionGenerator(),
         CityQuestionGenerator(),
         ManagerQuestionGenerator(),

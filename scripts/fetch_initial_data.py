@@ -3,8 +3,10 @@
 Builds the initial clubs.db seed / deltas_v1.json for the Football Club Quiz app.
 
 Sources:
-  - Wikidata (SPARQL): official name, nickname, manager, stadium, capacity, founded year,
-    city, and crest image (via Wikimedia Commons). This is the primary source.
+  - Wikidata (SPARQL): official name, nickname, manager, stadium, capacity, founded year
+    and city. This is the primary source.
+  - scripts/club_kits.py: hand-curated home kit colours (the app draws kits and shields from
+    these; club crests are never used, as they're trademarked).
   - TheSportsDB (REST, free tier): fallback for stadium/capacity/founded-year only — its
     free tier no longer returns badge or manager fields (Patreon-gated since 2024), and its
     `lookup_all_teams` league endpoint proved unreliable, so it is used defensively, per
@@ -37,10 +39,11 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from club_kits import KITS
+
 WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
 WIKIDATA_SEARCH_ENDPOINT = "https://www.wikidata.org/w/api.php"
 THESPORTSDB_SEARCH = "https://www.thesportsdb.com/api/v1/json/3/searchteams.php"
-COMMONS_FILEPATH = "https://commons.wikimedia.org/wiki/Special:FilePath/"
 USER_AGENT = "FootballClubQuizDataPipeline/1.0 (contact: mathkn@gmail.com)"
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "data"
@@ -190,13 +193,12 @@ ROSTERS: dict[str, list[str]] = {
 }
 
 SPARQL_DETAILS_QUERY_TEMPLATE = """
-SELECT ?club ?clubLabel ?venueLabel ?cityLabel ?logo
+SELECT ?club ?clubLabel ?venueLabel ?cityLabel
        (SAMPLE(?capacity) AS ?capacitySample)
        (SAMPLE(?founded) AS ?foundedSample)
        (GROUP_CONCAT(DISTINCT ?nickname; separator="|") AS ?nicknames)
 WHERE {{
   VALUES ?club {{ {qids} }}
-  OPTIONAL {{ ?club wdt:P154 ?logo . }}
   OPTIONAL {{ ?club wdt:P1449 ?nickname . FILTER(LANG(?nickname) = "en") }}
   OPTIONAL {{
     ?club wdt:P115 ?venue .
@@ -206,7 +208,7 @@ WHERE {{
   OPTIONAL {{ ?club wdt:P159 ?city . }}
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
 }}
-GROUP BY ?club ?clubLabel ?venueLabel ?cityLabel ?logo
+GROUP BY ?club ?clubLabel ?venueLabel ?cityLabel
 """
 
 # P286 (head coach) accumulates every past manager with no "preferred rank" set on most clubs,
@@ -275,13 +277,6 @@ def parse_year(iso_date: str | None) -> int:
     if not iso_date:
         return 0
     return int(iso_date[:4])
-
-
-def commons_filename_to_url(file_uri: str | None) -> str | None:
-    if not file_uri:
-        return None
-    filename = urllib.parse.unquote(file_uri.rsplit("/", 1)[-1])
-    return COMMONS_FILEPATH + urllib.parse.quote(filename)
 
 
 def fetch_sportsdb_team(name: str) -> dict:
@@ -359,13 +354,10 @@ def build_club(official_name: str, wikidata_row: dict | None, manager: str, leag
 
     city = value_or_none(row, "cityLabel") or sportsdb_city(sportsdb_team)
 
-    # Club crests are trademarked, so Wikimedia Commons (the only free-licensed image source
-    # queried here) hosts almost none of them — badgeRemoteUrl is a legitimate best-effort,
-    # expected to stay null for most clubs. badgeDrawableName instead names the bundled vector
-    # drawable an artist is expected to add at res/drawable/<name>.xml (see App Architecture spec).
+    # Club crests are trademarked, so the app never shows them: it draws its own shield and kit
+    # from the plain colours in club_kits.py instead.
     club_id = slugify(official_name)
-    badge_remote_url = commons_filename_to_url(value_or_none(row, "logo"))
-    badge_drawable_name = f"badge_{club_id.replace('-', '_')}"
+    pattern, primary, secondary, shorts = KITS[club_id]
 
     return {
         "id": club_id,
@@ -376,11 +368,15 @@ def build_club(official_name: str, wikidata_row: dict | None, manager: str, leag
         "stadiumCapacity": stadium_capacity,
         "foundedYear": founded_year,
         "city": city,
-        "badgeDrawableName": badge_drawable_name,
-        "badgeRemoteUrl": badge_remote_url,
+        "badgeDrawableName": None,
+        "badgeRemoteUrl": None,
         "version": 1,
         "manager": manager or "Unknown",
         "league": league,
+        "kitPattern": pattern,
+        "kitPrimary": primary,
+        "kitSecondary": secondary,
+        "kitShorts": shorts,
     }
 
 

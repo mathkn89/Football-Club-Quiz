@@ -7,15 +7,17 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.ruflo.footballquiz.BuildConfig
 import com.ruflo.footballquiz.data.local.converter.Converters
 import com.ruflo.footballquiz.data.local.dao.ClubDao
 import com.ruflo.footballquiz.data.local.dao.CustomQuestionDao
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
 import com.ruflo.footballquiz.data.local.entity.CustomQuestionEntity
+import kotlinx.coroutines.runBlocking
 
 @Database(
     entities = [ClubEntity::class, CustomQuestionEntity::class],
-    version = 3,
+    version = 4,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -35,6 +37,32 @@ abstract class QuizDatabase : RoomDatabase() {
             }
         }
 
+        /** Adds the home-kit columns; existing rows get them on the next delta sync. */
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                listOf("kitPattern", "kitPrimary", "kitSecondary", "kitShorts").forEach { column ->
+                    db.execSQL("ALTER TABLE clubs ADD COLUMN $column TEXT")
+                }
+            }
+        }
+
+        /**
+         * Runs only when Room copies the bundled clubs.db (first launch, or after a destructive
+         * migration): the copy already contains every delta up to [BuildConfig.SEED_DATA_VERSION],
+         * so sync resumes after it instead of replaying older deltas over newer seed data.
+         * Upgraded installs keep their own last-synced version and still fetch the newer deltas.
+         */
+        private class SeedVersionCallback(private val context: Context) : RoomDatabase.PrepackagedDatabaseCallback() {
+            override fun onOpenPrepackagedDatabase(db: SupportSQLiteDatabase) {
+                runBlocking {
+                    val preferences = SyncPreferences(context)
+                    if (preferences.getLastSyncedVersion() < BuildConfig.SEED_DATA_VERSION) {
+                        preferences.setLastSyncedVersion(BuildConfig.SEED_DATA_VERSION)
+                    }
+                }
+            }
+        }
+
         @Volatile
         private var instance: QuizDatabase? = null
 
@@ -49,8 +77,8 @@ abstract class QuizDatabase : RoomDatabase() {
                 QuizDatabase::class.java,
                 DATABASE_NAME,
             )
-                .createFromAsset(ASSET_DATABASE_PATH)
-                .addMigrations(MIGRATION_2_3)
+                .createFromAsset(ASSET_DATABASE_PATH, SeedVersionCallback(context.applicationContext))
+                .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                 .fallbackToDestructiveMigration()
                 .build()
     }

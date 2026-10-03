@@ -27,12 +27,15 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "docs" / "data"
 SCHEMA_DIR = ROOT / "app" / "schemas" / "com.ruflo.footballquiz.data.local.QuizDatabase"
 OUTPUT_PATH = ROOT / "app" / "src" / "main" / "assets" / "database" / "clubs.db"
+# Read by app/build.gradle.kts into BuildConfig.SEED_DATA_VERSION.
+SEED_VERSION_PATH = ROOT / "app" / "seed_data_version.txt"
 
-DATABASE_VERSION = 3
+DATABASE_VERSION = 4
 
 CLUB_COLUMNS = [
     "id", "name", "shortName", "nickname", "stadiumName", "stadiumCapacity",
     "foundedYear", "city", "badgeDrawableName", "badgeRemoteUrl", "version", "manager", "league", "badgeQuizUrl",
+    "kitPattern", "kitPrimary", "kitSecondary", "kitShorts",
 ]
 
 QUESTION_COLUMNS = [
@@ -54,6 +57,7 @@ def load_schema() -> dict:
 def delta_files() -> list[Path]:
     latest = json.loads((DATA_DIR / "version.json").read_text())["latestVersion"]
     files = [DATA_DIR / f"deltas_v{n}.json" for n in range(1, latest + 1)]
+    SEED_VERSION_PATH.write_text(f"{latest}\n")
     missing = [f.name for f in files if not f.exists()]
     if missing:
         raise SystemExit(f"Missing delta files: {missing}")

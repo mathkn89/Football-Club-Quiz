@@ -20,6 +20,10 @@ fun ClubDeltaDto.toEntity(): ClubEntity = ClubEntity(
     manager = manager,
     league = league,
     badgeQuizUrl = badgeQuizUrl,
+    kitPattern = kitPattern,
+    kitPrimary = kitPrimary,
+    kitSecondary = kitSecondary,
+    kitShorts = kitShorts,
 )
 
 fun CustomQuestionDeltaDto.toEntity(): CustomQuestionEntity = CustomQuestionEntity(

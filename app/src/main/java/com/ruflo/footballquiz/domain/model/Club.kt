@@ -11,5 +11,6 @@ data class Club(
     val city: String,
     val manager: String,
     val league: String,
-    val badgeImageRef: String?,
+    /** Home kit; null for rows synced before kit colours existed. */
+    val kit: Kit?,
 )

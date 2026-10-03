@@ -1,8 +1,8 @@
 package com.ruflo.footballquiz.domain.mapper
 
 import com.ruflo.footballquiz.data.local.entity.ClubEntity
-import com.ruflo.footballquiz.domain.generator.BadgeQuestionGenerator
 import com.ruflo.footballquiz.domain.model.Club
+import com.ruflo.footballquiz.domain.model.Kit
 
 fun ClubEntity.toDomain(): Club = Club(
     id = id,
@@ -15,7 +15,7 @@ fun ClubEntity.toDomain(): Club = Club(
     city = city,
     manager = manager,
     league = league,
-    // No res/drawable/badge_*.xml files are bundled yet, so a badgeDrawableName never resolves —
-    // prefer the network URL until real vector art ships.
-    badgeImageRef = badgeRemoteUrl ?: badgeDrawableName?.let { "${BadgeQuestionGenerator.DRAWABLE_SCHEME}$it" },
+    kit = kit(),
 )
+
+fun ClubEntity.kit(): Kit? = Kit.from(kitPattern, kitPrimary, kitSecondary, kitShorts)

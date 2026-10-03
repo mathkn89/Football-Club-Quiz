@@ -18,4 +18,8 @@ data class ClubDeltaDto(
     val manager: String,
     val league: String,
     val badgeQuizUrl: String? = null,
+    val kitPattern: String? = null,
+    val kitPrimary: String? = null,
+    val kitSecondary: String? = null,
+    val kitShorts: String? = null,
 )

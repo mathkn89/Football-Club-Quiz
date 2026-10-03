@@ -17,6 +17,10 @@ android {
         versionName = "1.0"
 
         buildConfigField("String", "DATA_SYNC_BASE_URL", "\"https://mathkn89.github.io/Football-Club-Quiz/data/\"")
+        // Delta version already baked into the bundled clubs.db (written by scripts/build_clubs_db.py),
+        // so a fresh install syncs only newer deltas instead of replaying older ones over the seed.
+        val seedDataVersion = file("seed_data_version.txt").readText().trim().toInt()
+        buildConfigField("int", "SEED_DATA_VERSION", seedDataVersion.toString())
     }
 
     buildFeatures {

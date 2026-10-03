@@ -32,7 +32,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruflo.footballquiz.domain.model.Club
+import com.ruflo.footballquiz.ui.common.ClubShield
 import com.ruflo.footballquiz.ui.common.FootballQuizTopBar
+import com.ruflo.footballquiz.ui.common.KitShirt
 import java.text.NumberFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +81,7 @@ private fun ClubDetailContent(club: Club, onPlayLeague: () -> Unit, modifier: Mo
             .padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ClubBadge(club.badgeImageRef, Modifier.size(112.dp))
+        ClubShield(club.kit, Modifier.height(96.dp))
         Spacer(Modifier.height(16.dp))
         Text(club.name, style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
         if (club.nickname.isNotBlank()) {
@@ -99,7 +101,23 @@ private fun ClubDetailContent(club: Club, onPlayLeague: () -> Unit, modifier: Mo
             }
             if (club.foundedYear > 0) DetailRow("Founded", "${club.foundedYear}")
             DetailRow("City", club.city)
-            DetailRow("Manager", club.manager, showDivider = false)
+            DetailRow("Manager", club.manager, showDivider = club.kit != null)
+            club.kit?.let { kit ->
+                DetailRow("Shirt", kit.shirtDescription)
+                DetailRow("Shorts", kit.shorts.label.replaceFirstChar { it.uppercase() }, showDivider = false)
+            }
+        }
+
+        club.kit?.let { kit ->
+            Spacer(Modifier.height(24.dp))
+            Text(
+                "Home kit",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Spacer(Modifier.height(12.dp))
+            KitShirt(kit, Modifier.height(160.dp))
         }
 
         Spacer(Modifier.height(28.dp))

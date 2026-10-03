@@ -21,4 +21,9 @@ data class ClubEntity(
     val league: String,
     /** Badge with its lettering painted out, for badge questions. Null until one is published. */
     val badgeQuizUrl: String? = null,
+    /** Home kit — see [com.ruflo.footballquiz.domain.model.Kit]. Null until synced. */
+    val kitPattern: String? = null,
+    val kitPrimary: String? = null,
+    val kitSecondary: String? = null,
+    val kitShorts: String? = null,
 )

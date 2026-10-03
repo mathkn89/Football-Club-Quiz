@@ -3,7 +3,6 @@ package com.ruflo.footballquiz.ui.clubs
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -43,7 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruflo.footballquiz.domain.model.Club
 import com.ruflo.footballquiz.ui.common.FootballQuizTopBar
 import com.ruflo.footballquiz.ui.common.LeagueFilterRow
-import com.ruflo.footballquiz.ui.common.QuizImage
+import com.ruflo.footballquiz.ui.common.ClubShield
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -136,15 +135,8 @@ private fun ClubRow(club: Club, onClick: () -> Unit) {
                 overflow = TextOverflow.Ellipsis,
             )
         },
-        leadingContent = { ClubBadge(club.badgeImageRef, Modifier.size(40.dp)) },
+        leadingContent = { ClubShield(club.kit, Modifier.height(40.dp)) },
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
         modifier = Modifier.clickable(onClick = onClick).padding(horizontal = 4.dp),
     )
 }
-
-/** Fixed-size slot so rows don't shift while badges load (or when a club has none). */
-@Composable
-fun ClubBadge(imageRef: String?, modifier: Modifier = Modifier) {
-    Box(modifier) { QuizImage(imageUrl = imageRef, modifier = Modifier.fillMaxSize()) }
-}
-
