@@ -10,6 +10,7 @@ import com.makn.footballquiz.domain.text.QuizText
 import com.makn.footballquiz.domain.text.kitDescription
 import com.makn.footballquiz.domain.text.shortsColour
 import java.util.UUID
+import kotlin.random.Random
 
 /**
  * "Whose home kit is this?" with the kit drawn from plain colours. No other option shares any
@@ -20,18 +21,23 @@ class KitQuestionGenerator(private val strings: QuizStrings) : DynamicQuestionGe
 
     override val category = QuizCategory.KIT
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
         val kit = target.kit() ?: return null
         val distractors = distractorPool
             .filter { it.id != target.id }
             .mapNotNull { club -> club.kit()?.let { club to it } }
             .filter { (_, other) -> other.shirtFamilies.none { it in kit.shirtFamilies } }
-            .shuffled()
+            .shuffled(random)
             .distinctBy { (_, other) -> other.shirtFamilies }
             .take(3)
             .map { (club, _) -> club.shortName }
         if (distractors.size < 3) return null
-        val options = (distractors + target.shortName).shuffled()
+        val options = (distractors + target.shortName).shuffled(random)
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
             prompt = strings.text(QuizText.KIT_PROMPT),

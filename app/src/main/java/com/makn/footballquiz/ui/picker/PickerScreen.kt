@@ -49,6 +49,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.makn.footballquiz.R
+import androidx.compose.ui.text.style.TextAlign
+import com.makn.footballquiz.domain.model.DailyChallenge
+import com.makn.footballquiz.domain.model.QuizMode
 import com.makn.footballquiz.domain.model.Difficulty
 import com.makn.footballquiz.domain.model.QuizCategory
 import com.makn.footballquiz.ui.common.FootballQuizTopBar
@@ -61,7 +64,7 @@ private val SCREEN_PADDING = 20.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickerScreen(
-    onStartQuiz: (roundSize: Int, categories: Set<QuizCategory>, league: String?, difficulty: Difficulty) -> Unit,
+    onStartQuiz: (mode: QuizMode, roundSize: Int, categories: Set<QuizCategory>, league: String?, difficulty: Difficulty) -> Unit,
     viewModel: PickerViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -81,7 +84,7 @@ fun PickerScreen(
                 }
                 Button(
                     onClick = {
-                        onStartQuiz(uiState.roundSize, uiState.activeCategories, uiState.selectedLeague, uiState.difficulty)
+                        onStartQuiz(uiState.mode, uiState.roundSize, uiState.activeCategories, uiState.selectedLeague, uiState.difficulty)
                     },
                     enabled = uiState.canStart,
                     modifier = Modifier.fillMaxWidth().height(56.dp),
@@ -113,7 +116,26 @@ fun PickerScreen(
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Spacer(Modifier.height(28.dp))
+                uiState.daily?.let { daily ->
+                    Spacer(Modifier.height(20.dp))
+                    DailyCard(
+                        daily = daily,
+                        enabled = uiState.clubCount > 0,
+                        onPlay = {
+                            onStartQuiz(QuizMode.DAILY, DailyChallenge.ROUND_SIZE, QuizCategory.entries.toSet(), null, Difficulty.MEDIUM)
+                        },
+                    )
+                }
+                Spacer(Modifier.height(24.dp))
+                SectionLabel(stringResource(R.string.section_mode))
+                ModeSelector(uiState.mode, viewModel::onModeSelected)
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    modeHint(uiState.mode, uiState.survivalBest),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(20.dp))
                 SectionLabel(stringResource(R.string.section_difficulty))
                 DifficultySelector(uiState.difficulty, viewModel::onDifficultySelected)
                 Spacer(Modifier.height(6.dp))
@@ -163,6 +185,76 @@ private fun SectionLabel(text: String, modifier: Modifier = Modifier) {
     )
 }
 
+/** Today's challenge: play it, or once done, the score and streak. */
+@Composable
+private fun DailyCard(daily: DailyStatus, enabled: Boolean, onPlay: () -> Unit) {
+    Surface(
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.daily_title, daily.number), style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    if (daily.playedToday) {
+                        stringResource(R.string.daily_done, daily.score, daily.total)
+                    } else {
+                        stringResource(R.string.daily_subtitle)
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                if (daily.streak > 0) {
+                    Text("🔥 " + stringResource(R.string.daily_streak, daily.streak), style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+            if (daily.playedToday) {
+                Text(stringResource(R.string.daily_come_back), style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.End,
+                    modifier = Modifier.width(110.dp))
+            } else {
+                Button(onClick = onPlay, enabled = enabled, shape = RoundedCornerShape(14.dp)) {
+                    Text(stringResource(R.string.daily_play))
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ModeSelector(selected: QuizMode, onSelected: (QuizMode) -> Unit) {
+    val modes = listOf(QuizMode.STANDARD, QuizMode.SURVIVAL, QuizMode.DUEL)
+    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+        modes.forEachIndexed { index, mode ->
+            SegmentedButton(
+                selected = selected == mode,
+                onClick = { onSelected(mode) },
+                shape = SegmentedButtonDefaults.itemShape(index = index, count = modes.size),
+            ) {
+                Text(
+                    stringResource(
+                        when (mode) {
+                            QuizMode.SURVIVAL -> R.string.mode_survival
+                            QuizMode.DUEL -> R.string.mode_duel
+                            else -> R.string.mode_classic
+                        },
+                    ),
+                    maxLines = 1,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun modeHint(mode: QuizMode, survivalBest: Int): String = when (mode) {
+    QuizMode.SURVIVAL -> stringResource(R.string.mode_survival_hint, survivalBest)
+    QuizMode.DUEL -> stringResource(R.string.mode_duel_hint)
+    else -> stringResource(R.string.mode_classic_hint)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DifficultySelector(selected: Difficulty, onSelected: (Difficulty) -> Unit) {
@@ -208,6 +300,7 @@ private fun optionsSummary(state: PickerUiState): String {
             .joinToString { context.getString(it.nameRes()) }
         else -> stringResource(R.string.topics_count, state.activeCategories.size, state.availableCategories.size)
     }
+    if (state.mode == QuizMode.SURVIVAL) return topics
     return stringResource(R.string.options_summary, state.roundSize, topics)
 }
 
@@ -244,6 +337,16 @@ private fun OptionsContent(
     onClear: () -> Unit,
 ) {
     Column(Modifier.padding(horizontal = SCREEN_PADDING)) {
+        // Survival has no fixed length.
+        if (uiState.mode != QuizMode.SURVIVAL) RoundSizeSelector(uiState, onRoundSizeSelected)
+        TopicsSection(uiState, onCategoryToggled, onSelectAll, onClear)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RoundSizeSelector(uiState: PickerUiState, onRoundSizeSelected: (Int) -> Unit) {
+    Column {
         SectionLabel(stringResource(R.string.section_questions))
         SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
             val options = PickerUiState.ROUND_SIZE_OPTIONS
@@ -259,6 +362,17 @@ private fun OptionsContent(
         }
 
         Spacer(Modifier.height(20.dp))
+    }
+}
+
+@Composable
+private fun TopicsSection(
+    uiState: PickerUiState,
+    onCategoryToggled: (QuizCategory) -> Unit,
+    onSelectAll: () -> Unit,
+    onClear: () -> Unit,
+) {
+    Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 stringResource(R.string.section_topics),

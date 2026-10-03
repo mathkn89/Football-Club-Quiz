@@ -21,6 +21,7 @@ import com.makn.footballquiz.domain.model.QuizCategory
 import com.makn.footballquiz.domain.model.QuizQuestion
 import com.makn.footballquiz.domain.text.QuizStrings
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 /**
  * Builds a quiz round by interleaving dynamically-generated questions (drawn from [ClubEntity]
@@ -39,6 +40,9 @@ class GetQuizRoundUseCase(
         leagues: Set<String>? = null,
         difficulty: Difficulty = Difficulty.MEDIUM,
         strings: QuizStrings,
+        random: Random = Random.Default,
+        /** Same data + same [random] seed → the same round on every device (daily challenge). */
+        deterministic: Boolean = false,
     ): List<QuizQuestion> {
         // Curated questions aren't tied to a league, so a single-league round leaves them out.
         val customCount = if (leagues.isNullOrEmpty()) {
@@ -49,16 +53,20 @@ class GetQuizRoundUseCase(
         val customQuestions = if (customCount == 0) {
             emptyList()
         } else {
-            customQuestionDao.getRandom(customCount * CUSTOM_OVERFETCH_FACTOR)
-                .map { it.toDomain(strings.languageCode) }
+            val pool = if (deterministic) {
+                customQuestionDao.getAllOrdered().shuffled(random).take(customCount * CUSTOM_OVERFETCH_FACTOR)
+            } else {
+                customQuestionDao.getRandom(customCount * CUSTOM_OVERFETCH_FACTOR)
+            }
+            pool.map { it.toDomain(strings.languageCode, random) }
                 .filter { it.category in categories }
                 .take(customCount)
         }
 
         val dynamicCount = roundSize - customQuestions.size
-        val dynamicQuestions = buildDynamicQuestions(dynamicCount, categories, leagues, difficulty, generatorsFor(strings))
+        val dynamicQuestions = buildDynamicQuestions(dynamicCount, categories, leagues, difficulty, generatorsFor(strings), random, deterministic)
 
-        return (customQuestions + dynamicQuestions).shuffled()
+        return (customQuestions + dynamicQuestions).shuffled(random)
     }
 
     /**
@@ -71,6 +79,8 @@ class GetQuizRoundUseCase(
         leagues: Set<String>?,
         difficulty: Difficulty,
         generators: List<DynamicQuestionGenerator>,
+        random: Random,
+        deterministic: Boolean,
     ): List<QuizQuestion> {
         if (count <= 0) return emptyList()
 
@@ -80,7 +90,12 @@ class GetQuizRoundUseCase(
         // A chosen league always wins; otherwise Easy sticks to the best-known clubs.
         val poolLeagues = leagues?.takeIf { it.isNotEmpty() }
             ?: EASY_LEAGUES.takeIf { difficulty == Difficulty.EASY }
-        val pool = if (poolLeagues == null) {
+        val pool = if (deterministic) {
+            clubDao.getAllOrdered()
+                .filter { poolLeagues == null || it.league in poolLeagues }
+                .shuffled(random)
+                .take(DYNAMIC_POOL_SIZE)
+        } else if (poolLeagues == null) {
             clubDao.getRandomClubs(excludeIds = emptyList(), limit = DYNAMIC_POOL_SIZE)
         } else {
             clubDao.getRandomClubsInLeagues(poolLeagues, limit = DYNAMIC_POOL_SIZE)
@@ -89,13 +104,13 @@ class GetQuizRoundUseCase(
 
         val usedClubIds = mutableSetOf<String>()
         val questions = mutableListOf<QuizQuestion>()
-        val categoryCycle = generatorsByCategory.keys.shuffled()
+        val categoryCycle = generatorsByCategory.keys.toList().shuffled(random)
         var madeProgress = true
         while (questions.size < count && madeProgress) {
             madeProgress = false
             for (category in categoryCycle) {
                 if (questions.size >= count) break
-                val question = generateOne(generatorsByCategory.getValue(category), pool, usedClubIds, difficulty) ?: continue
+                val question = generateOne(generatorsByCategory.getValue(category), pool, usedClubIds, difficulty, random) ?: continue
                 questions += question
                 madeProgress = true
             }
@@ -108,16 +123,17 @@ class GetQuizRoundUseCase(
         pool: List<ClubEntity>,
         usedClubIds: MutableSet<String>,
         difficulty: Difficulty,
+        random: Random,
     ): QuizQuestion? {
-        for (target in pool.shuffled()) {
+        for (target in pool.shuffled(random)) {
             if (target.id in usedClubIds) continue
             val others = pool.filter { it.id != target.id }
             // Hard: wrong answers from the same league are much harder to rule out.
             val sameLeague = others.filter { it.league == target.league }
             val distractors = if (difficulty == Difficulty.HARD && sameLeague.size >= MIN_SAME_LEAGUE) sameLeague else others
-            for (generator in generators.shuffled()) {
-                val question = generator.generate(target, distractors, difficulty)
-                    ?: generator.takeIf { distractors !== others }?.generate(target, others, difficulty)
+            for (generator in generators.shuffled(random)) {
+                val question = generator.generate(target, distractors, difficulty, random)
+                    ?: generator.takeIf { distractors !== others }?.generate(target, others, difficulty, random)
                     ?: continue
                 usedClubIds += target.id
                 return question

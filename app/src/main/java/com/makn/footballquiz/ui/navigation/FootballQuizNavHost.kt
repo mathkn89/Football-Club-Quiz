@@ -15,9 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,6 +31,7 @@ import com.makn.footballquiz.R
 import com.makn.footballquiz.core.AppContainer
 import com.makn.footballquiz.domain.model.Difficulty
 import com.makn.footballquiz.domain.model.QuizCategory
+import com.makn.footballquiz.domain.model.QuizMode
 import com.makn.footballquiz.ui.clubs.ClubDetailScreen
 import com.makn.footballquiz.ui.clubs.ClubDetailViewModel
 import com.makn.footballquiz.ui.clubs.ClubListScreen
@@ -47,13 +45,11 @@ import com.makn.footballquiz.ui.picker.PickerUiState
 import com.makn.footballquiz.ui.picker.PickerViewModel
 import com.makn.footballquiz.ui.quiz.QuizScreen
 import com.makn.footballquiz.ui.quiz.QuizViewModel
-import com.makn.footballquiz.ui.results.ResultsScreen
 import java.net.URLDecoder
 import java.net.URLEncoder
 
 private const val ROUTE_PICKER = "picker"
-private const val ROUTE_QUIZ = "quiz/{roundSize}/{categories}/{league}/{difficulty}"
-private const val ROUTE_RESULTS = "results/{score}/{total}"
+private const val ROUTE_QUIZ = "quiz/{mode}/{roundSize}/{categories}/{league}/{difficulty}"
 private const val ROUTE_HISTORY = "history"
 private const val ROUTE_CLUBS = "clubs"
 private const val ROUTE_CLUB_DETAIL = "clubs/{clubId}"
@@ -76,13 +72,17 @@ private val TAB_FOR_ROUTE = mapOf(
 
 private fun clubDetailRoute(clubId: String): String = "clubs/$clubId"
 
-private fun quizRoute(roundSize: Int, categories: Set<QuizCategory>, league: String?, difficulty: Difficulty): String {
+private fun quizRoute(
+    mode: QuizMode,
+    roundSize: Int,
+    categories: Set<QuizCategory>,
+    league: String?,
+    difficulty: Difficulty,
+): String {
     val categoriesArg = categories.joinToString(",") { it.name }
     val leagueArg = league?.let { URLEncoder.encode(it, "UTF-8") } ?: ARG_ALL_LEAGUES
-    return "quiz/$roundSize/$categoriesArg/$leagueArg/${difficulty.name}"
+    return "quiz/${mode.name}/$roundSize/$categoriesArg/$leagueArg/${difficulty.name}"
 }
-
-private fun resultsRoute(score: Int, total: Int): String = "results/$score/$total"
 
 @Composable
 fun FootballQuizNavHost(
@@ -91,13 +91,7 @@ fun FootballQuizNavHost(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentTab = TAB_FOR_ROUTE[backStackEntry?.destination?.route]
-    // Remembered so "Play again" on the results screen can replay the exact same round setup.
-    var lastQuizRoute by rememberSaveable { mutableStateOf<String?>(null) }
-
-    fun startQuiz(route: String) {
-        lastQuizRoute = route
-        navController.navigate(route)
-    }
+    fun startQuiz(route: String) = navController.navigate(route)
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
@@ -129,11 +123,13 @@ fun FootballQuizNavHost(
         ) {
             composable(ROUTE_PICKER) {
                 val pickerViewModel: PickerViewModel = viewModel(
-                    factory = ViewModelFactory { PickerViewModel(container.clubDao, container.customQuestionDao) },
+                    factory = ViewModelFactory {
+                        PickerViewModel(container.clubDao, container.customQuestionDao, container.playProgressPreferences)
+                    },
                 )
                 PickerScreen(
-                    onStartQuiz = { roundSize, categories, league, difficulty ->
-                        startQuiz(quizRoute(roundSize, categories, league, difficulty))
+                    onStartQuiz = { mode, roundSize, categories, league, difficulty ->
+                        startQuiz(quizRoute(mode, roundSize, categories, league, difficulty))
                     },
                     viewModel = pickerViewModel,
                 )
@@ -142,10 +138,15 @@ fun FootballQuizNavHost(
             composable(ROUTE_HISTORY) {
                 val historyViewModel: HistoryViewModel = viewModel(
                     factory = ViewModelFactory {
-                        HistoryViewModel(container.quizAttemptDao, container.userProfilePreferences)
+                        HistoryViewModel(container.quizAttemptDao, container.userProfilePreferences, container.playProgressPreferences)
                     },
                 )
-                HistoryScreen(viewModel = historyViewModel)
+                HistoryScreen(
+                    onPractise = { categories ->
+                        startQuiz(quizRoute(QuizMode.STANDARD, PickerUiState.DEFAULT_ROUND_SIZE, categories, null, Difficulty.MEDIUM))
+                    },
+                    viewModel = historyViewModel,
+                )
             }
 
             composable(ROUTE_CLUBS) {
@@ -169,7 +170,7 @@ fun FootballQuizNavHost(
                 ClubDetailScreen(
                     onBack = { navController.popBackStack() },
                     onPlayLeague = { league ->
-                        startQuiz(quizRoute(PickerUiState.DEFAULT_ROUND_SIZE, QuizCategory.entries.toSet(), league, Difficulty.MEDIUM))
+                        startQuiz(quizRoute(QuizMode.STANDARD, PickerUiState.DEFAULT_ROUND_SIZE, QuizCategory.entries.toSet(), league, Difficulty.MEDIUM))
                     },
                     viewModel = clubDetailViewModel,
                 )
@@ -178,12 +179,16 @@ fun FootballQuizNavHost(
             composable(
                 route = ROUTE_QUIZ,
                 arguments = listOf(
+                    navArgument("mode") { type = NavType.StringType },
                     navArgument("roundSize") { type = NavType.IntType },
                     navArgument("categories") { type = NavType.StringType },
                     navArgument("league") { type = NavType.StringType },
                     navArgument("difficulty") { type = NavType.StringType },
                 ),
             ) { backStackEntry ->
+                val mode = backStackEntry.arguments?.getString("mode")
+                    ?.let { runCatching { QuizMode.valueOf(it) }.getOrNull() }
+                    ?: QuizMode.STANDARD
                 val roundSize = backStackEntry.arguments?.getInt("roundSize") ?: ARG_DEFAULT_ROUND_SIZE
                 val categories = backStackEntry.arguments?.getString("categories").orEmpty()
                     .split(",")
@@ -200,44 +205,34 @@ fun FootballQuizNavHost(
                 val strings = rememberQuizStrings()
                 val quizViewModel: QuizViewModel = viewModel(
                     factory = ViewModelFactory {
-                        QuizViewModel(container.getQuizRoundUseCase, container.quizAttemptDao, roundSize, categories, league, difficulty, strings)
+                        QuizViewModel(
+                            getQuizRoundUseCase = container.getQuizRoundUseCase,
+                            quizAttemptDao = container.quizAttemptDao,
+                            progress = container.playProgressPreferences,
+                            mode = mode,
+                            roundSize = roundSize,
+                            categories = categories,
+                            league = league,
+                            difficulty = difficulty,
+                            strings = strings,
+                        )
                     },
                 )
 
                 QuizScreen(
                     viewModel = quizViewModel,
-                    onFinished = { score, total ->
-                        navController.navigate(resultsRoute(score, total)) {
-                            popUpTo(ROUTE_QUIZ) { inclusive = true }
+                    // The daily challenge is once a day; every other mode can be replayed as-is.
+                    onPlayAgain = if (mode == QuizMode.DAILY) {
+                        null
+                    } else {
+                        {
+                            navController.navigate(quizRoute(mode, roundSize, categories, league, difficulty)) {
+                                popUpTo(ROUTE_QUIZ) { inclusive = true }
+                            }
                         }
                     },
-                    // Back to wherever the round was started from (Play tab or a club page).
+                    // Back to wherever the round was started from (Play tab, a club page or History).
                     onExit = { navController.popBackStack() },
-                )
-            }
-
-            composable(
-                route = ROUTE_RESULTS,
-                arguments = listOf(
-                    navArgument("score") { type = NavType.IntType },
-                    navArgument("total") { type = NavType.IntType },
-                ),
-            ) { backStackEntry ->
-                val score = backStackEntry.arguments?.getInt("score") ?: 0
-                val total = backStackEntry.arguments?.getInt("total") ?: 0
-
-                ResultsScreen(
-                    score = score,
-                    total = total,
-                    onPlayAgain = {
-                        val replay = lastQuizRoute
-                        if (replay == null) {
-                            navController.popBackStack()
-                        } else {
-                            navController.navigate(replay) { popUpTo(ROUTE_RESULTS) { inclusive = true } }
-                        }
-                    },
-                    onDone = { navController.popBackStack() },
                 )
             }
         }

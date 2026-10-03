@@ -18,6 +18,10 @@ interface ClubDao {
     @Query("SELECT * FROM clubs ORDER BY name ASC")
     fun observeAll(): Flow<List<ClubEntity>>
 
+    /** Stable order, for rounds that must come out identical on every device (daily challenge). */
+    @Query("SELECT * FROM clubs ORDER BY id")
+    suspend fun getAllOrdered(): List<ClubEntity>
+
     @Query("SELECT * FROM clubs WHERE id = :id")
     suspend fun getById(id: String): ClubEntity?
 

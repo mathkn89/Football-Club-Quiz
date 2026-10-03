@@ -7,16 +7,22 @@ import com.makn.footballquiz.domain.model.QuizQuestion
 import com.makn.footballquiz.domain.text.QuizStrings
 import com.makn.footballquiz.domain.text.QuizText
 import java.util.UUID
+import kotlin.random.Random
 
 /** "What is Arsenal's home stadium?" */
 class StadiumQuestionGenerator(private val strings: QuizStrings) : DynamicQuestionGenerator {
 
     override val category = QuizCategory.STADIUM
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
         if (target.giveaway(target.stadiumName)) return null
         val candidates = distractorPool.filter { nameKey(it.stadiumName) != nameKey(target.stadiumName) }
-        val options = buildOptions(target.stadiumName, candidates.map { it.stadiumName }) ?: return null
+        val options = buildOptions(target.stadiumName, candidates.map { it.stadiumName }, random) ?: return null
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
             prompt = strings.text(QuizText.STADIUM_PROMPT, target.shortName),
@@ -33,11 +39,16 @@ class StadiumClubQuestionGenerator(private val strings: QuizStrings) : DynamicQu
 
     override val category = QuizCategory.STADIUM
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
         if (target.stadiumName.isBlank() || target.giveaway(target.stadiumName)) return null
         // Near-identical ground names (St James' Park / St James Park) would make two answers right.
         if (distractorPool.any { it.id != target.id && nameKey(it.stadiumName) == nameKey(target.stadiumName) }) return null
-        val options = buildClubOptions(target, distractorPool) ?: return null
+        val options = buildClubOptions(target, distractorPool, random) ?: return null
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
             prompt = strings.text(QuizText.STADIUM_CLUB_PROMPT, target.stadiumName),
@@ -54,7 +65,12 @@ class CapacityQuestionGenerator(private val strings: QuizStrings) : DynamicQuest
 
     override val category = QuizCategory.STADIUM
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
         if (target.stadiumCapacity <= 0 || target.stadiumName.isBlank()) return null
         // Published capacities vary between sources, so always leave a margin; widest on Easy.
         val maxPercent = when (difficulty) {
@@ -65,10 +81,10 @@ class CapacityQuestionGenerator(private val strings: QuizStrings) : DynamicQuest
         val smaller = distractorPool
             .filter { it.stadiumCapacity in 1..(target.stadiumCapacity * maxPercent / 100) && it.stadiumName.isNotBlank() }
             .distinctBy { nameKey(it.stadiumName) }
-            .shuffled()
+            .shuffled(random)
             .take(3)
         if (smaller.size < 3) return null
-        val options = (smaller.map { it.stadiumName } + target.stadiumName).shuffled()
+        val options = (smaller.map { it.stadiumName } + target.stadiumName).shuffled(random)
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
             prompt = strings.text(QuizText.CAPACITY_PROMPT),

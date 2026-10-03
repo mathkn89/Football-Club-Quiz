@@ -125,6 +125,55 @@
     <string name="cancel">Cancel</string>
     <string name="language_system">Phone language</string>
 
+    <!-- Modes, daily challenge, duel, review, share, stats, reminders -->
+    <string name="section_mode">Mode</string>
+    <string name="mode_classic">Classic</string>
+    <string name="mode_survival">Survival</string>
+    <string name="mode_duel">2 players</string>
+    <string name="mode_classic_hint">A set number of questions with your options</string>
+    <string name="mode_survival_hint">Keep going until your first wrong answer · best %1$d</string>
+    <string name="mode_duel_hint">Take turns on one phone. Same questions for both.</string>
+    <string name="daily_title">Daily challenge #%1$d</string>
+    <string name="daily_subtitle">10 questions, the same for everyone today</string>
+    <string name="daily_done">Done today: %1$d/%2$d</string>
+    <string name="daily_streak">%1$d-day streak</string>
+    <string name="daily_come_back">New challenge tomorrow</string>
+    <string name="daily_play">Play</string>
+    <string name="daily_label">Daily challenge</string>
+    <string name="quiz_survival_progress">Question %1$d</string>
+    <string name="duel_score">%1$d – %2$d</string>
+    <string name="duel_player1">Player 1</string>
+    <string name="duel_player2">Player 2</string>
+    <string name="duel_turn">%1$s to answer</string>
+    <string name="duel_handoff_title">Pass the phone to %1$s</string>
+    <string name="duel_handoff_text">%1$s has answered. No peeking!</string>
+    <string name="duel_handoff_ready">I\'m %1$s, show the question</string>
+    <string name="duel_winner">%1$s wins!</string>
+    <string name="duel_draw">It\'s a draw!</string>
+    <string name="share">Share</string>
+    <string name="survival_result">%1$d in a row</string>
+    <string name="survival_best">Best: %1$d</string>
+    <string name="survival_new_best">New best!</string>
+    <string name="review_title">Review answers</string>
+    <string name="review_mistakes_only">Only mistakes</string>
+    <string name="review_all_correct">No mistakes this round.</string>
+    <string name="review_your_answer">Your answer: %1$s</string>
+    <string name="review_no_answer">No answer</string>
+    <string name="review_correct_answer">Correct answer: %1$s</string>
+    <string name="share_daily_title">%1$s · Daily #%2$d</string>
+    <string name="share_survival">I got %1$d in a row in %2$s survival mode!</string>
+    <string name="share_duel">%1$s %2$d – %3$d %4$s in %5$s</string>
+    <string name="share_standard">I scored %1$d/%2$d in %3$s!</string>
+    <string name="stats_title">Topics</string>
+    <string name="stats_empty">Play a few rounds to see how you do on each topic.</string>
+    <string name="practise_weak">Practise weak topics</string>
+    <string name="reminder_title">Daily reminder</string>
+    <string name="reminder_text">A nudge at 18:00 if today\'s challenge is still waiting</string>
+    <string name="notif_channel">Daily challenge</string>
+    <string name="notif_title">Today\'s challenge is ready</string>
+    <string name="notif_text">10 questions, the same for everyone today.</string>
+    <string name="notif_text_streak">Keep your %1$d-day streak going!</string>
+
     <!-- Question text (quiz engine) -->
     <string name="q_stadium_prompt">What is the name of %1$s\'s home stadium?</string>
     <string name="q_stadium_explanation">%1$s play their home games at %2$s in %3$s.</string>

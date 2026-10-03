@@ -27,19 +27,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.makn.footballquiz.R
+import com.makn.footballquiz.domain.model.QuizMode
 import com.makn.footballquiz.ui.common.FootballQuizTopBar
 import com.makn.footballquiz.ui.common.KitShirt
 import com.makn.footballquiz.ui.common.QuizImage
@@ -51,7 +51,8 @@ import com.makn.footballquiz.ui.theme.TimerWarning
 @Composable
 fun QuizScreen(
     viewModel: QuizViewModel,
-    onFinished: (score: Int, total: Int) -> Unit,
+    /** Null when the round can't be replayed (the daily challenge). */
+    onPlayAgain: (() -> Unit)?,
     onExit: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -61,10 +62,16 @@ fun QuizScreen(
     // Back mid-round asks first instead of silently throwing the round away.
     BackHandler(enabled = inProgress != null) { showExitConfirm = true }
 
+    val finished = uiState as? QuizUiState.Finished
+    if (finished != null) {
+        RoundResults(state = finished, onPlayAgain = onPlayAgain, onDone = onExit)
+        return
+    }
+
     Scaffold(
         topBar = {
             FootballQuizTopBar(
-                title = inProgress?.let { stringResource(R.string.quiz_progress, it.questionNumber, it.totalQuestions) }.orEmpty(),
+                title = inProgress?.let { progressTitle(it) }.orEmpty(),
                 navigationIcon = {
                     IconButton(onClick = { if (inProgress != null) showExitConfirm = true else onExit() }) {
                         Icon(Icons.Default.Close, contentDescription = stringResource(R.string.quiz_exit))
@@ -73,7 +80,11 @@ fun QuizScreen(
                 actions = {
                     if (inProgress != null) {
                         Text(
-                            stringResource(R.string.quiz_score, inProgress.score),
+                            if (inProgress.mode == QuizMode.DUEL) {
+                                stringResource(R.string.duel_score, inProgress.score, inProgress.secondScore)
+                            } else {
+                                stringResource(R.string.quiz_score, inProgress.score)
+                            },
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(end = 16.dp),
@@ -90,7 +101,7 @@ fun QuizScreen(
                     shape = RoundedCornerShape(16.dp),
                 ) {
                     Text(
-                        stringResource(if (inProgress.isLastQuestion) R.string.quiz_see_results else R.string.quiz_next),
+                        stringResource(if (inProgress.endsRound) R.string.quiz_see_results else R.string.quiz_next),
                         style = MaterialTheme.typography.titleMedium,
                     )
                 }
@@ -101,8 +112,12 @@ fun QuizScreen(
             when (val state = uiState) {
                 QuizUiState.Loading -> LoadingContent()
                 QuizUiState.Empty -> EmptyContent(onExit)
-                is QuizUiState.Finished -> LaunchedEffect(state) { onFinished(state.score, state.total) }
-                is QuizUiState.InProgress -> QuizContent(state = state, onOptionSelected = viewModel::selectOption)
+                is QuizUiState.InProgress -> if (state.duelPhase == DuelPhase.HANDOFF) {
+                    HandoffContent(onReady = viewModel::startSecondTurn)
+                } else {
+                    QuizContent(state = state, onOptionSelected = viewModel::selectOption)
+                }
+                is QuizUiState.Finished -> Unit
             }
         }
     }
@@ -120,6 +135,12 @@ fun QuizScreen(
             },
         )
     }
+}
+
+@Composable
+private fun progressTitle(state: QuizUiState.InProgress): String = when (state.mode) {
+    QuizMode.SURVIVAL -> stringResource(R.string.quiz_survival_progress, state.questionNumber)
+    else -> stringResource(R.string.quiz_progress, state.questionNumber, state.totalQuestions)
 }
 
 @Composable
@@ -147,6 +168,34 @@ private fun EmptyContent(onBack: () -> Unit) {
         )
         Spacer(Modifier.height(16.dp))
         TextButton(onClick = onBack) { Text(stringResource(R.string.quiz_change_options)) }
+    }
+}
+
+/** Between duel turns: hides the question so the second player starts fresh. */
+@Composable
+private fun HandoffContent(onReady: () -> Unit) {
+    val player2 = stringResource(R.string.duel_player2)
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            stringResource(R.string.duel_handoff_title, player2),
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            stringResource(R.string.duel_handoff_text, stringResource(R.string.duel_player1)),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(28.dp))
+        Button(onClick = onReady, shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth().height(56.dp)) {
+            Text(stringResource(R.string.duel_handoff_ready, player2), style = MaterialTheme.typography.titleMedium)
+        }
     }
 }
 
@@ -185,7 +234,19 @@ private fun QuizContent(state: QuizUiState.InProgress, onOptionSelected: (Int) -
             )
         }
 
-        Spacer(Modifier.height(28.dp))
+        if (state.mode == QuizMode.DUEL && !state.isAnswerRevealed) {
+            Spacer(Modifier.height(16.dp))
+            val player = stringResource(
+                if (state.duelPhase == DuelPhase.FIRST_PLAYER) R.string.duel_player1 else R.string.duel_player2,
+            )
+            Text(
+                stringResource(R.string.duel_turn, player),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+
+        Spacer(Modifier.height(if (state.mode == QuizMode.DUEL) 12.dp else 28.dp))
         if (question.kit != null) {
             KitShirt(question.kit, Modifier.height(170.dp).align(Alignment.CenterHorizontally))
             Spacer(Modifier.height(20.dp))
@@ -207,15 +268,8 @@ private fun QuizContent(state: QuizUiState.InProgress, onOptionSelected: (Int) -
         }
 
         if (state.isAnswerRevealed) {
-            val feedback = stringResource(
-                when {
-                    state.selectedOptionIndex == null -> R.string.quiz_times_up
-                    state.selectedOptionIndex == question.correctOptionIndex -> R.string.quiz_correct
-                    else -> R.string.quiz_not_quite
-                },
-            )
             Spacer(Modifier.height(6.dp))
-            Text(feedback, style = MaterialTheme.typography.titleMedium)
+            Text(feedback(state), style = MaterialTheme.typography.titleMedium)
             question.explanation?.let {
                 Spacer(Modifier.height(4.dp))
                 Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -223,4 +277,21 @@ private fun QuizContent(state: QuizUiState.InProgress, onOptionSelected: (Int) -
         }
         Spacer(Modifier.height(16.dp))
     }
+}
+
+@Composable
+private fun feedback(state: QuizUiState.InProgress): String {
+    val correct = state.currentQuestion.correctOptionIndex
+    if (state.mode == QuizMode.DUEL) {
+        fun mark(pick: Int?) = if (pick == correct) "✓" else "✗"
+        return "${stringResource(R.string.duel_player1)} ${mark(state.firstPlayerPick)} · " +
+            "${stringResource(R.string.duel_player2)} ${mark(state.selectedOptionIndex)}"
+    }
+    return stringResource(
+        when (state.selectedOptionIndex) {
+            null -> R.string.quiz_times_up
+            correct -> R.string.quiz_correct
+            else -> R.string.quiz_not_quite
+        },
+    )
 }

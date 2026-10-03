@@ -5,16 +5,17 @@ import com.makn.footballquiz.data.remote.dto.QuestionTranslationDto
 import com.makn.footballquiz.data.remote.mapper.translationJson
 import com.makn.footballquiz.domain.model.QuizCategory
 import com.makn.footballquiz.domain.model.QuizQuestion
+import kotlin.random.Random
 import kotlinx.serialization.decodeFromString
 
 /** The question in [languageCode] when a translation exists, otherwise the English original. */
-fun CustomQuestionEntity.toDomain(languageCode: String = "en"): QuizQuestion {
+fun CustomQuestionEntity.toDomain(languageCode: String = "en", random: Random = Random.Default): QuizQuestion {
     val translation = translations
         ?.let { runCatching { translationJson.decodeFromString<Map<String, QuestionTranslationDto>>(it) }.getOrNull() }
         ?.get(languageCode)
         ?.takeIf { it.wrongAnswers.size == wrongAnswers.size }
     val correct = translation?.correctAnswer ?: correctAnswer
-    val options = ((translation?.wrongAnswers ?: wrongAnswers) + correct).shuffled()
+    val options = ((translation?.wrongAnswers ?: wrongAnswers) + correct).shuffled(random)
     return QuizQuestion(
         id = id,
         prompt = translation?.questionText ?: questionText,

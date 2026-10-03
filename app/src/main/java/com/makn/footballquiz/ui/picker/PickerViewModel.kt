@@ -4,8 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.makn.footballquiz.data.local.dao.ClubDao
 import com.makn.footballquiz.data.local.dao.CustomQuestionDao
+import com.makn.footballquiz.data.local.PlayProgressPreferences
+import com.makn.footballquiz.domain.model.DailyChallenge
 import com.makn.footballquiz.domain.model.Difficulty
+import java.time.LocalDate
 import com.makn.footballquiz.domain.model.Leagues
+import com.makn.footballquiz.domain.model.QuizMode
 import com.makn.footballquiz.domain.model.QuizCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +21,8 @@ import kotlinx.coroutines.launch
 class PickerViewModel(
     private val clubDao: ClubDao,
     private val customQuestionDao: CustomQuestionDao,
+    private val progress: PlayProgressPreferences,
+    private val today: () -> LocalDate = LocalDate::now,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PickerUiState())
@@ -45,6 +51,27 @@ class PickerViewModel(
                 }
             }
         }
+        viewModelScope.launch {
+            progress.progress.collect { saved ->
+                val day = today()
+                _uiState.update {
+                    it.copy(
+                        daily = DailyStatus(
+                            number = DailyChallenge.number(day),
+                            playedToday = saved.playedDailyOn(day),
+                            score = saved.lastDailyScore,
+                            total = saved.lastDailyTotal,
+                            streak = saved.currentStreak(day),
+                        ),
+                        survivalBest = saved.survivalBest,
+                    )
+                }
+            }
+        }
+    }
+
+    fun onModeSelected(mode: QuizMode) {
+        _uiState.update { it.copy(mode = mode) }
     }
 
     fun onRoundSizeSelected(size: Int) {

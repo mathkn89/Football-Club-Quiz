@@ -10,14 +10,16 @@ import java.util.UUID
 import kotlin.random.Random
 
 /** "In what year was Arsenal founded?" — wrong years are close to the real one, so it can't be guessed by era. */
-class FoundedYearQuestionGenerator(
-    private val strings: QuizStrings,
-    private val random: Random = Random.Default,
-) : DynamicQuestionGenerator {
+class FoundedYearQuestionGenerator(private val strings: QuizStrings) : DynamicQuestionGenerator {
 
     override val category = QuizCategory.FOUNDED_YEAR
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
         if (target.foundedYear <= 0) return null
         val correct = target.foundedYear
         val maxOffset = when (difficulty) {
@@ -52,7 +54,12 @@ class OldestClubQuestionGenerator(private val strings: QuizStrings) : DynamicQue
 
     override val category = QuizCategory.FOUNDED_YEAR
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
         if (target.foundedYear <= 0) return null
         // A minimum gap so disputed founding dates can't flip the answer; wider on Easy.
         val minGap = when (difficulty) {
@@ -63,10 +70,10 @@ class OldestClubQuestionGenerator(private val strings: QuizStrings) : DynamicQue
         val younger = distractorPool
             .filter { it.id != target.id && it.foundedYear >= target.foundedYear + minGap }
             .distinctBy { it.shortName }
-            .shuffled()
+            .shuffled(random)
             .take(3)
         if (younger.size < 3) return null
-        val options = (younger.map { it.shortName } + target.shortName).shuffled()
+        val options = (younger.map { it.shortName } + target.shortName).shuffled(random)
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
             prompt = strings.text(QuizText.OLDEST_PROMPT),

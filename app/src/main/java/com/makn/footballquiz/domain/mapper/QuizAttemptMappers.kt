@@ -3,6 +3,7 @@ package com.makn.footballquiz.domain.mapper
 import com.makn.footballquiz.data.local.entity.QuizAttemptEntity
 import com.makn.footballquiz.domain.model.QuizAttempt
 import com.makn.footballquiz.domain.model.QuizCategory
+import com.makn.footballquiz.domain.model.QuizMode
 
 fun QuizAttemptEntity.toDomain(): QuizAttempt = QuizAttempt(
     id = id,
@@ -10,4 +11,5 @@ fun QuizAttemptEntity.toDomain(): QuizAttempt = QuizAttempt(
     score = score,
     total = total,
     categories = categories.map { QuizCategory.fromRaw(it) }.toSet(),
+    mode = QuizMode.entries.find { it.name == mode } ?: QuizMode.STANDARD,
 )

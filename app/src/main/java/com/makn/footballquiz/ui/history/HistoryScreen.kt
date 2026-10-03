@@ -1,5 +1,9 @@
 package com.makn.footballquiz.ui.history
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,8 +24,10 @@ import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +36,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,18 +47,24 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.makn.footballquiz.BuildConfig
 import com.makn.footballquiz.R
 import com.makn.footballquiz.data.local.UserProfilePreferences
-import com.makn.footballquiz.ui.common.LanguageDialog
 import com.makn.footballquiz.domain.model.QuizAttempt
+import com.makn.footballquiz.domain.model.QuizCategory
+import com.makn.footballquiz.domain.model.QuizMode
+import com.makn.footballquiz.reminder.DailyReminder
 import com.makn.footballquiz.sync.SyncScheduler
 import com.makn.footballquiz.ui.common.FootballQuizTopBar
+import com.makn.footballquiz.ui.common.LanguageDialog
+import com.makn.footballquiz.ui.common.displayName
 import com.makn.footballquiz.ui.common.nameRes
 import java.time.Instant
 import java.time.ZoneId
@@ -63,7 +77,7 @@ private val DATE_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.M
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(viewModel: HistoryViewModel) {
+fun HistoryScreen(onPractise: (Set<QuizCategory>) -> Unit, viewModel: HistoryViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -72,6 +86,26 @@ fun HistoryScreen(viewModel: HistoryViewModel) {
     var showAboutDialog by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
     val updatingMessage = stringResource(R.string.history_updating)
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            viewModel.onRemindersChanged(true)
+            DailyReminder.enable(context)
+        }
+    }
+    fun setReminders(enabled: Boolean) {
+        when {
+            !enabled -> {
+                viewModel.onRemindersChanged(false)
+                DailyReminder.disable(context)
+            }
+            DailyReminder.canNotify(context) -> {
+                viewModel.onRemindersChanged(true)
+                DailyReminder.enable(context)
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -104,7 +138,9 @@ fun HistoryScreen(viewModel: HistoryViewModel) {
             item {
                 ProfileRow(displayName = state.displayName.localizedName(), onEditClick = { showRenameDialog = true })
                 StatsRow(state)
-                Spacer(Modifier.height(24.dp))
+                ReminderRow(enabled = state.remindersEnabled, onChange = ::setReminders)
+                TopicsSection(state, onPractise)
+                Spacer(Modifier.height(16.dp))
                 Text(
                     stringResource(R.string.history_recent),
                     style = MaterialTheme.typography.labelLarge,
@@ -186,6 +222,66 @@ private fun StatsRow(state: HistoryUiState.Content) {
 }
 
 @Composable
+private fun ReminderRow(enabled: Boolean, onChange: (Boolean) -> Unit) {
+    ListItem(
+        headlineContent = { Text(stringResource(R.string.reminder_title)) },
+        supportingContent = { Text(stringResource(R.string.reminder_text)) },
+        trailingContent = { Switch(checked = enabled, onCheckedChange = onChange) },
+        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
+        modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+    )
+}
+
+/** Accuracy per topic, best first, with a shortcut to practise the weakest ones. */
+@Composable
+private fun TopicsSection(state: HistoryUiState.Content, onPractise: (Set<QuizCategory>) -> Unit) {
+    Column(Modifier.padding(horizontal = 20.dp)) {
+        Spacer(Modifier.height(8.dp))
+        Text(
+            stringResource(R.string.stats_title),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(8.dp))
+        if (state.topicStats.isEmpty()) {
+            Text(
+                stringResource(R.string.stats_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            return@Column
+        }
+        state.topicStats.forEach { stat ->
+            Row(Modifier.fillMaxWidth().padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(stat.category.displayName(), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.width(110.dp))
+                LinearProgressIndicator(
+                    progress = { stat.percent / 100f },
+                    modifier = Modifier.weight(1f).height(8.dp).clip(RoundedCornerShape(4.dp)),
+                    color = if (stat.category in state.weakTopics) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                )
+                Text(
+                    stringResource(R.string.percent, stat.percent),
+                    style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.width(52.dp),
+                )
+            }
+        }
+        if (state.weakTopics.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            FilledTonalButton(
+                onClick = { onPractise(state.weakTopics) },
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth().height(48.dp),
+            ) {
+                Text(stringResource(R.string.practise_weak))
+            }
+        }
+    }
+}
+
+@Composable
 private fun StatTile(label: String, value: String, modifier: Modifier = Modifier) {
     Surface(
         shape = RoundedCornerShape(16.dp),
@@ -206,7 +302,13 @@ private fun AttemptRow(attempt: QuizAttempt) {
     ListItem(
         headlineContent = { Text(stringResource(R.string.results_score, attempt.score, attempt.total)) },
         supportingContent = {
-            val topics = attempt.categories.joinToString { context.getString(it.nameRes()) }
+            val modeLabel = when (attempt.mode) {
+                QuizMode.DAILY -> context.getString(R.string.daily_label)
+                QuizMode.SURVIVAL -> context.getString(R.string.mode_survival)
+                else -> null
+            }
+            val topics = listOfNotNull(modeLabel, attempt.categories.joinToString { context.getString(it.nameRes()) }.ifEmpty { null })
+                .joinToString(" · ")
             Text(
                 if (topics.isEmpty()) date else "$date\n$topics",
                 maxLines = 2,

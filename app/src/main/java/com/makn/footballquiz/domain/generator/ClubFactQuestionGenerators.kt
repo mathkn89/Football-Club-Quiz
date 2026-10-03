@@ -8,14 +8,20 @@ import com.makn.footballquiz.domain.text.QuizStrings
 import com.makn.footballquiz.domain.text.QuizText
 import com.makn.footballquiz.domain.text.leagueInSentence
 import java.util.UUID
+import kotlin.random.Random
 
 /** "Which league does Barnsley play in?" Needs clubs from at least 4 leagues in the pool. */
 class LeagueQuestionGenerator(private val strings: QuizStrings) : DynamicQuestionGenerator {
 
     override val category = QuizCategory.LEAGUE
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
-        val options = buildOptions(target.league, distractorPool.map { it.league }) ?: return null
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
+        val options = buildOptions(target.league, distractorPool.map { it.league }, random) ?: return null
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
             prompt = strings.text(QuizText.LEAGUE_PROMPT, target.shortName),
@@ -32,9 +38,14 @@ class CityQuestionGenerator(private val strings: QuizStrings) : DynamicQuestionG
 
     override val category = QuizCategory.LOCATION
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
         if (target.giveaway(target.city)) return null
-        val options = buildOptions(target.city, distractorPool.map { it.city }) ?: return null
+        val options = buildOptions(target.city, distractorPool.map { it.city }, random) ?: return null
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
             prompt = strings.text(QuizText.CITY_PROMPT, target.shortName),
@@ -51,10 +62,15 @@ class ManagerQuestionGenerator(private val strings: QuizStrings) : DynamicQuesti
 
     override val category = QuizCategory.MANAGER
 
-    override fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty): QuizQuestion? {
+    override fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty,
+        random: Random,
+    ): QuizQuestion? {
         if (!target.manager.isSingleNamedManager()) return null
         val candidates = distractorPool.map { it.manager }.filter { it.isSingleNamedManager() }
-        val options = buildOptions(target.manager, candidates) ?: return null
+        val options = buildOptions(target.manager, candidates, random) ?: return null
         return QuizQuestion(
             id = UUID.randomUUID().toString(),
             prompt = strings.text(QuizText.MANAGER_PROMPT, target.shortName),

@@ -4,6 +4,7 @@ import com.makn.footballquiz.data.local.entity.ClubEntity
 import com.makn.footballquiz.domain.model.Difficulty
 import com.makn.footballquiz.domain.model.QuizCategory
 import com.makn.footballquiz.domain.model.QuizQuestion
+import kotlin.random.Random
 
 /** Builds one [QuizQuestion] about [target], drawing wrong-answer options from [distractorPool]. */
 interface DynamicQuestionGenerator {
@@ -14,18 +15,24 @@ interface DynamicQuestionGenerator {
      * Null when [distractorPool] can't supply enough distinct wrong answers for [target].
      * [difficulty] tunes how close numeric wrong answers sit to the right one.
      */
-    fun generate(target: ClubEntity, distractorPool: List<ClubEntity>, difficulty: Difficulty = Difficulty.MEDIUM): QuizQuestion?
+    fun generate(
+        target: ClubEntity,
+        distractorPool: List<ClubEntity>,
+        difficulty: Difficulty = Difficulty.MEDIUM,
+        /** Seeded for the daily challenge, so every player gets the same options in the same order. */
+        random: Random = Random.Default,
+    ): QuizQuestion?
 }
 
 /**
  * Builds a 4-option list from [correct] plus 3 distinct values from [candidates], shuffled.
  * Null when [correct] is blank (missing data) or there aren't 3 usable distractors.
  */
-internal fun buildOptions(correct: String, candidates: List<String>): List<String>? {
+internal fun buildOptions(correct: String, candidates: List<String>, random: Random = Random.Default): List<String>? {
     if (correct.isBlank()) return null
-    val distractors = candidates.filter { it.isNotBlank() && it != correct }.distinct().shuffled().take(3)
+    val distractors = candidates.filter { it.isNotBlank() && it != correct }.distinct().shuffled(random).take(3)
     if (distractors.size < 3) return null
-    return (distractors + correct).shuffled()
+    return (distractors + correct).shuffled(random)
 }
 
 /** Words too common in club/ground names to count as giving the answer away. */
@@ -56,5 +63,5 @@ internal fun nicknameKey(nickname: String): String =
  * Club-name options: [target]'s short name plus 3 from [candidates] (excluding [target]), shuffled.
  * Null when there aren't 3 distinct names to pick from.
  */
-internal fun buildClubOptions(target: ClubEntity, candidates: List<ClubEntity>): List<String>? =
-    buildOptions(target.shortName, candidates.filter { it.id != target.id }.map { it.shortName })
+internal fun buildClubOptions(target: ClubEntity, candidates: List<ClubEntity>, random: Random = Random.Default): List<String>? =
+    buildOptions(target.shortName, candidates.filter { it.id != target.id }.map { it.shortName }, random)

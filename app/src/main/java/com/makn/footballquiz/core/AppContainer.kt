@@ -3,6 +3,7 @@ package com.makn.footballquiz.core
 import android.content.Context
 import com.makn.footballquiz.data.local.HistoryDatabase
 import com.makn.footballquiz.data.local.QuizDatabase
+import com.makn.footballquiz.data.local.PlayProgressPreferences
 import com.makn.footballquiz.data.local.UserProfilePreferences
 import com.makn.footballquiz.domain.usecase.GetQuizRoundUseCase
 
@@ -16,6 +17,7 @@ class AppContainer(context: Context) {
     val customQuestionDao = database.customQuestionDao()
     val quizAttemptDao = historyDatabase.quizAttemptDao()
     val userProfilePreferences = UserProfilePreferences(context)
+    val playProgressPreferences = PlayProgressPreferences(context)
 
     val getQuizRoundUseCase = GetQuizRoundUseCase(
         clubDao = clubDao,

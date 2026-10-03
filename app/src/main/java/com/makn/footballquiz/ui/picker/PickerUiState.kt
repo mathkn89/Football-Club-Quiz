@@ -2,8 +2,21 @@ package com.makn.footballquiz.ui.picker
 
 import com.makn.footballquiz.domain.model.Difficulty
 import com.makn.footballquiz.domain.model.QuizCategory
+import com.makn.footballquiz.domain.model.QuizMode
+
+/** Today's daily challenge as shown on the Play screen. */
+data class DailyStatus(
+    val number: Int,
+    val playedToday: Boolean,
+    val score: Int,
+    val total: Int,
+    val streak: Int,
+)
 
 data class PickerUiState(
+    val mode: QuizMode = QuizMode.STANDARD,
+    val daily: DailyStatus? = null,
+    val survivalBest: Int = 0,
     val roundSize: Int = DEFAULT_ROUND_SIZE,
     val difficulty: Difficulty = Difficulty.MEDIUM,
     val selectedCategories: Set<QuizCategory> = QuizCategory.entries.toSet(),

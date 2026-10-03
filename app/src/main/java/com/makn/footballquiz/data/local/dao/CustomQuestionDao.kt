@@ -21,6 +21,9 @@ interface CustomQuestionDao {
     @Query("SELECT * FROM custom_questions WHERE category = :category ORDER BY RANDOM() LIMIT :limit")
     suspend fun getRandomByCategory(category: String, limit: Int): List<CustomQuestionEntity>
 
+    @Query("SELECT * FROM custom_questions ORDER BY id")
+    suspend fun getAllOrdered(): List<CustomQuestionEntity>
+
     @Query("SELECT * FROM custom_questions ORDER BY RANDOM() LIMIT :limit")
     suspend fun getRandom(limit: Int): List<CustomQuestionEntity>
 
