@@ -76,7 +76,7 @@ since it's the bootstrap payload — see below).
 | `explanation`    | String?       | Shown after the player answers.                                          |
 | `imageUriOrUrl`  | String?       | Full `http(s)://` URL — rendered as-is, no drawable-name scheme.          |
 | `version`        | Int           | Same semantics as `ClubEntity.version` above.                            |
-| `translations`   | Object        | Optional. Language code (`de`, `fr`, `nb`, `sv`) → `{questionText, correctAnswer, wrongAnswers, explanation}`. The app shows the player's language when present, else the English fields. Sources: `scripts/curated_questions.py` + `scripts/curated_translations.py`. |
+| `translations`   | Object        | Optional. Language code (`de`, `fr`, `nb`, `sv`) → `{questionText, correctAnswer, wrongAnswers, explanation}`. The app shows the player's language when present, else the English fields. Sources: `scripts/curated_questions.py` + `scripts/curated_translations.py` (first batch), `scripts/curated_questions_v2.py` (second batch, translations inline). |
 
 ### Deletions
 
