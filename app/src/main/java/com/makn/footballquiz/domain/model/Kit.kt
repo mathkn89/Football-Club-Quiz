@@ -11,7 +11,13 @@ data class Kit(
     /** Colour families on the shirt, used to keep look-alike kits out of the same question. */
     val shirtFamilies: Set<KitColour.Family> get() = setOfNotNull(primary.family, secondary?.family)
 
+    /** Compact form for storage: "SLEEVES|RED|WHITE|WHITE". */
+    fun encode(): String = listOf(pattern.name, primary.name, secondary?.name.orEmpty(), shorts.name).joinToString("|")
+
     companion object {
+        fun decode(encoded: String?): Kit? =
+            encoded?.split("|")?.takeIf { it.size == 4 }?.let { from(it[0], it[1], it[2].ifEmpty { null }, it[3]) }
+
         /** Null when any part is missing or unknown (e.g. a row synced before kits existed). */
         fun from(pattern: String?, primary: String?, secondary: String?, shorts: String?): Kit? {
             val kitPattern = KitPattern.fromRaw(pattern) ?: return null

@@ -201,7 +201,19 @@ class QuizViewModel(
                 categories = answered.map { it.question.category.name }.distinct(),
                 mode = mode.name,
             ),
-            answered.map { AnswerRecordEntity(attemptId = attemptId, category = it.question.category.name, correct = it.isCorrect) },
+            answered.map {
+                AnswerRecordEntity(
+                    attemptId = attemptId,
+                    category = it.question.category.name,
+                    correct = it.isCorrect,
+                    prompt = it.question.prompt,
+                    options = it.question.options,
+                    correctOptionIndex = it.question.correctOptionIndex,
+                    selectedOptionIndex = it.selectedOptionIndex,
+                    explanation = it.question.explanation,
+                    kit = it.question.kit?.encode(),
+                )
+            },
         )
     }
 

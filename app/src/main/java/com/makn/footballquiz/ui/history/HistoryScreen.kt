@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
@@ -77,7 +79,11 @@ private val DATE_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.M
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(onPractise: (Set<QuizCategory>) -> Unit, viewModel: HistoryViewModel) {
+fun HistoryScreen(
+    onPractise: (Set<QuizCategory>) -> Unit,
+    onAttemptSelected: (String) -> Unit,
+    viewModel: HistoryViewModel,
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -158,7 +164,7 @@ fun HistoryScreen(onPractise: (Set<QuizCategory>) -> Unit, viewModel: HistoryVie
                     )
                 }
             } else {
-                items(state.attempts, key = { it.id }) { attempt -> AttemptRow(attempt) }
+                items(state.attempts, key = { it.id }) { attempt -> AttemptRow(attempt, onClick = { onAttemptSelected(attempt.id) }) }
             }
         }
 
@@ -296,7 +302,7 @@ private fun StatTile(label: String, value: String, modifier: Modifier = Modifier
 }
 
 @Composable
-private fun AttemptRow(attempt: QuizAttempt) {
+private fun AttemptRow(attempt: QuizAttempt, onClick: () -> Unit) {
     val context = LocalContext.current
     val date = Instant.ofEpochMilli(attempt.completedAtMillis).atZone(ZoneId.systemDefault()).format(DATE_FORMATTER)
     ListItem(
@@ -316,14 +322,17 @@ private fun AttemptRow(attempt: QuizAttempt) {
             )
         },
         trailingContent = {
-            Text(
-                stringResource(R.string.percent, (attempt.percentage * 100).roundToInt()),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    stringResource(R.string.percent, (attempt.percentage * 100).roundToInt()),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Icon(Icons.Default.ChevronRight, contentDescription = stringResource(R.string.round_details))
+            }
         },
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
-        modifier = Modifier.padding(horizontal = 4.dp),
+        modifier = Modifier.clickable(onClick = onClick).padding(horizontal = 4.dp),
     )
 }
 

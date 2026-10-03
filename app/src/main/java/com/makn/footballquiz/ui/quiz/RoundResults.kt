@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.makn.footballquiz.R
 import com.makn.footballquiz.domain.model.QuizMode
+import com.makn.footballquiz.ui.common.KitShirt
 import com.makn.footballquiz.ui.theme.CorrectGreen
 import com.makn.footballquiz.ui.theme.IncorrectRed
 
@@ -168,13 +169,20 @@ private fun duelHeadline(state: QuizUiState.Finished): String {
     }
 }
 
+/** One reviewed question; shared with the round details in History. */
 @Composable
-private fun ReviewRow(answer: AnsweredQuestion, isDuel: Boolean) {
+fun ReviewRow(answer: AnsweredQuestion, isDuel: Boolean = false) {
     val question = answer.question
     val correctText = question.options[question.correctOptionIndex]
     fun pickText(pick: Int?) = pick?.let { question.options[it] }
     Column(Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
-        Text(question.prompt, style = MaterialTheme.typography.bodyLarge)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            question.kit?.let { kit ->
+                KitShirt(kit, Modifier.height(56.dp))
+                Spacer(Modifier.width(12.dp))
+            }
+            Text(question.prompt, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+        }
         Spacer(Modifier.height(4.dp))
         if (isDuel) {
             ReviewLine("${stringResource(R.string.duel_player1)}: ${pickText(answer.selectedOptionIndex) ?: stringResource(R.string.review_no_answer)}", answer.isCorrect)

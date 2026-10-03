@@ -211,5 +211,8 @@
     <string name="notif_text">10 spørsmål, like for alle i dag.</string>
     <string name="notif_text_streak">Hold rekken på %1$d dager i live!</string>
 
+    <string name="round_details">Rundedetaljer</string>
+    <string name="round_not_found">Fant ikke denne runden.</string>
+    <string name="round_details_missing">Spørsmålsdetaljer lagres for runder spilt fra denne versjonen. Denne runden har bare resultatet.</string>
     <bool name="kit_shorts_plural">true</bool>
 </resources>

@@ -211,5 +211,8 @@
     <string name="notif_text">10 questions, les mêmes pour tous aujourd\'hui.</string>
     <string name="notif_text_streak">Garde ta série de %1$d jours !</string>
 
+    <string name="round_details">Détails de la manche</string>
+    <string name="round_not_found">Cette manche est introuvable.</string>
+    <string name="round_details_missing">Le détail des questions est enregistré pour les manches jouées à partir de cette version. Seul le score de cette manche est disponible.</string>
     <bool name="kit_shorts_plural">false</bool>
 </resources>

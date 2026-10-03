@@ -16,8 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -38,6 +38,8 @@ import com.makn.footballquiz.ui.clubs.ClubListScreen
 import com.makn.footballquiz.ui.clubs.ClubListViewModel
 import com.makn.footballquiz.ui.common.rememberQuizStrings
 import com.makn.footballquiz.ui.core.ViewModelFactory
+import com.makn.footballquiz.ui.history.AttemptDetailScreen
+import com.makn.footballquiz.ui.history.AttemptDetailViewModel
 import com.makn.footballquiz.ui.history.HistoryScreen
 import com.makn.footballquiz.ui.history.HistoryViewModel
 import com.makn.footballquiz.ui.picker.PickerScreen
@@ -51,6 +53,7 @@ import java.net.URLEncoder
 private const val ROUTE_PICKER = "picker"
 private const val ROUTE_QUIZ = "quiz/{mode}/{roundSize}/{categories}/{league}/{difficulty}"
 private const val ROUTE_HISTORY = "history"
+private const val ROUTE_ATTEMPT_DETAIL = "history/{attemptId}"
 private const val ROUTE_CLUBS = "clubs"
 private const val ROUTE_CLUB_DETAIL = "clubs/{clubId}"
 private const val ARG_DEFAULT_ROUND_SIZE = 10
@@ -68,6 +71,7 @@ private val TAB_FOR_ROUTE = mapOf(
     ROUTE_CLUBS to TopLevelDestination.CLUBS,
     ROUTE_CLUB_DETAIL to TopLevelDestination.CLUBS,
     ROUTE_HISTORY to TopLevelDestination.HISTORY,
+    ROUTE_ATTEMPT_DETAIL to TopLevelDestination.HISTORY,
 )
 
 private fun clubDetailRoute(clubId: String): String = "clubs/$clubId"
@@ -145,8 +149,20 @@ fun FootballQuizNavHost(
                     onPractise = { categories ->
                         startQuiz(quizRoute(QuizMode.STANDARD, PickerUiState.DEFAULT_ROUND_SIZE, categories, null, Difficulty.MEDIUM))
                     },
+                    onAttemptSelected = { attemptId -> navController.navigate("history/$attemptId") },
                     viewModel = historyViewModel,
                 )
+            }
+
+            composable(
+                route = ROUTE_ATTEMPT_DETAIL,
+                arguments = listOf(navArgument("attemptId") { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val attemptId = backStackEntry.arguments?.getString("attemptId").orEmpty()
+                val detailViewModel: AttemptDetailViewModel = viewModel(
+                    factory = ViewModelFactory { AttemptDetailViewModel(container.quizAttemptDao, attemptId) },
+                )
+                AttemptDetailScreen(onBack = { navController.popBackStack() }, viewModel = detailViewModel)
             }
 
             composable(ROUTE_CLUBS) {

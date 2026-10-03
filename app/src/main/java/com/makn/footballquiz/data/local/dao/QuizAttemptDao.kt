@@ -32,6 +32,13 @@ interface QuizAttemptDao {
     )
     fun observeCategoryStats(): Flow<List<CategoryStatRow>>
 
+    @Query("SELECT * FROM quiz_attempts WHERE id = :id")
+    fun observeAttempt(id: String): Flow<QuizAttemptEntity?>
+
+    /** In the order they were asked. */
+    @Query("SELECT * FROM answer_records WHERE attemptId = :attemptId ORDER BY id")
+    fun observeAnswers(attemptId: String): Flow<List<AnswerRecordEntity>>
+
     @Query("SELECT * FROM quiz_attempts ORDER BY completedAtMillis DESC")
     fun observeAll(): Flow<List<QuizAttemptEntity>>
 }

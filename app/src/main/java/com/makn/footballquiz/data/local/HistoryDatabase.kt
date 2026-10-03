@@ -17,7 +17,7 @@ import com.makn.footballquiz.data.local.entity.QuizAttemptEntity
  * that database's createFromAsset identity-hash contract — this one is plain app-created Room,
  * no bundled seed, so ordinary migrations apply.
  */
-@Database(entities = [QuizAttemptEntity::class, AnswerRecordEntity::class], version = 2, exportSchema = true)
+@Database(entities = [QuizAttemptEntity::class, AnswerRecordEntity::class], version = 3, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class HistoryDatabase : RoomDatabase() {
 
@@ -36,8 +36,20 @@ abstract class HistoryDatabase : RoomDatabase() {
 
         private fun build(context: Context): HistoryDatabase =
             Room.databaseBuilder(context.applicationContext, HistoryDatabase::class.java, DATABASE_NAME)
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build()
+
+        /** Stores each question and answer so a round can be reviewed later from History. */
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE answer_records ADD COLUMN prompt TEXT")
+                db.execSQL("ALTER TABLE answer_records ADD COLUMN options TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE answer_records ADD COLUMN correctOptionIndex INTEGER")
+                db.execSQL("ALTER TABLE answer_records ADD COLUMN selectedOptionIndex INTEGER")
+                db.execSQL("ALTER TABLE answer_records ADD COLUMN explanation TEXT")
+                db.execSQL("ALTER TABLE answer_records ADD COLUMN kit TEXT")
+            }
+        }
 
         /** Adds the round's mode and per-answer records, keeping existing history. */
         val MIGRATION_1_2 = object : Migration(1, 2) {

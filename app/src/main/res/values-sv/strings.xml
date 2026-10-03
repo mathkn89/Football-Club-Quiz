@@ -211,5 +211,8 @@
     <string name="notif_text">10 frågor, samma för alla i dag.</string>
     <string name="notif_text_streak">Håll din svit på %1$d dagar vid liv!</string>
 
+    <string name="round_details">Rundinformation</string>
+    <string name="round_not_found">Rundan hittades inte.</string>
+    <string name="round_details_missing">Frågedetaljer sparas för rundor som spelats från den här versionen. Den här rundan har bara resultatet.</string>
     <bool name="kit_shorts_plural">true</bool>
 </resources>

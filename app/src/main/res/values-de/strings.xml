@@ -211,5 +211,8 @@
     <string name="notif_text">10 Fragen, heute für alle gleich.</string>
     <string name="notif_text_streak">Halte deine Serie von %1$d Tagen am Leben!</string>
 
+    <string name="round_details">Rundendetails</string>
+    <string name="round_not_found">Diese Runde wurde nicht gefunden.</string>
+    <string name="round_details_missing">Fragedetails werden für Runden ab dieser Version gespeichert. Für diese Runde gibt es nur das Ergebnis.</string>
     <bool name="kit_shorts_plural">false</bool>
 </resources>
