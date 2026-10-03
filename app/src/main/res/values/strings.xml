@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">Football Club Quiz</string>
+
+    <!-- Navigation -->
+    <string name="tab_play">Play</string>
+    <string name="tab_clubs">Clubs</string>
+    <string name="tab_history">History</string>
+    <string name="back">Back</string>
+
+    <!-- Play screen -->
+    <string name="play_title">Ready to play?</string>
+    <string name="play_club_count">%1$d clubs across %2$d leagues</string>
+    <string name="play_loading">Loading club data…</string>
+    <string name="play_button">Play</string>
+    <string name="play_need_topic">Pick at least one topic under Options.</string>
+    <string name="section_difficulty">Difficulty</string>
+    <string name="section_league">League</string>
+    <string name="section_questions">Questions</string>
+    <string name="section_topics">Topics</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="difficulty_easy_hint">Premier League &amp; Championship clubs</string>
+    <string name="difficulty_easy_hint_league">Well-spaced answers</string>
+    <string name="difficulty_medium_hint">All clubs, fair wrong answers</string>
+    <string name="difficulty_hard_hint">Close wrong answers from the same league</string>
+    <string name="difficulty_hint_format">%1$s · %2$ds per question</string>
+    <string name="options">Options</string>
+    <string name="options_show">Show options</string>
+    <string name="options_hide">Hide options</string>
+    <string name="options_summary">%1$d questions · %2$s</string>
+    <string name="topics_all">All topics</string>
+    <string name="topics_none">No topics selected</string>
+    <string name="topics_count">%1$d of %2$d topics</string>
+    <string name="topics_select_all">Select all</string>
+    <string name="topics_clear">Clear</string>
+    <string name="topics_group_club_facts">Club facts</string>
+    <string name="topics_group_trivia">Trivia</string>
+    <string name="league_all">All</string>
+
+    <!-- Topics -->
+    <string name="category_stadium">Stadiums</string>
+    <string name="category_nickname">Nicknames</string>
+    <string name="category_founded">Founded</string>
+    <string name="category_badge">Badges</string>
+    <string name="category_kit">Kits</string>
+    <string name="category_league">Leagues</string>
+    <string name="category_location">Cities</string>
+    <string name="category_manager">Managers</string>
+    <string name="category_history">History</string>
+    <string name="category_transfers">Transfers</string>
+    <string name="category_rivalries">Rivalries</string>
+    <string name="category_general">General</string>
+
+    <!-- Quiz -->
+    <string name="quiz_progress">%1$d of %2$d</string>
+    <string name="quiz_score">Score %1$d</string>
+    <string name="quiz_seconds">%1$ds</string>
+    <string name="quiz_exit">Exit quiz</string>
+    <string name="quiz_next">Next question</string>
+    <string name="quiz_see_results">See results</string>
+    <string name="quiz_leave_title">Leave quiz?</string>
+    <string name="quiz_leave_text">Your progress in this round will be lost.</string>
+    <string name="quiz_leave">Leave</string>
+    <string name="quiz_keep_playing">Keep playing</string>
+    <string name="quiz_empty">Not enough questions for this selection yet. Try another league or more topics.</string>
+    <string name="quiz_change_options">Change options</string>
+    <string name="quiz_times_up">Time\'s up.</string>
+    <string name="quiz_correct">Correct!</string>
+    <string name="quiz_not_quite">Not quite.</string>
+    <string name="answer_correct">Correct</string>
+    <string name="answer_incorrect">Incorrect</string>
+
+    <!-- Results -->
+    <string name="results_score">%1$d / %2$d</string>
+    <string name="results_play_again">Play again</string>
+    <string name="results_done">Done</string>
+    <string name="results_title_perfect">Perfect round</string>
+    <string name="results_title_great">Great round</string>
+    <string name="results_title_good">Good effort</string>
+    <string name="results_title_over">Round over</string>
+    <string name="results_msg_none">No questions were available.</string>
+    <string name="results_msg_perfect">Every answer right. Try a lower league for a fresh challenge.</string>
+    <string name="results_msg_great">You know your clubs.</string>
+    <string name="results_msg_good">Not bad. Another round will sharpen it.</string>
+    <string name="results_msg_low">Browse the Clubs tab, then try again.</string>
+
+    <!-- Clubs -->
+    <string name="clubs_search">Search clubs, cities, stadiums</string>
+    <string name="clubs_search_clear">Clear search</string>
+    <string name="clubs_no_match">No clubs match \"%1$s\".</string>
+    <string name="clubs_league_header">%1$s · %2$d</string>
+    <string name="club_not_found">Club not found.</string>
+    <string name="club_league">League</string>
+    <string name="club_stadium">Stadium</string>
+    <string name="club_capacity">Capacity</string>
+    <string name="club_founded">Founded</string>
+    <string name="club_city">City</string>
+    <string name="club_manager">Manager</string>
+    <string name="club_shirt">Shirt</string>
+    <string name="club_shorts">Shorts</string>
+    <string name="club_home_kit">Home kit</string>
+    <string name="club_quiz_on_league">Quiz on %1$s</string>
+    <string name="kit_shield_description">%1$s shield</string>
+    <string name="kit_drawing_description">%1$s shirt, %2$s shorts</string>
+
+    <!-- History -->
+    <string name="history_update_data">Update club data</string>
+    <string name="history_updating">Updating club data…</string>
+    <string name="history_about">About</string>
+    <string name="history_language">Language</string>
+    <string name="history_recent">Recent rounds</string>
+    <string name="history_empty">No rounds played yet. Your results will show up here.</string>
+    <string name="history_edit_name">Edit name</string>
+    <string name="history_default_name">Player</string>
+    <string name="history_your_name">Your name</string>
+    <string name="history_played">Played</string>
+    <string name="history_average">Average</string>
+    <string name="history_best">Best</string>
+    <string name="percent">%1$d%%</string>
+    <string name="about_text">Version %1$s\n\nTrivia about English football clubs, from the Premier League down to the National League. Club data updates automatically in the background.\n\nNot affiliated with any club or league. Club colours are shown as plain drawings.</string>
+    <string name="ok">OK</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="language_system">Phone language</string>
+
+    <!-- Question text (quiz engine) -->
+    <string name="q_stadium_prompt">What is the name of %1$s\'s home stadium?</string>
+    <string name="q_stadium_explanation">%1$s play their home games at %2$s in %3$s.</string>
+    <string name="q_stadium_club_prompt">Which club plays its home games at %1$s?</string>
+    <string name="q_stadium_club_explanation">%1$s is the home of %2$s.</string>
+    <string name="q_capacity_prompt">Which of these grounds has the largest capacity?</string>
+    <string name="q_capacity_explanation">%1$s (%2$s) holds about %3$s.</string>
+    <string name="q_nickname_prompt">What is the nickname of %1$s?</string>
+    <string name="q_nickname_explanation">%1$s are nicknamed \"%2$s\".</string>
+    <string name="q_nickname_club_prompt">Which club is nicknamed \"%1$s\"?</string>
+    <string name="q_nickname_club_explanation">\"%1$s\" is the nickname of %2$s.</string>
+    <string name="q_founded_prompt">In what year was %1$s founded?</string>
+    <string name="q_founded_explanation">%1$s was founded in %2$s.</string>
+    <string name="q_oldest_prompt">Which of these clubs was founded first?</string>
+    <string name="q_league_prompt">Which league does %1$s play in this season?</string>
+    <string name="q_league_explanation">%1$s play in %2$s.</string>
+    <string name="q_city_prompt">Which town or city is %1$s based in?</string>
+    <string name="q_city_explanation">%1$s play at %2$s in %3$s.</string>
+    <string name="q_manager_prompt">Who is the manager of %1$s?</string>
+    <string name="q_manager_explanation">%1$s manages %2$s.</string>
+    <string name="q_kit_prompt">Whose home kit is this?</string>
+    <string name="q_kit_explanation">%1$s home kit: %2$s, %3$s shorts.</string>
+
+    <!-- Kit descriptions. %1 main colour, %2 second colour, %3/%4 their plural forms.
+         Languages use different subsets of the four arguments on purpose. -->
+    <string name="kit_plain">%1$s</string>
+    <string name="kit_sleeves" tools:ignore="StringFormatCount">%1$s with %2$s sleeves</string>
+    <string name="kit_stripes" tools:ignore="StringFormatCount">%1$s and %2$s stripes</string>
+    <string name="kit_hoops" tools:ignore="StringFormatCount">%1$s and %2$s hoops</string>
+    <string name="kit_halves" tools:ignore="StringFormatCount">%1$s and %2$s halves</string>
+    <string name="kit_quarters" tools:ignore="StringFormatCount">%1$s and %2$s quarters</string>
+    <bool name="kit_shorts_plural">false</bool>
+
+    <!-- Kit colours: base form, and the form used before a plural noun. -->
+    <string name="colour_red">red</string>
+    <string name="colour_white">white</string>
+    <string name="colour_black">black</string>
+    <string name="colour_navy">navy</string>
+    <string name="colour_blue">blue</string>
+    <string name="colour_sky">sky blue</string>
+    <string name="colour_claret">claret</string>
+    <string name="colour_amber">amber</string>
+    <string name="colour_gold">gold</string>
+    <string name="colour_yellow">yellow</string>
+    <string name="colour_orange">orange</string>
+    <string name="colour_green">green</string>
+    <string name="colour_lime">lime green</string>
+    <string name="colour_red_pl">red</string>
+    <string name="colour_white_pl">white</string>
+    <string name="colour_black_pl">black</string>
+    <string name="colour_navy_pl">navy</string>
+    <string name="colour_blue_pl">blue</string>
+    <string name="colour_sky_pl">sky blue</string>
+    <string name="colour_claret_pl">claret</string>
+    <string name="colour_amber_pl">amber</string>
+    <string name="colour_gold_pl">gold</string>
+    <string name="colour_yellow_pl">yellow</string>
+    <string name="colour_orange_pl">orange</string>
+    <string name="colour_green_pl">green</string>
+    <string name="colour_lime_pl">lime green</string>
+</resources>

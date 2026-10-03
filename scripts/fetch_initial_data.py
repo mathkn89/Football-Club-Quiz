@@ -19,7 +19,7 @@ Roster: league membership changes every season (promotion/relegation), and Wikid
 EFL Championship, EFL League One, EFL League Two and National League season pages) — update them each summer after the transfer window, then rerun this script.
 
 Output (matches DeltaResponseDto / ClubDeltaDto in
-app/src/main/java/com/ruflo/footballquiz/data/remote/dto/):
+app/src/main/java/com/makn/footballquiz/data/remote/dto/):
   - docs/data/version.json
   - docs/data/deltas_v1.json
 

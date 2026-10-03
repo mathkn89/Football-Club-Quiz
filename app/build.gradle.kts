@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ruflo.footballquiz"
+    namespace = "com.makn.footballquiz"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ruflo.footballquiz"
+        applicationId = "com.makn.footballquiz"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -21,6 +21,11 @@ android {
         // so a fresh install syncs only newer deltas instead of replaying older ones over the seed.
         val seedDataVersion = file("seed_data_version.txt").readText().trim().toInt()
         buildConfigField("int", "SEED_DATA_VERSION", seedDataVersion.toString())
+    }
+
+    androidResources {
+        // Lists the bundled languages in Android 13+ Settings > Apps > Language.
+        generateLocaleConfig = true
     }
 
     buildFeatures {
@@ -71,6 +76,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.animation:animation")
     implementation("androidx.activity:activity-compose:1.9.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
     implementation("androidx.navigation:navigation-compose:2.7.7")

@@ -1,0 +1,2528 @@
+{
+  "version": 7,
+  "clubs": [],
+  "customQuestions": [
+    {
+      "id": "derby-tyne-wear",
+      "questionText": "Which two clubs contest the Tyne–Wear derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Newcastle United & Sunderland",
+      "wrongAnswers": [
+        "Newcastle United & Middlesbrough",
+        "Sunderland & Hartlepool United",
+        "Middlesbrough & Sunderland"
+      ],
+      "explanation": "The Tyne–Wear derby is between Newcastle United and Sunderland.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welche zwei Vereine bestreiten das Tyne-Wear-Derby?",
+          "correctAnswer": "Newcastle United & Sunderland",
+          "wrongAnswers": [
+            "Newcastle United & Middlesbrough",
+            "Sunderland & Hartlepool United",
+            "Middlesbrough & Sunderland"
+          ],
+          "explanation": "Das Tyne-Wear-Derby ist Newcastle United gegen Sunderland."
+        },
+        "fr": {
+          "questionText": "Quels clubs disputent le derby Tyne-Wear ?",
+          "correctAnswer": "Newcastle United & Sunderland",
+          "wrongAnswers": [
+            "Newcastle United & Middlesbrough",
+            "Sunderland & Hartlepool United",
+            "Middlesbrough & Sunderland"
+          ],
+          "explanation": "Le derby Tyne-Wear oppose Newcastle United à Sunderland."
+        },
+        "nb": {
+          "questionText": "Hvilke to klubber møtes i Tyne–Wear-derbyet?",
+          "correctAnswer": "Newcastle United & Sunderland",
+          "wrongAnswers": [
+            "Newcastle United & Middlesbrough",
+            "Sunderland & Hartlepool United",
+            "Middlesbrough & Sunderland"
+          ],
+          "explanation": "Tyne–Wear-derbyet er Newcastle United mot Sunderland."
+        },
+        "sv": {
+          "questionText": "Vilka två klubbar möts i Tyne–Wear-derbyt?",
+          "correctAnswer": "Newcastle United & Sunderland",
+          "wrongAnswers": [
+            "Newcastle United & Middlesbrough",
+            "Sunderland & Hartlepool United",
+            "Middlesbrough & Sunderland"
+          ],
+          "explanation": "Tyne–Wear-derbyt är Newcastle United mot Sunderland."
+        }
+      }
+    },
+    {
+      "id": "derby-north-london",
+      "questionText": "Who are Arsenal's rivals in the North London derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Tottenham Hotspur",
+      "wrongAnswers": [
+        "Chelsea",
+        "West Ham United",
+        "Fulham"
+      ],
+      "explanation": "Arsenal and Tottenham Hotspur contest the North London derby.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wer ist Arsenals Rivale im Nordlondon-Derby?",
+          "correctAnswer": "Tottenham Hotspur",
+          "wrongAnswers": [
+            "Chelsea",
+            "West Ham United",
+            "Fulham"
+          ],
+          "explanation": "Arsenal und Tottenham Hotspur bestreiten das Nordlondon-Derby."
+        },
+        "fr": {
+          "questionText": "Qui est le rival d'Arsenal dans le derby du nord de Londres ?",
+          "correctAnswer": "Tottenham Hotspur",
+          "wrongAnswers": [
+            "Chelsea",
+            "West Ham United",
+            "Fulham"
+          ],
+          "explanation": "Arsenal et Tottenham Hotspur disputent le derby du nord de Londres."
+        },
+        "nb": {
+          "questionText": "Hvem er Arsenals rival i Nord-London-derbyet?",
+          "correctAnswer": "Tottenham Hotspur",
+          "wrongAnswers": [
+            "Chelsea",
+            "West Ham United",
+            "Fulham"
+          ],
+          "explanation": "Arsenal og Tottenham Hotspur møtes i Nord-London-derbyet."
+        },
+        "sv": {
+          "questionText": "Vem är Arsenals rival i Nordlondonderbyt?",
+          "correctAnswer": "Tottenham Hotspur",
+          "wrongAnswers": [
+            "Chelsea",
+            "West Ham United",
+            "Fulham"
+          ],
+          "explanation": "Arsenal och Tottenham Hotspur möts i Nordlondonderbyt."
+        }
+      }
+    },
+    {
+      "id": "derby-merseyside",
+      "questionText": "Which two clubs contest the Merseyside derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Liverpool & Everton",
+      "wrongAnswers": [
+        "Liverpool & Tranmere Rovers",
+        "Everton & Tranmere Rovers",
+        "Liverpool & Manchester United"
+      ],
+      "explanation": "The Merseyside derby is between Liverpool and Everton.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welche zwei Vereine bestreiten das Merseyside-Derby?",
+          "correctAnswer": "Liverpool & Everton",
+          "wrongAnswers": [
+            "Liverpool & Tranmere Rovers",
+            "Everton & Tranmere Rovers",
+            "Liverpool & Manchester United"
+          ],
+          "explanation": "Das Merseyside-Derby ist Liverpool gegen Everton."
+        },
+        "fr": {
+          "questionText": "Quels clubs disputent le derby de la Mersey ?",
+          "correctAnswer": "Liverpool & Everton",
+          "wrongAnswers": [
+            "Liverpool & Tranmere Rovers",
+            "Everton & Tranmere Rovers",
+            "Liverpool & Manchester United"
+          ],
+          "explanation": "Le derby de la Mersey oppose Liverpool à Everton."
+        },
+        "nb": {
+          "questionText": "Hvilke to klubber møtes i Merseyside-derbyet?",
+          "correctAnswer": "Liverpool & Everton",
+          "wrongAnswers": [
+            "Liverpool & Tranmere Rovers",
+            "Everton & Tranmere Rovers",
+            "Liverpool & Manchester United"
+          ],
+          "explanation": "Merseyside-derbyet er Liverpool mot Everton."
+        },
+        "sv": {
+          "questionText": "Vilka två klubbar möts i Merseysidederbyt?",
+          "correctAnswer": "Liverpool & Everton",
+          "wrongAnswers": [
+            "Liverpool & Tranmere Rovers",
+            "Everton & Tranmere Rovers",
+            "Liverpool & Manchester United"
+          ],
+          "explanation": "Merseysidederbyt är Liverpool mot Everton."
+        }
+      }
+    },
+    {
+      "id": "derby-second-city",
+      "questionText": "Which club are Aston Villa's rivals in the Second City derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Birmingham City",
+      "wrongAnswers": [
+        "West Bromwich Albion",
+        "Wolverhampton Wanderers",
+        "Coventry City"
+      ],
+      "explanation": "The Second City derby is Aston Villa v Birmingham City.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wer ist Aston Villas Rivale im Second-City-Derby?",
+          "correctAnswer": "Birmingham City",
+          "wrongAnswers": [
+            "West Bromwich Albion",
+            "Wolverhampton Wanderers",
+            "Coventry City"
+          ],
+          "explanation": "Das Second-City-Derby ist Aston Villa gegen Birmingham City."
+        },
+        "fr": {
+          "questionText": "Qui est le rival d'Aston Villa dans le derby de la Second City ?",
+          "correctAnswer": "Birmingham City",
+          "wrongAnswers": [
+            "West Bromwich Albion",
+            "Wolverhampton Wanderers",
+            "Coventry City"
+          ],
+          "explanation": "Le derby de la Second City oppose Aston Villa à Birmingham City."
+        },
+        "nb": {
+          "questionText": "Hvem er Aston Villas rival i Second City-derbyet?",
+          "correctAnswer": "Birmingham City",
+          "wrongAnswers": [
+            "West Bromwich Albion",
+            "Wolverhampton Wanderers",
+            "Coventry City"
+          ],
+          "explanation": "Second City-derbyet er Aston Villa mot Birmingham City."
+        },
+        "sv": {
+          "questionText": "Vem är Aston Villas rival i Second City-derbyt?",
+          "correctAnswer": "Birmingham City",
+          "wrongAnswers": [
+            "West Bromwich Albion",
+            "Wolverhampton Wanderers",
+            "Coventry City"
+          ],
+          "explanation": "Second City-derbyt är Aston Villa mot Birmingham City."
+        }
+      }
+    },
+    {
+      "id": "derby-steel-city",
+      "questionText": "The Steel City derby is played between which two clubs?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Sheffield United & Sheffield Wednesday",
+      "wrongAnswers": [
+        "Sheffield Wednesday & Rotherham United",
+        "Sheffield United & Barnsley",
+        "Barnsley & Rotherham United"
+      ],
+      "explanation": "The Steel City derby is between Sheffield United and Sheffield Wednesday.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Zwischen welchen zwei Vereinen wird das Steel-City-Derby ausgetragen?",
+          "correctAnswer": "Sheffield United & Sheffield Wednesday",
+          "wrongAnswers": [
+            "Sheffield Wednesday & Rotherham United",
+            "Sheffield United & Barnsley",
+            "Barnsley & Rotherham United"
+          ],
+          "explanation": "Das Steel-City-Derby ist Sheffield United gegen Sheffield Wednesday."
+        },
+        "fr": {
+          "questionText": "Quels clubs disputent le derby de Steel City ?",
+          "correctAnswer": "Sheffield United & Sheffield Wednesday",
+          "wrongAnswers": [
+            "Sheffield Wednesday & Rotherham United",
+            "Sheffield United & Barnsley",
+            "Barnsley & Rotherham United"
+          ],
+          "explanation": "Le derby de Steel City oppose Sheffield United à Sheffield Wednesday."
+        },
+        "nb": {
+          "questionText": "Hvilke to klubber møtes i Steel City-derbyet?",
+          "correctAnswer": "Sheffield United & Sheffield Wednesday",
+          "wrongAnswers": [
+            "Sheffield Wednesday & Rotherham United",
+            "Sheffield United & Barnsley",
+            "Barnsley & Rotherham United"
+          ],
+          "explanation": "Steel City-derbyet er Sheffield United mot Sheffield Wednesday."
+        },
+        "sv": {
+          "questionText": "Vilka två klubbar möts i Steel City-derbyt?",
+          "correctAnswer": "Sheffield United & Sheffield Wednesday",
+          "wrongAnswers": [
+            "Sheffield Wednesday & Rotherham United",
+            "Sheffield United & Barnsley",
+            "Barnsley & Rotherham United"
+          ],
+          "explanation": "Steel City-derbyt är Sheffield United mot Sheffield Wednesday."
+        }
+      }
+    },
+    {
+      "id": "derby-south-coast",
+      "questionText": "Who are Southampton's rivals in the South Coast derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Portsmouth",
+      "wrongAnswers": [
+        "AFC Bournemouth",
+        "Brighton & Hove Albion",
+        "Reading"
+      ],
+      "explanation": "The South Coast derby is Southampton v Portsmouth.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wer ist Southamptons Rivale im South-Coast-Derby?",
+          "correctAnswer": "Portsmouth",
+          "wrongAnswers": [
+            "AFC Bournemouth",
+            "Brighton & Hove Albion",
+            "Reading"
+          ],
+          "explanation": "Das South-Coast-Derby ist Southampton gegen Portsmouth."
+        },
+        "fr": {
+          "questionText": "Qui est le rival de Southampton dans le derby de la côte sud ?",
+          "correctAnswer": "Portsmouth",
+          "wrongAnswers": [
+            "AFC Bournemouth",
+            "Brighton & Hove Albion",
+            "Reading"
+          ],
+          "explanation": "Le derby de la côte sud oppose Southampton à Portsmouth."
+        },
+        "nb": {
+          "questionText": "Hvem er Southamptons rival i sørkystderbyet?",
+          "correctAnswer": "Portsmouth",
+          "wrongAnswers": [
+            "AFC Bournemouth",
+            "Brighton & Hove Albion",
+            "Reading"
+          ],
+          "explanation": "Sørkystderbyet er Southampton mot Portsmouth."
+        },
+        "sv": {
+          "questionText": "Vem är Southamptons rival i sydkustderbyt?",
+          "correctAnswer": "Portsmouth",
+          "wrongAnswers": [
+            "AFC Bournemouth",
+            "Brighton & Hove Albion",
+            "Reading"
+          ],
+          "explanation": "Sydkustderbyt är Southampton mot Portsmouth."
+        }
+      }
+    },
+    {
+      "id": "derby-east-anglian",
+      "questionText": "Which two clubs contest the East Anglian derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Ipswich Town & Norwich City",
+      "wrongAnswers": [
+        "Ipswich Town & Colchester United",
+        "Norwich City & Cambridge United",
+        "Colchester United & Cambridge United"
+      ],
+      "explanation": "The East Anglian derby is between Ipswich Town and Norwich City.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welche zwei Vereine bestreiten das East-Anglian-Derby?",
+          "correctAnswer": "Ipswich Town & Norwich City",
+          "wrongAnswers": [
+            "Ipswich Town & Colchester United",
+            "Norwich City & Cambridge United",
+            "Colchester United & Cambridge United"
+          ],
+          "explanation": "Das East-Anglian-Derby ist Ipswich Town gegen Norwich City."
+        },
+        "fr": {
+          "questionText": "Quels clubs disputent le derby d'East Anglia ?",
+          "correctAnswer": "Ipswich Town & Norwich City",
+          "wrongAnswers": [
+            "Ipswich Town & Colchester United",
+            "Norwich City & Cambridge United",
+            "Colchester United & Cambridge United"
+          ],
+          "explanation": "Le derby d'East Anglia oppose Ipswich Town à Norwich City."
+        },
+        "nb": {
+          "questionText": "Hvilke to klubber møtes i East Anglia-derbyet?",
+          "correctAnswer": "Ipswich Town & Norwich City",
+          "wrongAnswers": [
+            "Ipswich Town & Colchester United",
+            "Norwich City & Cambridge United",
+            "Colchester United & Cambridge United"
+          ],
+          "explanation": "East Anglia-derbyet er Ipswich Town mot Norwich City."
+        },
+        "sv": {
+          "questionText": "Vilka två klubbar möts i East Anglia-derbyt?",
+          "correctAnswer": "Ipswich Town & Norwich City",
+          "wrongAnswers": [
+            "Ipswich Town & Colchester United",
+            "Norwich City & Cambridge United",
+            "Colchester United & Cambridge United"
+          ],
+          "explanation": "East Anglia-derbyt är Ipswich Town mot Norwich City."
+        }
+      }
+    },
+    {
+      "id": "derby-black-country",
+      "questionText": "Which club are Wolves' rivals in the Black Country derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "West Bromwich Albion",
+      "wrongAnswers": [
+        "Walsall",
+        "Aston Villa",
+        "Birmingham City"
+      ],
+      "explanation": "The Black Country derby is Wolverhampton Wanderers v West Bromwich Albion.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wer ist der Rivale der Wolves im Black-Country-Derby?",
+          "correctAnswer": "West Bromwich Albion",
+          "wrongAnswers": [
+            "Walsall",
+            "Aston Villa",
+            "Birmingham City"
+          ],
+          "explanation": "Das Black-Country-Derby ist Wolverhampton Wanderers gegen West Bromwich Albion."
+        },
+        "fr": {
+          "questionText": "Qui est le rival des Wolves dans le derby du Black Country ?",
+          "correctAnswer": "West Bromwich Albion",
+          "wrongAnswers": [
+            "Walsall",
+            "Aston Villa",
+            "Birmingham City"
+          ],
+          "explanation": "Le derby du Black Country oppose Wolverhampton Wanderers à West Bromwich Albion."
+        },
+        "nb": {
+          "questionText": "Hvem er Wolves' rival i Black Country-derbyet?",
+          "correctAnswer": "West Bromwich Albion",
+          "wrongAnswers": [
+            "Walsall",
+            "Aston Villa",
+            "Birmingham City"
+          ],
+          "explanation": "Black Country-derbyet er Wolverhampton Wanderers mot West Bromwich Albion."
+        },
+        "sv": {
+          "questionText": "Vem är Wolves rival i Black Country-derbyt?",
+          "correctAnswer": "West Bromwich Albion",
+          "wrongAnswers": [
+            "Walsall",
+            "Aston Villa",
+            "Birmingham City"
+          ],
+          "explanation": "Black Country-derbyt är Wolverhampton Wanderers mot West Bromwich Albion."
+        }
+      }
+    },
+    {
+      "id": "derby-m23",
+      "questionText": "Brighton & Hove Albion's M23 derby rivals are…",
+      "category": "RIVALRIES",
+      "correctAnswer": "Crystal Palace",
+      "wrongAnswers": [
+        "Crawley Town",
+        "Fulham",
+        "Southampton"
+      ],
+      "explanation": "Brighton and Crystal Palace contest the M23 derby.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wer ist der Rivale von Brighton & Hove Albion im M23-Derby?",
+          "correctAnswer": "Crystal Palace",
+          "wrongAnswers": [
+            "Crawley Town",
+            "Fulham",
+            "Southampton"
+          ],
+          "explanation": "Brighton und Crystal Palace bestreiten das M23-Derby."
+        },
+        "fr": {
+          "questionText": "Qui est le rival de Brighton & Hove Albion dans le derby de la M23 ?",
+          "correctAnswer": "Crystal Palace",
+          "wrongAnswers": [
+            "Crawley Town",
+            "Fulham",
+            "Southampton"
+          ],
+          "explanation": "Brighton et Crystal Palace disputent le derby de la M23."
+        },
+        "nb": {
+          "questionText": "Hvem er Brighton & Hove Albions rival i M23-derbyet?",
+          "correctAnswer": "Crystal Palace",
+          "wrongAnswers": [
+            "Crawley Town",
+            "Fulham",
+            "Southampton"
+          ],
+          "explanation": "Brighton og Crystal Palace møtes i M23-derbyet."
+        },
+        "sv": {
+          "questionText": "Vem är Brighton & Hove Albions rival i M23-derbyt?",
+          "correctAnswer": "Crystal Palace",
+          "wrongAnswers": [
+            "Crawley Town",
+            "Fulham",
+            "Southampton"
+          ],
+          "explanation": "Brighton och Crystal Palace möts i M23-derbyt."
+        }
+      }
+    },
+    {
+      "id": "derby-south-wales",
+      "questionText": "Which two clubs contest the South Wales derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Cardiff City & Swansea City",
+      "wrongAnswers": [
+        "Cardiff City & Newport County",
+        "Swansea City & Newport County",
+        "Cardiff City & Wrexham"
+      ],
+      "explanation": "The South Wales derby is between Cardiff City and Swansea City.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welche zwei Vereine bestreiten das Südwales-Derby?",
+          "correctAnswer": "Cardiff City & Swansea City",
+          "wrongAnswers": [
+            "Cardiff City & Newport County",
+            "Swansea City & Newport County",
+            "Cardiff City & Wrexham"
+          ],
+          "explanation": "Das Südwales-Derby ist Cardiff City gegen Swansea City."
+        },
+        "fr": {
+          "questionText": "Quels clubs disputent le derby du sud du pays de Galles ?",
+          "correctAnswer": "Cardiff City & Swansea City",
+          "wrongAnswers": [
+            "Cardiff City & Newport County",
+            "Swansea City & Newport County",
+            "Cardiff City & Wrexham"
+          ],
+          "explanation": "Le derby du sud du pays de Galles oppose Cardiff City à Swansea City."
+        },
+        "nb": {
+          "questionText": "Hvilke to klubber møtes i Sør-Wales-derbyet?",
+          "correctAnswer": "Cardiff City & Swansea City",
+          "wrongAnswers": [
+            "Cardiff City & Newport County",
+            "Swansea City & Newport County",
+            "Cardiff City & Wrexham"
+          ],
+          "explanation": "Sør-Wales-derbyet er Cardiff City mot Swansea City."
+        },
+        "sv": {
+          "questionText": "Vilka två klubbar möts i Sydwalesderbyt?",
+          "correctAnswer": "Cardiff City & Swansea City",
+          "wrongAnswers": [
+            "Cardiff City & Newport County",
+            "Swansea City & Newport County",
+            "Cardiff City & Wrexham"
+          ],
+          "explanation": "Sydwalesderbyt är Cardiff City mot Swansea City."
+        }
+      }
+    },
+    {
+      "id": "derby-east-midlands",
+      "questionText": "Which club are Derby County's fiercest East Midlands rivals?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Nottingham Forest",
+      "wrongAnswers": [
+        "Leicester City",
+        "Notts County",
+        "Mansfield Town"
+      ],
+      "explanation": "Derby County and Nottingham Forest contest the East Midlands derby, also linked by the Brian Clough Trophy.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wer ist Derby Countys größter Rivale in den East Midlands?",
+          "correctAnswer": "Nottingham Forest",
+          "wrongAnswers": [
+            "Leicester City",
+            "Notts County",
+            "Mansfield Town"
+          ],
+          "explanation": "Derby County und Nottingham Forest bestreiten das East-Midlands-Derby, um die Brian Clough Trophy."
+        },
+        "fr": {
+          "questionText": "Qui est le grand rival de Derby County dans les East Midlands ?",
+          "correctAnswer": "Nottingham Forest",
+          "wrongAnswers": [
+            "Leicester City",
+            "Notts County",
+            "Mansfield Town"
+          ],
+          "explanation": "Derby County et Nottingham Forest disputent le derby des East Midlands, pour le Brian Clough Trophy."
+        },
+        "nb": {
+          "questionText": "Hvem er Derby Countys største rival i East Midlands?",
+          "correctAnswer": "Nottingham Forest",
+          "wrongAnswers": [
+            "Leicester City",
+            "Notts County",
+            "Mansfield Town"
+          ],
+          "explanation": "Derby County og Nottingham Forest møtes i East Midlands-derbyet og spiller om Brian Clough Trophy."
+        },
+        "sv": {
+          "questionText": "Vem är Derby Countys största rival i East Midlands?",
+          "correctAnswer": "Nottingham Forest",
+          "wrongAnswers": [
+            "Leicester City",
+            "Notts County",
+            "Mansfield Town"
+          ],
+          "explanation": "Derby County och Nottingham Forest möts i East Midlands-derbyt och spelar om Brian Clough Trophy."
+        }
+      }
+    },
+    {
+      "id": "derby-bristol",
+      "questionText": "Who are Bristol City's local rivals in the Bristol derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Bristol Rovers",
+      "wrongAnswers": [
+        "Cardiff City",
+        "Swindon Town",
+        "Cheltenham Town"
+      ],
+      "explanation": "The Bristol derby is Bristol City v Bristol Rovers.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wer ist Bristol Citys Lokalrivale im Bristol-Derby?",
+          "correctAnswer": "Bristol Rovers",
+          "wrongAnswers": [
+            "Cardiff City",
+            "Swindon Town",
+            "Cheltenham Town"
+          ],
+          "explanation": "Das Bristol-Derby ist Bristol City gegen Bristol Rovers."
+        },
+        "fr": {
+          "questionText": "Qui est le rival local de Bristol City dans le derby de Bristol ?",
+          "correctAnswer": "Bristol Rovers",
+          "wrongAnswers": [
+            "Cardiff City",
+            "Swindon Town",
+            "Cheltenham Town"
+          ],
+          "explanation": "Le derby de Bristol oppose Bristol City à Bristol Rovers."
+        },
+        "nb": {
+          "questionText": "Hvem er Bristol Citys lokalrival i Bristol-derbyet?",
+          "correctAnswer": "Bristol Rovers",
+          "wrongAnswers": [
+            "Cardiff City",
+            "Swindon Town",
+            "Cheltenham Town"
+          ],
+          "explanation": "Bristol-derbyet er Bristol City mot Bristol Rovers."
+        },
+        "sv": {
+          "questionText": "Vem är Bristol Citys lokalrival i Bristolderbyt?",
+          "correctAnswer": "Bristol Rovers",
+          "wrongAnswers": [
+            "Cardiff City",
+            "Swindon Town",
+            "Cheltenham Town"
+          ],
+          "explanation": "Bristolderbyt är Bristol City mot Bristol Rovers."
+        }
+      }
+    },
+    {
+      "id": "derby-potteries",
+      "questionText": "Which two clubs contest the Potteries derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Stoke City & Port Vale",
+      "wrongAnswers": [
+        "Stoke City & Crewe Alexandra",
+        "Port Vale & Crewe Alexandra",
+        "Stoke City & Walsall"
+      ],
+      "explanation": "The Potteries derby is between Stoke City and Port Vale, both from Stoke-on-Trent.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welche zwei Vereine bestreiten das Potteries-Derby?",
+          "correctAnswer": "Stoke City & Port Vale",
+          "wrongAnswers": [
+            "Stoke City & Crewe Alexandra",
+            "Port Vale & Crewe Alexandra",
+            "Stoke City & Walsall"
+          ],
+          "explanation": "Das Potteries-Derby ist Stoke City gegen Port Vale, beide aus Stoke-on-Trent."
+        },
+        "fr": {
+          "questionText": "Quels clubs disputent le derby des Potteries ?",
+          "correctAnswer": "Stoke City & Port Vale",
+          "wrongAnswers": [
+            "Stoke City & Crewe Alexandra",
+            "Port Vale & Crewe Alexandra",
+            "Stoke City & Walsall"
+          ],
+          "explanation": "Le derby des Potteries oppose Stoke City à Port Vale, tous deux de Stoke-on-Trent."
+        },
+        "nb": {
+          "questionText": "Hvilke to klubber møtes i Potteries-derbyet?",
+          "correctAnswer": "Stoke City & Port Vale",
+          "wrongAnswers": [
+            "Stoke City & Crewe Alexandra",
+            "Port Vale & Crewe Alexandra",
+            "Stoke City & Walsall"
+          ],
+          "explanation": "Potteries-derbyet er Stoke City mot Port Vale, begge fra Stoke-on-Trent."
+        },
+        "sv": {
+          "questionText": "Vilka två klubbar möts i Potteriesderbyt?",
+          "correctAnswer": "Stoke City & Port Vale",
+          "wrongAnswers": [
+            "Stoke City & Crewe Alexandra",
+            "Port Vale & Crewe Alexandra",
+            "Stoke City & Walsall"
+          ],
+          "explanation": "Potteriesderbyt är Stoke City mot Port Vale, båda från Stoke-on-Trent."
+        }
+      }
+    },
+    {
+      "id": "derby-manchester",
+      "questionText": "Which two clubs contest the Manchester derby?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Manchester City & Manchester United",
+      "wrongAnswers": [
+        "Manchester United & Salford City",
+        "Manchester City & Stockport County",
+        "Manchester United & Bolton Wanderers"
+      ],
+      "explanation": "The Manchester derby is City v United.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welche zwei Vereine bestreiten das Manchester-Derby?",
+          "correctAnswer": "Manchester City & Manchester United",
+          "wrongAnswers": [
+            "Manchester United & Salford City",
+            "Manchester City & Stockport County",
+            "Manchester United & Bolton Wanderers"
+          ],
+          "explanation": "Das Manchester-Derby ist City gegen United."
+        },
+        "fr": {
+          "questionText": "Quels clubs disputent le derby de Manchester ?",
+          "correctAnswer": "Manchester City & Manchester United",
+          "wrongAnswers": [
+            "Manchester United & Salford City",
+            "Manchester City & Stockport County",
+            "Manchester United & Bolton Wanderers"
+          ],
+          "explanation": "Le derby de Manchester oppose City à United."
+        },
+        "nb": {
+          "questionText": "Hvilke to klubber møtes i Manchester-derbyet?",
+          "correctAnswer": "Manchester City & Manchester United",
+          "wrongAnswers": [
+            "Manchester United & Salford City",
+            "Manchester City & Stockport County",
+            "Manchester United & Bolton Wanderers"
+          ],
+          "explanation": "Manchester-derbyet er City mot United."
+        },
+        "sv": {
+          "questionText": "Vilka två klubbar möts i Manchesterderbyt?",
+          "correctAnswer": "Manchester City & Manchester United",
+          "wrongAnswers": [
+            "Manchester United & Salford City",
+            "Manchester City & Stockport County",
+            "Manchester United & Bolton Wanderers"
+          ],
+          "explanation": "Manchesterderbyt är City mot United."
+        }
+      }
+    },
+    {
+      "id": "derby-dockers",
+      "questionText": "Millwall's fiercest rivalry, rooted in London's docks, is with which club?",
+      "category": "RIVALRIES",
+      "correctAnswer": "West Ham United",
+      "wrongAnswers": [
+        "Charlton Athletic",
+        "Crystal Palace",
+        "Leyton Orient"
+      ],
+      "explanation": "Millwall v West Ham is often called the Dockers' derby.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Millwalls größte Rivalität, entstanden in Londons Docks, besteht mit welchem Verein?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Charlton Athletic",
+            "Crystal Palace",
+            "Leyton Orient"
+          ],
+          "explanation": "Millwall gegen West Ham wird oft Dockers-Derby genannt."
+        },
+        "fr": {
+          "questionText": "La plus grande rivalité de Millwall, née dans les docks de Londres, l'oppose à quel club ?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Charlton Athletic",
+            "Crystal Palace",
+            "Leyton Orient"
+          ],
+          "explanation": "Millwall contre West Ham est souvent appelé le derby des dockers."
+        },
+        "nb": {
+          "questionText": "Millwalls største rivalisering, med røtter i Londons havner, er mot hvilken klubb?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Charlton Athletic",
+            "Crystal Palace",
+            "Leyton Orient"
+          ],
+          "explanation": "Millwall mot West Ham kalles ofte Dockers-derbyet."
+        },
+        "sv": {
+          "questionText": "Millwalls största rivalitet, med rötter i Londons hamnar, är mot vilken klubb?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Charlton Athletic",
+            "Crystal Palace",
+            "Leyton Orient"
+          ],
+          "explanation": "Millwall mot West Ham kallas ofta Dockers-derbyt."
+        }
+      }
+    },
+    {
+      "id": "derby-severnside",
+      "questionText": "The Severnside derby is played between Bristol City and which club?",
+      "category": "RIVALRIES",
+      "correctAnswer": "Cardiff City",
+      "wrongAnswers": [
+        "Swansea City",
+        "Plymouth Argyle",
+        "Cheltenham Town"
+      ],
+      "explanation": "Bristol City and Cardiff City, either side of the Severn estuary, contest the Severnside derby.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Das Severnside-Derby wird zwischen Bristol City und welchem Verein ausgetragen?",
+          "correctAnswer": "Cardiff City",
+          "wrongAnswers": [
+            "Swansea City",
+            "Plymouth Argyle",
+            "Cheltenham Town"
+          ],
+          "explanation": "Bristol City und Cardiff City, auf beiden Seiten der Severn-Mündung, bestreiten das Severnside-Derby."
+        },
+        "fr": {
+          "questionText": "Le derby de la Severn oppose Bristol City à quel club ?",
+          "correctAnswer": "Cardiff City",
+          "wrongAnswers": [
+            "Swansea City",
+            "Plymouth Argyle",
+            "Cheltenham Town"
+          ],
+          "explanation": "Bristol City et Cardiff City, de part et d'autre de l'estuaire de la Severn, disputent ce derby."
+        },
+        "nb": {
+          "questionText": "Severnside-derbyet spilles mellom Bristol City og hvilken klubb?",
+          "correctAnswer": "Cardiff City",
+          "wrongAnswers": [
+            "Swansea City",
+            "Plymouth Argyle",
+            "Cheltenham Town"
+          ],
+          "explanation": "Bristol City og Cardiff City, på hver sin side av Severn-elvemunningen, møtes i Severnside-derbyet."
+        },
+        "sv": {
+          "questionText": "Severnside-derbyt spelas mellan Bristol City och vilken klubb?",
+          "correctAnswer": "Cardiff City",
+          "wrongAnswers": [
+            "Swansea City",
+            "Plymouth Argyle",
+            "Cheltenham Town"
+          ],
+          "explanation": "Bristol City och Cardiff City, på var sin sida om Severns mynning, möts i Severnside-derbyt."
+        }
+      }
+    },
+    {
+      "id": "hist-oldest-professional",
+      "questionText": "Which club, founded in 1862, is often called the oldest professional football club in the world?",
+      "category": "HISTORY",
+      "correctAnswer": "Notts County",
+      "wrongAnswers": [
+        "Stoke City",
+        "Nottingham Forest",
+        "Sheffield Wednesday"
+      ],
+      "explanation": "Notts County were founded in 1862.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher 1862 gegründete Verein gilt oft als ältester Profifußballverein der Welt?",
+          "correctAnswer": "Notts County",
+          "wrongAnswers": [
+            "Stoke City",
+            "Nottingham Forest",
+            "Sheffield Wednesday"
+          ],
+          "explanation": "Notts County wurde 1862 gegründet."
+        },
+        "fr": {
+          "questionText": "Quel club, fondé en 1862, est souvent présenté comme le plus vieux club professionnel du monde ?",
+          "correctAnswer": "Notts County",
+          "wrongAnswers": [
+            "Stoke City",
+            "Nottingham Forest",
+            "Sheffield Wednesday"
+          ],
+          "explanation": "Notts County a été fondé en 1862."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb, stiftet i 1862, kalles ofte verdens eldste profesjonelle fotballklubb?",
+          "correctAnswer": "Notts County",
+          "wrongAnswers": [
+            "Stoke City",
+            "Nottingham Forest",
+            "Sheffield Wednesday"
+          ],
+          "explanation": "Notts County ble stiftet i 1862."
+        },
+        "sv": {
+          "questionText": "Vilken klubb, grundad 1862, kallas ofta världens äldsta professionella fotbollsklubb?",
+          "correctAnswer": "Notts County",
+          "wrongAnswers": [
+            "Stoke City",
+            "Nottingham Forest",
+            "Sheffield Wednesday"
+          ],
+          "explanation": "Notts County grundades 1862."
+        }
+      }
+    },
+    {
+      "id": "hist-first-english-european-cup",
+      "questionText": "Which was the first English club to win the European Cup, in 1968?",
+      "category": "HISTORY",
+      "correctAnswer": "Manchester United",
+      "wrongAnswers": [
+        "Liverpool",
+        "Tottenham Hotspur",
+        "Leeds United"
+      ],
+      "explanation": "Manchester United beat Benfica 4–1 at Wembley in 1968.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein gewann 1968 als erster englischer Klub den Europapokal der Landesmeister?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Liverpool",
+            "Tottenham Hotspur",
+            "Leeds United"
+          ],
+          "explanation": "Manchester United schlug Benfica 1968 in Wembley mit 4:1."
+        },
+        "fr": {
+          "questionText": "Quel club fut le premier club anglais à remporter la Coupe des clubs champions, en 1968 ?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Liverpool",
+            "Tottenham Hotspur",
+            "Leeds United"
+          ],
+          "explanation": "Manchester United a battu Benfica 4-1 à Wembley en 1968."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb ble den første engelske klubben som vant Europacupen, i 1968?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Liverpool",
+            "Tottenham Hotspur",
+            "Leeds United"
+          ],
+          "explanation": "Manchester United slo Benfica 4–1 på Wembley i 1968."
+        },
+        "sv": {
+          "questionText": "Vilken klubb blev den första engelska klubben att vinna Europacupen, 1968?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Liverpool",
+            "Tottenham Hotspur",
+            "Leeds United"
+          ],
+          "explanation": "Manchester United slog Benfica med 4–1 på Wembley 1968."
+        }
+      }
+    },
+    {
+      "id": "hist-invincibles",
+      "questionText": "Which club went the whole 2003–04 Premier League season unbeaten?",
+      "category": "HISTORY",
+      "correctAnswer": "Arsenal",
+      "wrongAnswers": [
+        "Chelsea",
+        "Manchester United",
+        "Liverpool"
+      ],
+      "explanation": "Arsenal's 'Invincibles' won 26 and drew 12 in 2003–04.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein blieb in der Premier-League-Saison 2003/04 ungeschlagen?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Chelsea",
+            "Manchester United",
+            "Liverpool"
+          ],
+          "explanation": "Arsenals „Invincibles“ gewannen 2003/04 26 Spiele und spielten 12-mal unentschieden."
+        },
+        "fr": {
+          "questionText": "Quel club a terminé la saison 2003-04 de Premier League invaincu ?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Chelsea",
+            "Manchester United",
+            "Liverpool"
+          ],
+          "explanation": "Les « Invincibles » d'Arsenal ont gagné 26 matchs et fait 12 nuls en 2003-04."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb gikk ubeseiret gjennom hele Premier League-sesongen 2003–04?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Chelsea",
+            "Manchester United",
+            "Liverpool"
+          ],
+          "explanation": "Arsenals «Invincibles» vant 26 og spilte 12 uavgjort i 2003–04."
+        },
+        "sv": {
+          "questionText": "Vilken klubb gick obesegrad genom hela Premier League-säsongen 2003–04?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Chelsea",
+            "Manchester United",
+            "Liverpool"
+          ],
+          "explanation": "Arsenals ”Invincibles” vann 26 och spelade 12 oavgjorda 2003–04."
+        }
+      }
+    },
+    {
+      "id": "hist-first-pl-champions",
+      "questionText": "Who won the first Premier League title, in 1992–93?",
+      "category": "HISTORY",
+      "correctAnswer": "Manchester United",
+      "wrongAnswers": [
+        "Aston Villa",
+        "Blackburn Rovers",
+        "Leeds United"
+      ],
+      "explanation": "Manchester United won the inaugural Premier League, ahead of Aston Villa.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wer gewann 1992/93 den ersten Premier-League-Titel?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Aston Villa",
+            "Blackburn Rovers",
+            "Leeds United"
+          ],
+          "explanation": "Manchester United gewann die erste Premier League vor Aston Villa."
+        },
+        "fr": {
+          "questionText": "Qui a remporté le premier titre de Premier League, en 1992-93 ?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Aston Villa",
+            "Blackburn Rovers",
+            "Leeds United"
+          ],
+          "explanation": "Manchester United a remporté la première Premier League, devant Aston Villa."
+        },
+        "nb": {
+          "questionText": "Hvem vant den første Premier League-tittelen, i 1992–93?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Aston Villa",
+            "Blackburn Rovers",
+            "Leeds United"
+          ],
+          "explanation": "Manchester United vant den første Premier League-sesongen, foran Aston Villa."
+        },
+        "sv": {
+          "questionText": "Vem vann den första Premier League-titeln, 1992–93?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Aston Villa",
+            "Blackburn Rovers",
+            "Leeds United"
+          ],
+          "explanation": "Manchester United vann den första Premier League-säsongen, före Aston Villa."
+        }
+      }
+    },
+    {
+      "id": "hist-leicester-title",
+      "questionText": "In which season did Leicester City win the Premier League as 5000–1 outsiders?",
+      "category": "HISTORY",
+      "correctAnswer": "2015–16",
+      "wrongAnswers": [
+        "2014–15",
+        "2016–17",
+        "2013–14"
+      ],
+      "explanation": "Leicester City were crowned champions in 2015–16.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "In welcher Saison wurde Leicester City als 5000:1-Außenseiter Meister der Premier League?",
+          "correctAnswer": "2015–16",
+          "wrongAnswers": [
+            "2014–15",
+            "2016–17",
+            "2013–14"
+          ],
+          "explanation": "Leicester City wurde 2015/16 Meister."
+        },
+        "fr": {
+          "questionText": "Lors de quelle saison Leicester City a-t-il remporté la Premier League, coté à 5000 contre 1 ?",
+          "correctAnswer": "2015–16",
+          "wrongAnswers": [
+            "2014–15",
+            "2016–17",
+            "2013–14"
+          ],
+          "explanation": "Leicester City a été sacré champion en 2015-16."
+        },
+        "nb": {
+          "questionText": "Hvilken sesong vant Leicester City Premier League med odds 5000–1?",
+          "correctAnswer": "2015–16",
+          "wrongAnswers": [
+            "2014–15",
+            "2016–17",
+            "2013–14"
+          ],
+          "explanation": "Leicester City ble seriemester i 2015–16."
+        },
+        "sv": {
+          "questionText": "Vilken säsong vann Leicester City Premier League med odds 5000–1?",
+          "correctAnswer": "2015–16",
+          "wrongAnswers": [
+            "2014–15",
+            "2016–17",
+            "2013–14"
+          ],
+          "explanation": "Leicester City blev mästare 2015–16."
+        }
+      }
+    },
+    {
+      "id": "hist-blackburn-title",
+      "questionText": "Which club won the Premier League in 1994–95?",
+      "category": "HISTORY",
+      "correctAnswer": "Blackburn Rovers",
+      "wrongAnswers": [
+        "Manchester United",
+        "Newcastle United",
+        "Liverpool"
+      ],
+      "explanation": "Blackburn Rovers pipped Manchester United to the 1994–95 title.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein gewann die Premier League 1994/95?",
+          "correctAnswer": "Blackburn Rovers",
+          "wrongAnswers": [
+            "Manchester United",
+            "Newcastle United",
+            "Liverpool"
+          ],
+          "explanation": "Blackburn Rovers sicherte sich den Titel 1994/95 knapp vor Manchester United."
+        },
+        "fr": {
+          "questionText": "Quel club a remporté la Premier League en 1994-95 ?",
+          "correctAnswer": "Blackburn Rovers",
+          "wrongAnswers": [
+            "Manchester United",
+            "Newcastle United",
+            "Liverpool"
+          ],
+          "explanation": "Blackburn Rovers a devancé Manchester United pour le titre 1994-95."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb vant Premier League i 1994–95?",
+          "correctAnswer": "Blackburn Rovers",
+          "wrongAnswers": [
+            "Manchester United",
+            "Newcastle United",
+            "Liverpool"
+          ],
+          "explanation": "Blackburn Rovers slo Manchester United i kampen om tittelen 1994–95."
+        },
+        "sv": {
+          "questionText": "Vilken klubb vann Premier League 1994–95?",
+          "correctAnswer": "Blackburn Rovers",
+          "wrongAnswers": [
+            "Manchester United",
+            "Newcastle United",
+            "Liverpool"
+          ],
+          "explanation": "Blackburn Rovers knep titeln 1994–95 före Manchester United."
+        }
+      }
+    },
+    {
+      "id": "hist-forest-european-cups",
+      "questionText": "Which club won the European Cup in both 1979 and 1980?",
+      "category": "HISTORY",
+      "correctAnswer": "Nottingham Forest",
+      "wrongAnswers": [
+        "Liverpool",
+        "Aston Villa",
+        "Leeds United"
+      ],
+      "explanation": "Brian Clough's Nottingham Forest won back-to-back European Cups.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein gewann den Europapokal der Landesmeister 1979 und 1980?",
+          "correctAnswer": "Nottingham Forest",
+          "wrongAnswers": [
+            "Liverpool",
+            "Aston Villa",
+            "Leeds United"
+          ],
+          "explanation": "Brian Cloughs Nottingham Forest gewann den Pokal zweimal in Folge."
+        },
+        "fr": {
+          "questionText": "Quel club a remporté la Coupe des clubs champions en 1979 et en 1980 ?",
+          "correctAnswer": "Nottingham Forest",
+          "wrongAnswers": [
+            "Liverpool",
+            "Aston Villa",
+            "Leeds United"
+          ],
+          "explanation": "Le Nottingham Forest de Brian Clough a gagné deux Coupes d'Europe d'affilée."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb vant Europacupen både i 1979 og 1980?",
+          "correctAnswer": "Nottingham Forest",
+          "wrongAnswers": [
+            "Liverpool",
+            "Aston Villa",
+            "Leeds United"
+          ],
+          "explanation": "Brian Cloughs Nottingham Forest vant Europacupen to år på rad."
+        },
+        "sv": {
+          "questionText": "Vilken klubb vann Europacupen både 1979 och 1980?",
+          "correctAnswer": "Nottingham Forest",
+          "wrongAnswers": [
+            "Liverpool",
+            "Aston Villa",
+            "Leeds United"
+          ],
+          "explanation": "Brian Cloughs Nottingham Forest vann Europacupen två år i rad."
+        }
+      }
+    },
+    {
+      "id": "hist-villa-european-cup",
+      "questionText": "In which year did Aston Villa win the European Cup?",
+      "category": "HISTORY",
+      "correctAnswer": "1982",
+      "wrongAnswers": [
+        "1979",
+        "1984",
+        "1977"
+      ],
+      "explanation": "Aston Villa beat Bayern Munich 1–0 in Rotterdam in 1982.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "In welchem Jahr gewann Aston Villa den Europapokal der Landesmeister?",
+          "correctAnswer": "1982",
+          "wrongAnswers": [
+            "1979",
+            "1984",
+            "1977"
+          ],
+          "explanation": "Aston Villa schlug Bayern München 1982 in Rotterdam mit 1:0."
+        },
+        "fr": {
+          "questionText": "En quelle année Aston Villa a-t-il remporté la Coupe des clubs champions ?",
+          "correctAnswer": "1982",
+          "wrongAnswers": [
+            "1979",
+            "1984",
+            "1977"
+          ],
+          "explanation": "Aston Villa a battu le Bayern Munich 1-0 à Rotterdam en 1982."
+        },
+        "nb": {
+          "questionText": "Hvilket år vant Aston Villa Europacupen?",
+          "correctAnswer": "1982",
+          "wrongAnswers": [
+            "1979",
+            "1984",
+            "1977"
+          ],
+          "explanation": "Aston Villa slo Bayern München 1–0 i Rotterdam i 1982."
+        },
+        "sv": {
+          "questionText": "Vilket år vann Aston Villa Europacupen?",
+          "correctAnswer": "1982",
+          "wrongAnswers": [
+            "1979",
+            "1984",
+            "1977"
+          ],
+          "explanation": "Aston Villa slog Bayern München med 1–0 i Rotterdam 1982."
+        }
+      }
+    },
+    {
+      "id": "hist-preston-invincibles",
+      "questionText": "Which club were the first Football League champions, unbeaten in 1888–89?",
+      "category": "HISTORY",
+      "correctAnswer": "Preston North End",
+      "wrongAnswers": [
+        "Aston Villa",
+        "Everton",
+        "Blackburn Rovers"
+      ],
+      "explanation": "Preston North End won the league unbeaten and the FA Cup in 1888–89.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein wurde 1888/89 ungeschlagen erster Meister der Football League?",
+          "correctAnswer": "Preston North End",
+          "wrongAnswers": [
+            "Aston Villa",
+            "Everton",
+            "Blackburn Rovers"
+          ],
+          "explanation": "Preston North End gewann 1888/89 ungeschlagen die Liga und dazu den FA Cup."
+        },
+        "fr": {
+          "questionText": "Quel club fut le premier champion de la Football League, invaincu en 1888-89 ?",
+          "correctAnswer": "Preston North End",
+          "wrongAnswers": [
+            "Aston Villa",
+            "Everton",
+            "Blackburn Rovers"
+          ],
+          "explanation": "Preston North End a remporté le championnat invaincu et la FA Cup en 1888-89."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb ble den første mesteren i Football League, ubeseiret i 1888–89?",
+          "correctAnswer": "Preston North End",
+          "wrongAnswers": [
+            "Aston Villa",
+            "Everton",
+            "Blackburn Rovers"
+          ],
+          "explanation": "Preston North End vant ligaen ubeseiret og FA-cupen i 1888–89."
+        },
+        "sv": {
+          "questionText": "Vilken klubb blev första mästare i Football League, obesegrad 1888–89?",
+          "correctAnswer": "Preston North End",
+          "wrongAnswers": [
+            "Aston Villa",
+            "Everton",
+            "Blackburn Rovers"
+          ],
+          "explanation": "Preston North End vann ligan obesegrad och FA-cupen 1888–89."
+        }
+      }
+    },
+    {
+      "id": "hist-highbury",
+      "questionText": "Which club played at Highbury until 2006?",
+      "category": "HISTORY",
+      "correctAnswer": "Arsenal",
+      "wrongAnswers": [
+        "Tottenham Hotspur",
+        "Chelsea",
+        "Queens Park Rangers"
+      ],
+      "explanation": "Arsenal left Highbury for the Emirates Stadium in 2006.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein spielte bis 2006 in Highbury?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Tottenham Hotspur",
+            "Chelsea",
+            "Queens Park Rangers"
+          ],
+          "explanation": "Arsenal zog 2006 von Highbury ins Emirates Stadium."
+        },
+        "fr": {
+          "questionText": "Quel club a joué à Highbury jusqu'en 2006 ?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Tottenham Hotspur",
+            "Chelsea",
+            "Queens Park Rangers"
+          ],
+          "explanation": "Arsenal a quitté Highbury pour l'Emirates Stadium en 2006."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb spilte på Highbury frem til 2006?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Tottenham Hotspur",
+            "Chelsea",
+            "Queens Park Rangers"
+          ],
+          "explanation": "Arsenal flyttet fra Highbury til Emirates Stadium i 2006."
+        },
+        "sv": {
+          "questionText": "Vilken klubb spelade på Highbury fram till 2006?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Tottenham Hotspur",
+            "Chelsea",
+            "Queens Park Rangers"
+          ],
+          "explanation": "Arsenal flyttade från Highbury till Emirates Stadium 2006."
+        }
+      }
+    },
+    {
+      "id": "hist-maine-road",
+      "questionText": "Which club played at Maine Road until 2003?",
+      "category": "HISTORY",
+      "correctAnswer": "Manchester City",
+      "wrongAnswers": [
+        "Manchester United",
+        "Stockport County",
+        "Bolton Wanderers"
+      ],
+      "explanation": "Manchester City moved from Maine Road to the City of Manchester Stadium in 2003.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein spielte bis 2003 an der Maine Road?",
+          "correctAnswer": "Manchester City",
+          "wrongAnswers": [
+            "Manchester United",
+            "Stockport County",
+            "Bolton Wanderers"
+          ],
+          "explanation": "Manchester City zog 2003 von der Maine Road ins City of Manchester Stadium."
+        },
+        "fr": {
+          "questionText": "Quel club a joué à Maine Road jusqu'en 2003 ?",
+          "correctAnswer": "Manchester City",
+          "wrongAnswers": [
+            "Manchester United",
+            "Stockport County",
+            "Bolton Wanderers"
+          ],
+          "explanation": "Manchester City a quitté Maine Road pour le City of Manchester Stadium en 2003."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb spilte på Maine Road frem til 2003?",
+          "correctAnswer": "Manchester City",
+          "wrongAnswers": [
+            "Manchester United",
+            "Stockport County",
+            "Bolton Wanderers"
+          ],
+          "explanation": "Manchester City flyttet fra Maine Road til City of Manchester Stadium i 2003."
+        },
+        "sv": {
+          "questionText": "Vilken klubb spelade på Maine Road fram till 2003?",
+          "correctAnswer": "Manchester City",
+          "wrongAnswers": [
+            "Manchester United",
+            "Stockport County",
+            "Bolton Wanderers"
+          ],
+          "explanation": "Manchester City flyttade från Maine Road till City of Manchester Stadium 2003."
+        }
+      }
+    },
+    {
+      "id": "hist-upton-park",
+      "questionText": "Which club left the Boleyn Ground (Upton Park) in 2016?",
+      "category": "HISTORY",
+      "correctAnswer": "West Ham United",
+      "wrongAnswers": [
+        "Millwall",
+        "Charlton Athletic",
+        "Leyton Orient"
+      ],
+      "explanation": "West Ham moved to the London Stadium in 2016.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein verließ 2016 den Boleyn Ground (Upton Park)?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Millwall",
+            "Charlton Athletic",
+            "Leyton Orient"
+          ],
+          "explanation": "West Ham zog 2016 ins London Stadium."
+        },
+        "fr": {
+          "questionText": "Quel club a quitté le Boleyn Ground (Upton Park) en 2016 ?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Millwall",
+            "Charlton Athletic",
+            "Leyton Orient"
+          ],
+          "explanation": "West Ham s'est installé au London Stadium en 2016."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb forlot Boleyn Ground (Upton Park) i 2016?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Millwall",
+            "Charlton Athletic",
+            "Leyton Orient"
+          ],
+          "explanation": "West Ham flyttet til London Stadium i 2016."
+        },
+        "sv": {
+          "questionText": "Vilken klubb lämnade Boleyn Ground (Upton Park) 2016?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Millwall",
+            "Charlton Athletic",
+            "Leyton Orient"
+          ],
+          "explanation": "West Ham flyttade till London Stadium 2016."
+        }
+      }
+    },
+    {
+      "id": "hist-ayresome-park",
+      "questionText": "Which club played at Ayresome Park before moving to the Riverside Stadium in 1995?",
+      "category": "HISTORY",
+      "correctAnswer": "Middlesbrough",
+      "wrongAnswers": [
+        "Sunderland",
+        "Hartlepool United",
+        "Newcastle United"
+      ],
+      "explanation": "Middlesbrough left Ayresome Park in 1995.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein spielte im Ayresome Park, bevor er 1995 ins Riverside Stadium zog?",
+          "correctAnswer": "Middlesbrough",
+          "wrongAnswers": [
+            "Sunderland",
+            "Hartlepool United",
+            "Newcastle United"
+          ],
+          "explanation": "Middlesbrough verließ den Ayresome Park 1995."
+        },
+        "fr": {
+          "questionText": "Quel club jouait à Ayresome Park avant de rejoindre le Riverside Stadium en 1995 ?",
+          "correctAnswer": "Middlesbrough",
+          "wrongAnswers": [
+            "Sunderland",
+            "Hartlepool United",
+            "Newcastle United"
+          ],
+          "explanation": "Middlesbrough a quitté Ayresome Park en 1995."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb spilte på Ayresome Park før flyttingen til Riverside Stadium i 1995?",
+          "correctAnswer": "Middlesbrough",
+          "wrongAnswers": [
+            "Sunderland",
+            "Hartlepool United",
+            "Newcastle United"
+          ],
+          "explanation": "Middlesbrough forlot Ayresome Park i 1995."
+        },
+        "sv": {
+          "questionText": "Vilken klubb spelade på Ayresome Park innan flytten till Riverside Stadium 1995?",
+          "correctAnswer": "Middlesbrough",
+          "wrongAnswers": [
+            "Sunderland",
+            "Hartlepool United",
+            "Newcastle United"
+          ],
+          "explanation": "Middlesbrough lämnade Ayresome Park 1995."
+        }
+      }
+    },
+    {
+      "id": "hist-roker-park",
+      "questionText": "Which club played at Roker Park until 1997?",
+      "category": "HISTORY",
+      "correctAnswer": "Sunderland",
+      "wrongAnswers": [
+        "Newcastle United",
+        "Middlesbrough",
+        "Gateshead"
+      ],
+      "explanation": "Sunderland moved from Roker Park to the Stadium of Light in 1997.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein spielte bis 1997 im Roker Park?",
+          "correctAnswer": "Sunderland",
+          "wrongAnswers": [
+            "Newcastle United",
+            "Middlesbrough",
+            "Gateshead"
+          ],
+          "explanation": "Sunderland zog 1997 vom Roker Park ins Stadium of Light."
+        },
+        "fr": {
+          "questionText": "Quel club a joué à Roker Park jusqu'en 1997 ?",
+          "correctAnswer": "Sunderland",
+          "wrongAnswers": [
+            "Newcastle United",
+            "Middlesbrough",
+            "Gateshead"
+          ],
+          "explanation": "Sunderland a quitté Roker Park pour le Stadium of Light en 1997."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb spilte på Roker Park frem til 1997?",
+          "correctAnswer": "Sunderland",
+          "wrongAnswers": [
+            "Newcastle United",
+            "Middlesbrough",
+            "Gateshead"
+          ],
+          "explanation": "Sunderland flyttet fra Roker Park til Stadium of Light i 1997."
+        },
+        "sv": {
+          "questionText": "Vilken klubb spelade på Roker Park fram till 1997?",
+          "correctAnswer": "Sunderland",
+          "wrongAnswers": [
+            "Newcastle United",
+            "Middlesbrough",
+            "Gateshead"
+          ],
+          "explanation": "Sunderland flyttade från Roker Park till Stadium of Light 1997."
+        }
+      }
+    },
+    {
+      "id": "hist-newton-heath",
+      "questionText": "Which club was originally called Newton Heath?",
+      "category": "HISTORY",
+      "correctAnswer": "Manchester United",
+      "wrongAnswers": [
+        "Manchester City",
+        "Bolton Wanderers",
+        "Oldham Athletic"
+      ],
+      "explanation": "Newton Heath became Manchester United in 1902.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein hieß ursprünglich Newton Heath?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Manchester City",
+            "Bolton Wanderers",
+            "Oldham Athletic"
+          ],
+          "explanation": "Newton Heath wurde 1902 zu Manchester United."
+        },
+        "fr": {
+          "questionText": "Quel club s'appelait à l'origine Newton Heath ?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Manchester City",
+            "Bolton Wanderers",
+            "Oldham Athletic"
+          ],
+          "explanation": "Newton Heath est devenu Manchester United en 1902."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb het opprinnelig Newton Heath?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Manchester City",
+            "Bolton Wanderers",
+            "Oldham Athletic"
+          ],
+          "explanation": "Newton Heath ble Manchester United i 1902."
+        },
+        "sv": {
+          "questionText": "Vilken klubb hette ursprungligen Newton Heath?",
+          "correctAnswer": "Manchester United",
+          "wrongAnswers": [
+            "Manchester City",
+            "Bolton Wanderers",
+            "Oldham Athletic"
+          ],
+          "explanation": "Newton Heath blev Manchester United 1902."
+        }
+      }
+    },
+    {
+      "id": "hist-thames-ironworks",
+      "questionText": "Which club was founded as Thames Ironworks?",
+      "category": "HISTORY",
+      "correctAnswer": "West Ham United",
+      "wrongAnswers": [
+        "Millwall",
+        "Charlton Athletic",
+        "Arsenal"
+      ],
+      "explanation": "Thames Ironworks F.C. became West Ham United in 1900.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein wurde als Thames Ironworks gegründet?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Millwall",
+            "Charlton Athletic",
+            "Arsenal"
+          ],
+          "explanation": "Thames Ironworks F.C. wurde 1900 zu West Ham United."
+        },
+        "fr": {
+          "questionText": "Quel club a été fondé sous le nom de Thames Ironworks ?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Millwall",
+            "Charlton Athletic",
+            "Arsenal"
+          ],
+          "explanation": "Thames Ironworks F.C. est devenu West Ham United en 1900."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb ble stiftet som Thames Ironworks?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Millwall",
+            "Charlton Athletic",
+            "Arsenal"
+          ],
+          "explanation": "Thames Ironworks F.C. ble West Ham United i 1900."
+        },
+        "sv": {
+          "questionText": "Vilken klubb grundades som Thames Ironworks?",
+          "correctAnswer": "West Ham United",
+          "wrongAnswers": [
+            "Millwall",
+            "Charlton Athletic",
+            "Arsenal"
+          ],
+          "explanation": "Thames Ironworks F.C. blev West Ham United 1900."
+        }
+      }
+    },
+    {
+      "id": "hist-small-heath",
+      "questionText": "Which club was once known as Small Heath?",
+      "category": "HISTORY",
+      "correctAnswer": "Birmingham City",
+      "wrongAnswers": [
+        "Aston Villa",
+        "West Bromwich Albion",
+        "Wolverhampton Wanderers"
+      ],
+      "explanation": "Small Heath became Birmingham, then Birmingham City.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein hieß einst Small Heath?",
+          "correctAnswer": "Birmingham City",
+          "wrongAnswers": [
+            "Aston Villa",
+            "West Bromwich Albion",
+            "Wolverhampton Wanderers"
+          ],
+          "explanation": "Aus Small Heath wurde Birmingham, später Birmingham City."
+        },
+        "fr": {
+          "questionText": "Quel club s'appelait autrefois Small Heath ?",
+          "correctAnswer": "Birmingham City",
+          "wrongAnswers": [
+            "Aston Villa",
+            "West Bromwich Albion",
+            "Wolverhampton Wanderers"
+          ],
+          "explanation": "Small Heath est devenu Birmingham, puis Birmingham City."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb het en gang Small Heath?",
+          "correctAnswer": "Birmingham City",
+          "wrongAnswers": [
+            "Aston Villa",
+            "West Bromwich Albion",
+            "Wolverhampton Wanderers"
+          ],
+          "explanation": "Small Heath ble Birmingham, og senere Birmingham City."
+        },
+        "sv": {
+          "questionText": "Vilken klubb hette en gång Small Heath?",
+          "correctAnswer": "Birmingham City",
+          "wrongAnswers": [
+            "Aston Villa",
+            "West Bromwich Albion",
+            "Wolverhampton Wanderers"
+          ],
+          "explanation": "Small Heath blev Birmingham och senare Birmingham City."
+        }
+      }
+    },
+    {
+      "id": "hist-dial-square",
+      "questionText": "Which club began life as Dial Square in 1886?",
+      "category": "HISTORY",
+      "correctAnswer": "Arsenal",
+      "wrongAnswers": [
+        "Tottenham Hotspur",
+        "Fulham",
+        "Chelsea"
+      ],
+      "explanation": "Dial Square became Royal Arsenal, then Woolwich Arsenal, then Arsenal.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein begann 1886 als Dial Square?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Tottenham Hotspur",
+            "Fulham",
+            "Chelsea"
+          ],
+          "explanation": "Aus Dial Square wurde Royal Arsenal, dann Woolwich Arsenal und schließlich Arsenal."
+        },
+        "fr": {
+          "questionText": "Quel club est né en 1886 sous le nom de Dial Square ?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Tottenham Hotspur",
+            "Fulham",
+            "Chelsea"
+          ],
+          "explanation": "Dial Square est devenu Royal Arsenal, puis Woolwich Arsenal, puis Arsenal."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb startet som Dial Square i 1886?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Tottenham Hotspur",
+            "Fulham",
+            "Chelsea"
+          ],
+          "explanation": "Dial Square ble Royal Arsenal, så Woolwich Arsenal og til slutt Arsenal."
+        },
+        "sv": {
+          "questionText": "Vilken klubb började som Dial Square 1886?",
+          "correctAnswer": "Arsenal",
+          "wrongAnswers": [
+            "Tottenham Hotspur",
+            "Fulham",
+            "Chelsea"
+          ],
+          "explanation": "Dial Square blev Royal Arsenal, sedan Woolwich Arsenal och till sist Arsenal."
+        }
+      }
+    },
+    {
+      "id": "hist-wigan-2013",
+      "questionText": "Which club won the 2013 FA Cup and were relegated from the Premier League in the same season?",
+      "category": "HISTORY",
+      "correctAnswer": "Wigan Athletic",
+      "wrongAnswers": [
+        "Portsmouth",
+        "Birmingham City",
+        "Cardiff City"
+      ],
+      "explanation": "Wigan beat Manchester City 1–0 in the final, then went down days later.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein gewann 2013 den FA Cup und stieg in derselben Saison aus der Premier League ab?",
+          "correctAnswer": "Wigan Athletic",
+          "wrongAnswers": [
+            "Portsmouth",
+            "Birmingham City",
+            "Cardiff City"
+          ],
+          "explanation": "Wigan schlug Manchester City im Finale 1:0 und stieg Tage später ab."
+        },
+        "fr": {
+          "questionText": "Quel club a remporté la FA Cup 2013 et a été relégué de Premier League la même saison ?",
+          "correctAnswer": "Wigan Athletic",
+          "wrongAnswers": [
+            "Portsmouth",
+            "Birmingham City",
+            "Cardiff City"
+          ],
+          "explanation": "Wigan a battu Manchester City 1-0 en finale, puis a été relégué quelques jours plus tard."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb vant FA-cupen i 2013 og rykket ned fra Premier League samme sesong?",
+          "correctAnswer": "Wigan Athletic",
+          "wrongAnswers": [
+            "Portsmouth",
+            "Birmingham City",
+            "Cardiff City"
+          ],
+          "explanation": "Wigan slo Manchester City 1–0 i finalen og rykket ned noen dager senere."
+        },
+        "sv": {
+          "questionText": "Vilken klubb vann FA-cupen 2013 och åkte ur Premier League samma säsong?",
+          "correctAnswer": "Wigan Athletic",
+          "wrongAnswers": [
+            "Portsmouth",
+            "Birmingham City",
+            "Cardiff City"
+          ],
+          "explanation": "Wigan slog Manchester City med 1–0 i finalen och åkte ur några dagar senare."
+        }
+      }
+    },
+    {
+      "id": "hist-portsmouth-2008",
+      "questionText": "Which club beat Cardiff City in the 2008 FA Cup final?",
+      "category": "HISTORY",
+      "correctAnswer": "Portsmouth",
+      "wrongAnswers": [
+        "Southampton",
+        "Middlesbrough",
+        "Barnsley"
+      ],
+      "explanation": "Portsmouth won 1–0 with a Kanu goal.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein schlug Cardiff City im FA-Cup-Finale 2008?",
+          "correctAnswer": "Portsmouth",
+          "wrongAnswers": [
+            "Southampton",
+            "Middlesbrough",
+            "Barnsley"
+          ],
+          "explanation": "Portsmouth gewann durch ein Tor von Kanu mit 1:0."
+        },
+        "fr": {
+          "questionText": "Quel club a battu Cardiff City en finale de la FA Cup 2008 ?",
+          "correctAnswer": "Portsmouth",
+          "wrongAnswers": [
+            "Southampton",
+            "Middlesbrough",
+            "Barnsley"
+          ],
+          "explanation": "Portsmouth s'est imposé 1-0 grâce à un but de Kanu."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb slo Cardiff City i FA-cupfinalen i 2008?",
+          "correctAnswer": "Portsmouth",
+          "wrongAnswers": [
+            "Southampton",
+            "Middlesbrough",
+            "Barnsley"
+          ],
+          "explanation": "Portsmouth vant 1–0 etter mål av Kanu."
+        },
+        "sv": {
+          "questionText": "Vilken klubb slog Cardiff City i FA-cupfinalen 2008?",
+          "correctAnswer": "Portsmouth",
+          "wrongAnswers": [
+            "Southampton",
+            "Middlesbrough",
+            "Barnsley"
+          ],
+          "explanation": "Portsmouth vann med 1–0 efter mål av Kanu."
+        }
+      }
+    },
+    {
+      "id": "gen-pl-size",
+      "questionText": "How many clubs play in the Premier League?",
+      "category": "GENERAL",
+      "correctAnswer": "20",
+      "wrongAnswers": [
+        "18",
+        "22",
+        "24"
+      ],
+      "explanation": "The Premier League has had 20 clubs since 1995–96.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wie viele Vereine spielen in der Premier League?",
+          "correctAnswer": "20",
+          "wrongAnswers": [
+            "18",
+            "22",
+            "24"
+          ],
+          "explanation": "Die Premier League hat seit 1995/96 20 Vereine."
+        },
+        "fr": {
+          "questionText": "Combien de clubs jouent en Premier League ?",
+          "correctAnswer": "20",
+          "wrongAnswers": [
+            "18",
+            "22",
+            "24"
+          ],
+          "explanation": "La Premier League compte 20 clubs depuis 1995-96."
+        },
+        "nb": {
+          "questionText": "Hvor mange klubber spiller i Premier League?",
+          "correctAnswer": "20",
+          "wrongAnswers": [
+            "18",
+            "22",
+            "24"
+          ],
+          "explanation": "Premier League har hatt 20 klubber siden 1995–96."
+        },
+        "sv": {
+          "questionText": "Hur många klubbar spelar i Premier League?",
+          "correctAnswer": "20",
+          "wrongAnswers": [
+            "18",
+            "22",
+            "24"
+          ],
+          "explanation": "Premier League har haft 20 klubbar sedan 1995–96."
+        }
+      }
+    },
+    {
+      "id": "gen-efl-size",
+      "questionText": "How many clubs are in each of the Championship, League One and League Two?",
+      "category": "GENERAL",
+      "correctAnswer": "24",
+      "wrongAnswers": [
+        "20",
+        "22",
+        "26"
+      ],
+      "explanation": "Each EFL division has 24 clubs.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wie viele Vereine spielen jeweils in Championship, League One und League Two?",
+          "correctAnswer": "24",
+          "wrongAnswers": [
+            "20",
+            "22",
+            "26"
+          ],
+          "explanation": "Jede EFL-Liga hat 24 Vereine."
+        },
+        "fr": {
+          "questionText": "Combien de clubs compte chacun des championnats Championship, League One et League Two ?",
+          "correctAnswer": "24",
+          "wrongAnswers": [
+            "20",
+            "22",
+            "26"
+          ],
+          "explanation": "Chaque division de l'EFL compte 24 clubs."
+        },
+        "nb": {
+          "questionText": "Hvor mange klubber er det i hver av Championship, League One og League Two?",
+          "correctAnswer": "24",
+          "wrongAnswers": [
+            "20",
+            "22",
+            "26"
+          ],
+          "explanation": "Hver EFL-divisjon har 24 klubber."
+        },
+        "sv": {
+          "questionText": "Hur många klubbar finns det i var och en av Championship, League One och League Two?",
+          "correctAnswer": "24",
+          "wrongAnswers": [
+            "20",
+            "22",
+            "26"
+          ],
+          "explanation": "Varje EFL-division har 24 klubbar."
+        }
+      }
+    },
+    {
+      "id": "gen-national-league-tier",
+      "questionText": "Which tier of the English football pyramid is the National League?",
+      "category": "GENERAL",
+      "correctAnswer": "Fifth",
+      "wrongAnswers": [
+        "Fourth",
+        "Sixth",
+        "Third"
+      ],
+      "explanation": "The National League sits directly below League Two, as tier five.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Die wievielte Ebene der englischen Fußballpyramide ist die National League?",
+          "correctAnswer": "Fünfte",
+          "wrongAnswers": [
+            "Vierte",
+            "Sechste",
+            "Dritte"
+          ],
+          "explanation": "Die National League liegt direkt unter der League Two und ist die fünfte Ebene."
+        },
+        "fr": {
+          "questionText": "À quel niveau de la pyramide du football anglais se situe la National League ?",
+          "correctAnswer": "Cinquième",
+          "wrongAnswers": [
+            "Quatrième",
+            "Sixième",
+            "Troisième"
+          ],
+          "explanation": "La National League se trouve juste sous la League Two, au cinquième niveau."
+        },
+        "nb": {
+          "questionText": "Hvilket nivå i den engelske fotballpyramiden er National League?",
+          "correctAnswer": "Femte",
+          "wrongAnswers": [
+            "Fjerde",
+            "Sjette",
+            "Tredje"
+          ],
+          "explanation": "National League ligger rett under League Two, som nivå fem."
+        },
+        "sv": {
+          "questionText": "Vilken nivå i den engelska fotbollspyramiden är National League?",
+          "correctAnswer": "Femte",
+          "wrongAnswers": [
+            "Fjärde",
+            "Sjätte",
+            "Tredje"
+          ],
+          "explanation": "National League ligger direkt under League Two, som nivå fem."
+        }
+      }
+    },
+    {
+      "id": "gen-playoff-venue",
+      "questionText": "Where are the EFL play-off finals played?",
+      "category": "GENERAL",
+      "correctAnswer": "Wembley Stadium",
+      "wrongAnswers": [
+        "Villa Park",
+        "Old Trafford",
+        "Millennium Stadium"
+      ],
+      "explanation": "The play-off finals are held at Wembley.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wo werden die Play-off-Finals der EFL ausgetragen?",
+          "correctAnswer": "Wembley-Stadion",
+          "wrongAnswers": [
+            "Villa Park",
+            "Old Trafford",
+            "Millennium Stadium"
+          ],
+          "explanation": "Die Play-off-Finals finden im Wembley-Stadion statt."
+        },
+        "fr": {
+          "questionText": "Où se jouent les finales des play-offs de l'EFL ?",
+          "correctAnswer": "Stade de Wembley",
+          "wrongAnswers": [
+            "Villa Park",
+            "Old Trafford",
+            "Millennium Stadium"
+          ],
+          "explanation": "Les finales des play-offs se jouent au stade de Wembley."
+        },
+        "nb": {
+          "questionText": "Hvor spilles playoff-finalene i EFL?",
+          "correctAnswer": "Wembley Stadium",
+          "wrongAnswers": [
+            "Villa Park",
+            "Old Trafford",
+            "Millennium Stadium"
+          ],
+          "explanation": "Playoff-finalene spilles på Wembley Stadium."
+        },
+        "sv": {
+          "questionText": "Var spelas EFL:s playoff-finaler?",
+          "correctAnswer": "Wembley Stadium",
+          "wrongAnswers": [
+            "Villa Park",
+            "Old Trafford",
+            "Millennium Stadium"
+          ],
+          "explanation": "Playoff-finalerna spelas på Wembley Stadium."
+        }
+      }
+    },
+    {
+      "id": "gen-three-points",
+      "questionText": "Since 1981, how many points does a league win earn in English football?",
+      "category": "GENERAL",
+      "correctAnswer": "3",
+      "wrongAnswers": [
+        "2",
+        "4",
+        "1"
+      ],
+      "explanation": "England switched from two to three points for a win in 1981.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Wie viele Punkte gibt es seit 1981 im englischen Ligafußball für einen Sieg?",
+          "correctAnswer": "3",
+          "wrongAnswers": [
+            "2",
+            "4",
+            "1"
+          ],
+          "explanation": "England stellte 1981 von zwei auf drei Punkte pro Sieg um."
+        },
+        "fr": {
+          "questionText": "Depuis 1981, combien de points rapporte une victoire en championnat anglais ?",
+          "correctAnswer": "3",
+          "wrongAnswers": [
+            "2",
+            "4",
+            "1"
+          ],
+          "explanation": "L'Angleterre est passée de deux à trois points par victoire en 1981."
+        },
+        "nb": {
+          "questionText": "Hvor mange poeng gir en seier i engelsk ligafotball siden 1981?",
+          "correctAnswer": "3",
+          "wrongAnswers": [
+            "2",
+            "4",
+            "1"
+          ],
+          "explanation": "England gikk fra to til tre poeng for seier i 1981."
+        },
+        "sv": {
+          "questionText": "Hur många poäng ger en seger i engelsk ligafotboll sedan 1981?",
+          "correctAnswer": "3",
+          "wrongAnswers": [
+            "2",
+            "4",
+            "1"
+          ],
+          "explanation": "England gick från två till tre poäng för seger 1981."
+        }
+      }
+    },
+    {
+      "id": "gen-football-league-founded",
+      "questionText": "In which year was the Football League founded?",
+      "category": "GENERAL",
+      "correctAnswer": "1888",
+      "wrongAnswers": [
+        "1863",
+        "1872",
+        "1892"
+      ],
+      "explanation": "The Football League kicked off in 1888 with 12 clubs.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "In welchem Jahr wurde die Football League gegründet?",
+          "correctAnswer": "1888",
+          "wrongAnswers": [
+            "1863",
+            "1872",
+            "1892"
+          ],
+          "explanation": "Die Football League startete 1888 mit 12 Vereinen."
+        },
+        "fr": {
+          "questionText": "En quelle année la Football League a-t-elle été fondée ?",
+          "correctAnswer": "1888",
+          "wrongAnswers": [
+            "1863",
+            "1872",
+            "1892"
+          ],
+          "explanation": "La Football League a débuté en 1888 avec 12 clubs."
+        },
+        "nb": {
+          "questionText": "Hvilket år ble Football League stiftet?",
+          "correctAnswer": "1888",
+          "wrongAnswers": [
+            "1863",
+            "1872",
+            "1892"
+          ],
+          "explanation": "Football League startet i 1888 med 12 klubber."
+        },
+        "sv": {
+          "questionText": "Vilket år grundades Football League?",
+          "correctAnswer": "1888",
+          "wrongAnswers": [
+            "1863",
+            "1872",
+            "1892"
+          ],
+          "explanation": "Football League startade 1888 med 12 klubbar."
+        }
+      }
+    },
+    {
+      "id": "gen-premier-league-founded",
+      "questionText": "In which year did the Premier League begin?",
+      "category": "GENERAL",
+      "correctAnswer": "1992",
+      "wrongAnswers": [
+        "1990",
+        "1994",
+        "1988"
+      ],
+      "explanation": "The Premier League's first season was 1992–93.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "In welchem Jahr startete die Premier League?",
+          "correctAnswer": "1992",
+          "wrongAnswers": [
+            "1990",
+            "1994",
+            "1988"
+          ],
+          "explanation": "Die erste Premier-League-Saison war 1992/93."
+        },
+        "fr": {
+          "questionText": "En quelle année la Premier League a-t-elle commencé ?",
+          "correctAnswer": "1992",
+          "wrongAnswers": [
+            "1990",
+            "1994",
+            "1988"
+          ],
+          "explanation": "La première saison de Premier League était 1992-93."
+        },
+        "nb": {
+          "questionText": "Hvilket år startet Premier League?",
+          "correctAnswer": "1992",
+          "wrongAnswers": [
+            "1990",
+            "1994",
+            "1988"
+          ],
+          "explanation": "Den første Premier League-sesongen var 1992–93."
+        },
+        "sv": {
+          "questionText": "Vilket år startade Premier League?",
+          "correctAnswer": "1992",
+          "wrongAnswers": [
+            "1990",
+            "1994",
+            "1988"
+          ],
+          "explanation": "Den första Premier League-säsongen var 1992–93."
+        }
+      }
+    },
+    {
+      "id": "gen-fa-cup-first",
+      "questionText": "The FA Cup, the oldest national football competition, was first played in which season?",
+      "category": "GENERAL",
+      "correctAnswer": "1871–72",
+      "wrongAnswers": [
+        "1888–89",
+        "1863–64",
+        "1901–02"
+      ],
+      "explanation": "Wanderers won the first FA Cup in 1872.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Der FA Cup, der älteste nationale Fußballwettbewerb, wurde erstmals in welcher Saison ausgespielt?",
+          "correctAnswer": "1871–72",
+          "wrongAnswers": [
+            "1888–89",
+            "1863–64",
+            "1901–02"
+          ],
+          "explanation": "Wanderers gewann 1872 den ersten FA Cup."
+        },
+        "fr": {
+          "questionText": "La FA Cup, plus ancienne compétition nationale de football, s'est jouée pour la première fois lors de quelle saison ?",
+          "correctAnswer": "1871–72",
+          "wrongAnswers": [
+            "1888–89",
+            "1863–64",
+            "1901–02"
+          ],
+          "explanation": "Wanderers a remporté la première FA Cup en 1872."
+        },
+        "nb": {
+          "questionText": "FA-cupen, verdens eldste nasjonale fotballturnering, ble første gang spilt hvilken sesong?",
+          "correctAnswer": "1871–72",
+          "wrongAnswers": [
+            "1888–89",
+            "1863–64",
+            "1901–02"
+          ],
+          "explanation": "Wanderers vant den første FA-cupen i 1872."
+        },
+        "sv": {
+          "questionText": "FA-cupen, världens äldsta nationella fotbollsturnering, spelades första gången vilken säsong?",
+          "correctAnswer": "1871–72",
+          "wrongAnswers": [
+            "1888–89",
+            "1863–64",
+            "1901–02"
+          ],
+          "explanation": "Wanderers vann den första FA-cupen 1872."
+        }
+      }
+    },
+    {
+      "id": "gen-wrexham-owners",
+      "questionText": "Which club was bought by actors Ryan Reynolds and Rob McElhenney in 2021?",
+      "category": "GENERAL",
+      "correctAnswer": "Wrexham",
+      "wrongAnswers": [
+        "Salford City",
+        "Bromley",
+        "Notts County"
+      ],
+      "explanation": "The takeover of Wrexham was completed in February 2021.",
+      "imageUriOrUrl": null,
+      "version": 2,
+      "translations": {
+        "de": {
+          "questionText": "Welcher Verein wurde 2021 von den Schauspielern Ryan Reynolds und Rob McElhenney gekauft?",
+          "correctAnswer": "Wrexham",
+          "wrongAnswers": [
+            "Salford City",
+            "Bromley",
+            "Notts County"
+          ],
+          "explanation": "Die Übernahme von Wrexham wurde im Februar 2021 abgeschlossen."
+        },
+        "fr": {
+          "questionText": "Quel club a été racheté par les acteurs Ryan Reynolds et Rob McElhenney en 2021 ?",
+          "correctAnswer": "Wrexham",
+          "wrongAnswers": [
+            "Salford City",
+            "Bromley",
+            "Notts County"
+          ],
+          "explanation": "Le rachat de Wrexham a été finalisé en février 2021."
+        },
+        "nb": {
+          "questionText": "Hvilken klubb ble kjøpt av skuespillerne Ryan Reynolds og Rob McElhenney i 2021?",
+          "correctAnswer": "Wrexham",
+          "wrongAnswers": [
+            "Salford City",
+            "Bromley",
+            "Notts County"
+          ],
+          "explanation": "Oppkjøpet av Wrexham ble fullført i februar 2021."
+        },
+        "sv": {
+          "questionText": "Vilken klubb köptes av skådespelarna Ryan Reynolds och Rob McElhenney 2021?",
+          "correctAnswer": "Wrexham",
+          "wrongAnswers": [
+            "Salford City",
+            "Bromley",
+            "Notts County"
+          ],
+          "explanation": "Köpet av Wrexham slutfördes i februari 2021."
+        }
+      }
+    }
+  ],
+  "deletedClubIds": [],
+  "deletedQuestionIds": []
+}

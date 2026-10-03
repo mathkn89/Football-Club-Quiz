@@ -7,7 +7,7 @@ Applies every docs/data/deltas_v{N}.json in version order (upserts, then deletio
 bundled seed matches what a device would hold after syncing up to latestVersion.
 
 Schema and identity hash come straight from Room's exported schema JSON
-(app/schemas/com.ruflo.footballquiz.data.local.QuizDatabase/<version>.json, written by KSP on
+(app/schemas/com.makn.footballquiz.data.local.QuizDatabase/<version>.json, written by KSP on
 every build). Using Room's own createSql + setupQueries means the tables match exactly and
 `room_master_table` carries the identity hash Room validates on open — so this file is
 shippable as-is, no device/emulator round-trip needed.
@@ -25,12 +25,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "docs" / "data"
-SCHEMA_DIR = ROOT / "app" / "schemas" / "com.ruflo.footballquiz.data.local.QuizDatabase"
+SCHEMA_DIR = ROOT / "app" / "schemas" / "com.makn.footballquiz.data.local.QuizDatabase"
 OUTPUT_PATH = ROOT / "app" / "src" / "main" / "assets" / "database" / "clubs.db"
 # Read by app/build.gradle.kts into BuildConfig.SEED_DATA_VERSION.
 SEED_VERSION_PATH = ROOT / "app" / "seed_data_version.txt"
 
-DATABASE_VERSION = 4
+DATABASE_VERSION = 5
 
 CLUB_COLUMNS = [
     "id", "name", "shortName", "nickname", "stadiumName", "stadiumCapacity",
@@ -40,7 +40,7 @@ CLUB_COLUMNS = [
 
 QUESTION_COLUMNS = [
     "id", "questionText", "category", "correctAnswer", "wrongAnswers",
-    "explanation", "imageUriOrUrl", "version",
+    "explanation", "imageUriOrUrl", "version", "translations",
 ]
 
 
@@ -62,6 +62,16 @@ def delta_files() -> list[Path]:
     if missing:
         raise SystemExit(f"Missing delta files: {missing}")
     return files
+
+
+def question_value(question: dict, column: str):
+    """Matches Room's storage: wrongAnswers via the JSON TypeConverter, translations as raw JSON."""
+    if column == "wrongAnswers":
+        return json.dumps(question[column])
+    if column == "translations":
+        translations = question.get("translations") or {}
+        return json.dumps(translations, ensure_ascii=False, separators=(",", ":")) if translations else None
+    return question.get(column)
 
 
 def upsert(conn: sqlite3.Connection, table: str, columns: list[str], rows: list[tuple]) -> None:
@@ -94,7 +104,7 @@ def main() -> None:
             upsert(conn, "clubs", CLUB_COLUMNS,
                    [tuple(club.get(col) for col in CLUB_COLUMNS) for club in deltas["clubs"]])
             upsert(conn, "custom_questions", QUESTION_COLUMNS, [
-                tuple(json.dumps(q[col]) if col == "wrongAnswers" else q[col] for col in QUESTION_COLUMNS)
+                tuple(question_value(q, col) for col in QUESTION_COLUMNS)
                 for q in deltas["customQuestions"]
             ])
             conn.executemany("DELETE FROM clubs WHERE id = ?", [(i,) for i in deltas["deletedClubIds"]])
