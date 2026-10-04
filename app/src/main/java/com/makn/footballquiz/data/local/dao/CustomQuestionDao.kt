@@ -24,9 +24,6 @@ interface CustomQuestionDao {
     @Query("SELECT * FROM custom_questions ORDER BY id")
     suspend fun getAllOrdered(): List<CustomQuestionEntity>
 
-    @Query("SELECT * FROM custom_questions ORDER BY RANDOM() LIMIT :limit")
-    suspend fun getRandom(limit: Int): List<CustomQuestionEntity>
-
     @Query("SELECT DISTINCT category FROM custom_questions")
     fun observeDistinctCategories(): Flow<List<String>>
 

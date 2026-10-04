@@ -45,28 +45,27 @@ class GetQuizRoundUseCase(
         deterministic: Boolean = false,
     ): List<QuizQuestion> {
         // Curated questions aren't tied to a league, so a single-league round leaves them out.
-        val customCount = if (leagues.isNullOrEmpty()) {
-            (roundSize * customRatio).roundToInt().coerceIn(0, roundSize)
-        } else {
-            0
-        }
-        val customQuestions = if (customCount == 0) {
-            emptyList()
-        } else {
-            val pool = if (deterministic) {
-                customQuestionDao.getAllOrdered().shuffled(random).take(customCount * CUSTOM_OVERFETCH_FACTOR)
-            } else {
-                customQuestionDao.getRandom(customCount * CUSTOM_OVERFETCH_FACTOR)
-            }
-            pool.map { it.toDomain(strings.languageCode, random) }
+        // The table is small (~100 rows), so take it all in a stable order and shuffle with [random]:
+        // that keeps the daily challenge identical everywhere and other rounds properly random.
+        val customPool = if (leagues.isNullOrEmpty()) {
+            customQuestionDao.getAllOrdered()
+                .shuffled(random)
+                .map { it.toDomain(strings.languageCode, random) }
                 .filter { it.category in categories }
-                .take(customCount)
+        } else {
+            emptyList()
         }
+        val customShare = (roundSize * customRatio).roundToInt().coerceIn(0, roundSize)
+        val customQuestions = customPool.take(customShare)
 
-        val dynamicCount = roundSize - customQuestions.size
-        val dynamicQuestions = buildDynamicQuestions(dynamicCount, categories, leagues, difficulty, generatorsFor(strings), random, deterministic)
+        val dynamicQuestions = buildDynamicQuestions(
+            roundSize - customQuestions.size, categories, leagues, difficulty, generatorsFor(strings), random, deterministic,
+        )
+        // Topics without generated questions (History, Rivalries, General) top up from the
+        // curated pool, so a trivia-only round is still full length.
+        val topUp = customPool.drop(customQuestions.size).take(roundSize - customQuestions.size - dynamicQuestions.size)
 
-        return (customQuestions + dynamicQuestions).shuffled(random)
+        return (customQuestions + topUp + dynamicQuestions).shuffled(random)
     }
 
     /**
@@ -145,7 +144,6 @@ class GetQuizRoundUseCase(
     private companion object {
         const val DEFAULT_ROUND_SIZE = 10
         const val DEFAULT_CUSTOM_RATIO = 0.3f
-        const val CUSTOM_OVERFETCH_FACTOR = 4
         const val DYNAMIC_POOL_SIZE = 100
         const val MIN_POOL_SIZE = 4
         const val MIN_SAME_LEAGUE = 8
