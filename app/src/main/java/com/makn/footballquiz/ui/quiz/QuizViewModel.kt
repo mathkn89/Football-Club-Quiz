@@ -42,6 +42,12 @@ class QuizViewModel(
     private var timerJob: Job? = null
     private var loadingMore = false
 
+    /** Survival: where the run stopped, so a second chance can pick it up again. */
+    private var stoppedAt: QuizUiState.InProgress? = null
+    private var stoppedAnswers: List<AnsweredQuestion> = emptyList()
+    private var lastAttemptId: String? = null
+    private var secondChanceUsed = false
+
     init {
         loadRound()
     }
@@ -181,7 +187,14 @@ class QuizViewModel(
                     val streak = progress.recordDaily(today, score, answered.size, pattern)
                     finished = finished.copy(dailyNumber = DailyChallenge.number(today), streak = streak)
                 }
-                QuizMode.SURVIVAL -> finished = finished.copy(survivalBest = progress.recordSurvival(score))
+                QuizMode.SURVIVAL -> {
+                    stoppedAt = state
+                    stoppedAnswers = answered
+                    finished = finished.copy(
+                        survivalBest = progress.recordSurvival(score),
+                        canContinue = !secondChanceUsed && state.currentIndex + 1 < state.questions.size,
+                    )
+                }
                 QuizMode.STANDARD, QuizMode.DUEL -> Unit
             }
             // A duel mixes two players' answers, so it stays out of history and topic stats.
@@ -190,8 +203,31 @@ class QuizViewModel(
         }
     }
 
+    /** Survival second chance (after a rewarded ad, or free for ad-free players): resume after the miss. */
+    fun continueSurvival() {
+        val state = stoppedAt ?: return
+        if (secondChanceUsed || state.currentIndex + 1 >= state.questions.size) return
+        secondChanceUsed = true
+        stoppedAt = null
+        viewModelScope.launch {
+            lastAttemptId?.let { quizAttemptDao.deleteWithAnswers(it) }
+            lastAttemptId = null
+            _uiState.value = state.copy(
+                currentIndex = state.currentIndex + 1,
+                answered = stoppedAnswers,
+                score = stoppedAnswers.count { it.isCorrect },
+                selectedOptionIndex = null,
+                isAnswerRevealed = false,
+                timeRemainingSeconds = state.secondsPerQuestion,
+            )
+            topUpSurvival()
+            startTimer()
+        }
+    }
+
     private suspend fun record(mode: QuizMode, answered: List<AnsweredQuestion>, score: Int) {
         val attemptId = UUID.randomUUID().toString()
+        lastAttemptId = attemptId
         quizAttemptDao.insertWithAnswers(
             QuizAttemptEntity(
                 id = attemptId,

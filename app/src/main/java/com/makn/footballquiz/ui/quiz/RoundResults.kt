@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
@@ -27,15 +29,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,9 +52,25 @@ import com.makn.footballquiz.ui.common.KitShirt
 import com.makn.footballquiz.ui.theme.CorrectGreen
 import com.makn.footballquiz.ui.theme.IncorrectRed
 
+/** What the results screen needs to know about ads and the "Remove ads" purchase. */
+data class ResultsMonetization(
+    val adFree: Boolean = true,
+    val showAdFreeOffer: Boolean = false,
+    val rewardedReady: Boolean = false,
+    /** Plays a rewarded ad and runs the callback only if it was watched to the end. */
+    val watchRewarded: (onRewarded: () -> Unit) -> Unit = {},
+    val onRemoveAds: () -> Unit = {},
+)
+
 /** End-of-round screen: score, mode-specific extras, share, and a review of the answers. */
 @Composable
-fun RoundResults(state: QuizUiState.Finished, onPlayAgain: (() -> Unit)?, onDone: () -> Unit) {
+fun RoundResults(
+    state: QuizUiState.Finished,
+    onPlayAgain: (() -> Unit)?,
+    onDone: () -> Unit,
+    monetization: ResultsMonetization = ResultsMonetization(),
+    onContinueSurvival: () -> Unit = {},
+) {
     val context = LocalContext.current
     var showAll by rememberSaveable { mutableStateOf(state.mistakes.isEmpty()) }
     val reviewed = if (showAll) state.answered else state.mistakes
@@ -64,6 +83,9 @@ fun RoundResults(state: QuizUiState.Finished, onPlayAgain: (() -> Unit)?, onDone
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item { Summary(state) }
+        if (state.canContinue && (monetization.adFree || monetization.rewardedReady)) {
+            item { SecondChanceCard(monetization, onContinueSurvival) }
+        }
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (onPlayAgain != null) {
@@ -81,6 +103,11 @@ fun RoundResults(state: QuizUiState.Finished, onPlayAgain: (() -> Unit)?, onDone
                     Text(stringResource(R.string.share))
                 }
                 TextButton(onClick = onDone, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.results_done)) }
+                if (monetization.showAdFreeOffer) {
+                    TextButton(onClick = monetization.onRemoveAds, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.ads_go_ad_free), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
             }
         }
         item {
@@ -112,6 +139,31 @@ fun RoundResults(state: QuizUiState.Finished, onPlayAgain: (() -> Unit)?, onDone
             }
         }
         items(reviewed) { ReviewRow(it, isDuel = state.mode == QuizMode.DUEL) }
+    }
+}
+
+/** Survival only: one more life, paid for with a short video (free for ad-free players). */
+@Composable
+private fun SecondChanceCard(monetization: ResultsMonetization, onContinue: () -> Unit) {
+    Surface(
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(stringResource(R.string.second_chance_title), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.second_chance_text), style = MaterialTheme.typography.bodyMedium)
+            Button(
+                onClick = { if (monetization.adFree) onContinue() else monetization.watchRewarded(onContinue) },
+                shape = RoundedCornerShape(14.dp),
+                modifier = Modifier.fillMaxWidth().height(48.dp),
+            ) {
+                Icon(if (monetization.adFree) Icons.Default.Favorite else Icons.Default.PlayCircle, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(if (monetization.adFree) R.string.second_chance_free else R.string.second_chance_watch))
+            }
+        }
     }
 }
 

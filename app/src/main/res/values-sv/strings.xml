@@ -214,5 +214,27 @@
     <string name="round_details">Rundinformation</string>
     <string name="round_not_found">Rundan hittades inte.</string>
     <string name="round_details_missing">Frågedetaljer sparas för rundor som spelats från den här versionen. Den här rundan har bara resultatet.</string>
+    <!-- Settings, ads and the Remove ads purchase -->
+    <string name="settings">Inställningar</string>
+    <string name="settings_section_general">Allmänt</string>
+    <string name="settings_section_privacy">Integritet och info</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="privacy_settings">Integritetsinställningar</string>
+    <string name="privacy_settings_text">Ändra dina val om annonser och data</string>
+    <string name="ads_restoring">Kontrollerar dina köp…</string>
+    <string name="ads_ad_free_title">Du är reklamfri</string>
+    <string name="ads_ad_free_text">Tack för att du stöttar Football Club Quiz!</string>
+    <string name="ads_remove_title">Ta bort reklam</string>
+    <string name="ads_remove_text">En betalning, ingen prenumeration. Inga banners, ingen reklam mellan rundorna, och andra chansen i överlevnad är gratis.</string>
+    <string name="ads_pending">Betalningen väntar…</string>
+    <string name="ads_remove_button_price">Ta bort reklam · %1$s</string>
+    <string name="ads_unavailable">Inte tillgängligt än</string>
+    <string name="ads_restore">Återställ köp</string>
+    <string name="ads_go_ad_free">Spela utan reklam</string>
+    <string name="second_chance_title">En chans till?</string>
+    <string name="second_chance_text">Fortsätt sviten från nästa fråga. En gång per runda.</string>
+    <string name="second_chance_free">Fortsätt</string>
+    <string name="second_chance_watch">Titta på en kort video för att fortsätta</string>
+
     <bool name="kit_shorts_plural">true</bool>
 </resources>

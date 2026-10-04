@@ -1,9 +1,5 @@
 package com.makn.footballquiz.ui.history
 
-import android.Manifest
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,9 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -35,17 +29,13 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,16 +46,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.makn.footballquiz.BuildConfig
 import com.makn.footballquiz.R
 import com.makn.footballquiz.data.local.UserProfilePreferences
 import com.makn.footballquiz.domain.model.QuizAttempt
 import com.makn.footballquiz.domain.model.QuizCategory
 import com.makn.footballquiz.domain.model.QuizMode
-import com.makn.footballquiz.reminder.DailyReminder
-import com.makn.footballquiz.sync.SyncScheduler
 import com.makn.footballquiz.ui.common.FootballQuizTopBar
-import com.makn.footballquiz.ui.common.LanguageDialog
 import com.makn.footballquiz.ui.common.displayName
 import com.makn.footballquiz.ui.common.nameRes
 import java.time.Instant
@@ -73,7 +59,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlin.math.roundToInt
-import kotlinx.coroutines.launch
 
 private val DATE_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
 
@@ -82,58 +67,23 @@ private val DATE_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.M
 fun HistoryScreen(
     onPractise: (Set<QuizCategory>) -> Unit,
     onAttemptSelected: (String) -> Unit,
+    onOpenSettings: () -> Unit,
     viewModel: HistoryViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     var showRenameDialog by remember { mutableStateOf(false) }
-    var showAboutDialog by remember { mutableStateOf(false) }
-    var showLanguageDialog by remember { mutableStateOf(false) }
-    val updatingMessage = stringResource(R.string.history_updating)
-    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) {
-            viewModel.onRemindersChanged(true)
-            DailyReminder.enable(context)
-        }
-    }
-    fun setReminders(enabled: Boolean) {
-        when {
-            !enabled -> {
-                viewModel.onRemindersChanged(false)
-                DailyReminder.disable(context)
-            }
-            DailyReminder.canNotify(context) -> {
-                viewModel.onRemindersChanged(true)
-                DailyReminder.enable(context)
-            }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-        }
-    }
 
     Scaffold(
         topBar = {
             FootballQuizTopBar(
                 title = stringResource(R.string.tab_history),
                 actions = {
-                    IconButton(onClick = {
-                        SyncScheduler.syncNow(context)
-                        coroutineScope.launch { snackbarHostState.showSnackbar(updatingMessage) }
-                    }) {
-                        Icon(Icons.Default.Sync, contentDescription = stringResource(R.string.history_update_data))
-                    }
-                    IconButton(onClick = { showLanguageDialog = true }) {
-                        Icon(Icons.Default.Language, contentDescription = stringResource(R.string.history_language))
-                    }
-                    IconButton(onClick = { showAboutDialog = true }) {
-                        Icon(Icons.Default.Info, contentDescription = stringResource(R.string.history_about))
+                    IconButton(onClick = onOpenSettings) {
+                        Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.settings))
                     }
                 },
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         val state = uiState as? HistoryUiState.Content ?: return@Scaffold
 
@@ -144,7 +94,6 @@ fun HistoryScreen(
             item {
                 ProfileRow(displayName = state.displayName.localizedName(), onEditClick = { showRenameDialog = true })
                 StatsRow(state)
-                ReminderRow(enabled = state.remindersEnabled, onChange = ::setReminders)
                 TopicsSection(state, onPractise)
                 Spacer(Modifier.height(16.dp))
                 Text(
@@ -180,20 +129,6 @@ fun HistoryScreen(
         }
     }
 
-    if (showAboutDialog) {
-        AlertDialog(
-            onDismissRequest = { showAboutDialog = false },
-            confirmButton = { TextButton(onClick = { showAboutDialog = false }) { Text(stringResource(R.string.ok)) } },
-            title = { Text(stringResource(R.string.app_name)) },
-            text = {
-                Text(stringResource(R.string.about_text, BuildConfig.VERSION_NAME))
-            },
-        )
-    }
-
-    if (showLanguageDialog) {
-        LanguageDialog(onDismiss = { showLanguageDialog = false })
-    }
 }
 
 @Composable
@@ -225,17 +160,6 @@ private fun StatsRow(state: HistoryUiState.Content) {
         StatTile(stringResource(R.string.history_average), state.averagePercent?.let { stringResource(R.string.percent, it) } ?: "–", Modifier.weight(1f))
         StatTile(stringResource(R.string.history_best), state.bestPercent?.let { stringResource(R.string.percent, it) } ?: "–", Modifier.weight(1f))
     }
-}
-
-@Composable
-private fun ReminderRow(enabled: Boolean, onChange: (Boolean) -> Unit) {
-    ListItem(
-        headlineContent = { Text(stringResource(R.string.reminder_title)) },
-        supportingContent = { Text(stringResource(R.string.reminder_text)) },
-        trailingContent = { Switch(checked = enabled, onCheckedChange = onChange) },
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
-        modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
-    )
 }
 
 /** Accuracy per topic, best first, with a shortcut to practise the weakest ones. */

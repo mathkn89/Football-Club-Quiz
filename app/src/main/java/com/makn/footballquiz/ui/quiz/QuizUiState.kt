@@ -62,6 +62,8 @@ sealed interface QuizUiState {
         val survivalBest: Int? = null,
         /** Duel: second player's score. */
         val secondScore: Int? = null,
+        /** Survival: the one-time second chance hasn't been used yet. */
+        val canContinue: Boolean = false,
     ) : QuizUiState {
         val mistakes: List<AnsweredQuestion> get() = answered.filterNot { it.isCorrect }
     }

@@ -177,6 +177,28 @@
     <string name="round_details">Round details</string>
     <string name="round_not_found">This round could not be found.</string>
     <string name="round_details_missing">Question details are saved for rounds played from this version on. This round only has its score.</string>
+    <!-- Settings, ads and the Remove ads purchase -->
+    <string name="settings">Settings</string>
+    <string name="settings_section_general">General</string>
+    <string name="settings_section_privacy">Privacy &amp; about</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="privacy_settings">Privacy settings</string>
+    <string name="privacy_settings_text">Change your choices about ads and data</string>
+    <string name="ads_restoring">Checking your purchases…</string>
+    <string name="ads_ad_free_title">You\'re ad-free</string>
+    <string name="ads_ad_free_text">Thanks for supporting Football Club Quiz!</string>
+    <string name="ads_remove_title">Remove ads</string>
+    <string name="ads_remove_text">One payment, no subscription. No banners, no ads between rounds, and Survival\'s second chance is free.</string>
+    <string name="ads_pending">Payment pending…</string>
+    <string name="ads_remove_button_price">Remove ads · %1$s</string>
+    <string name="ads_unavailable">Not available yet</string>
+    <string name="ads_restore">Restore purchase</string>
+    <string name="ads_go_ad_free">Go ad-free</string>
+    <string name="second_chance_title">Second chance?</string>
+    <string name="second_chance_text">Keep your run going from the next question. Once per run.</string>
+    <string name="second_chance_free">Continue</string>
+    <string name="second_chance_watch">Watch a short video to continue</string>
+
     <!-- Question text (quiz engine) -->
     <string name="q_stadium_prompt">What is the name of %1$s\'s home stadium?</string>
     <string name="q_stadium_explanation">%1$s play their home games at %2$s in %3$s.</string>

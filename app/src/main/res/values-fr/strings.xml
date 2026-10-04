@@ -214,5 +214,27 @@
     <string name="round_details">Détails de la manche</string>
     <string name="round_not_found">Cette manche est introuvable.</string>
     <string name="round_details_missing">Le détail des questions est enregistré pour les manches jouées à partir de cette version. Seul le score de cette manche est disponible.</string>
+    <!-- Settings, ads and the Remove ads purchase -->
+    <string name="settings">Paramètres</string>
+    <string name="settings_section_general">Général</string>
+    <string name="settings_section_privacy">Confidentialité et infos</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="privacy_settings">Paramètres de confidentialité</string>
+    <string name="privacy_settings_text">Modifier tes choix sur la publicité et les données</string>
+    <string name="ads_restoring">Vérification de tes achats…</string>
+    <string name="ads_ad_free_title">Tu es sans pub</string>
+    <string name="ads_ad_free_text">Merci de soutenir Football Club Quiz !</string>
+    <string name="ads_remove_title">Supprimer les pubs</string>
+    <string name="ads_remove_text">Un seul paiement, sans abonnement. Plus de bannières ni de pubs entre les manches, et la seconde chance en mode survie est gratuite.</string>
+    <string name="ads_pending">Paiement en attente…</string>
+    <string name="ads_remove_button_price">Supprimer les pubs · %1$s</string>
+    <string name="ads_unavailable">Pas encore disponible</string>
+    <string name="ads_restore">Restaurer l\'achat</string>
+    <string name="ads_go_ad_free">Jouer sans pub</string>
+    <string name="second_chance_title">Seconde chance ?</string>
+    <string name="second_chance_text">Reprends ta série à la question suivante. Une fois par partie.</string>
+    <string name="second_chance_free">Continuer</string>
+    <string name="second_chance_watch">Regarder une courte vidéo pour continuer</string>
+
     <bool name="kit_shorts_plural">false</bool>
 </resources>

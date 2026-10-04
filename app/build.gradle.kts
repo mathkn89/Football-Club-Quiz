@@ -21,11 +21,32 @@ android {
         // so a fresh install syncs only newer deltas instead of replaying older ones over the seed.
         val seedDataVersion = file("seed_data_version.txt").readText().trim().toInt()
         buildConfigField("int", "SEED_DATA_VERSION", seedDataVersion.toString())
+
+        // Play Console in-app product for the one-time "Remove ads" purchase.
+        buildConfigField("String", "REMOVE_ADS_PRODUCT_ID", "\"remove_ads\"")
     }
 
     androidResources {
         // Lists the bundled languages in Android 13+ Settings > Apps > Language.
         generateLocaleConfig = true
+    }
+
+    buildTypes {
+        // AdMob IDs (not secret — they're readable from any published app). Debug builds always use
+        // Google's public test IDs so testing can never produce real impressions or clicks, which
+        // AdMob treats as invalid traffic.
+        debug {
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+            buildConfigField("String", "ADMOB_BANNER_ID", "\"ca-app-pub-3940256099942544/9214589741\"")
+            buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
+            buildConfigField("String", "ADMOB_REWARDED_ID", "\"ca-app-pub-3940256099942544/5224354917\"")
+        }
+        release {
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-3922912607913463~9680233170"
+            buildConfigField("String", "ADMOB_BANNER_ID", "\"ca-app-pub-3922912607913463/7752073839\"") // Banner - tab bar
+            buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-3922912607913463/7312080975\"") // Interstitial - between rounds
+            buildConfigField("String", "ADMOB_REWARDED_ID", "\"ca-app-pub-3922912607913463/1059507125\"") // Reward - survival second chance
+        }
     }
 
     buildFeatures {
@@ -77,6 +98,9 @@ dependencies {
     implementation("androidx.compose.animation:animation")
     implementation("androidx.activity:activity-compose:1.9.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
+    implementation("com.google.android.ump:user-messaging-platform:3.1.0")
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
     implementation("androidx.navigation:navigation-compose:2.7.7")

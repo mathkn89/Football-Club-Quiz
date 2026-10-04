@@ -1,9 +1,9 @@
 package com.makn.footballquiz.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -19,6 +19,11 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         val container = (application as FootballQuizApplication).container
+
+        // Consent first (Google UMP); ads initialise only once it allows them. A previous run's
+        // consent lets ads start immediately while the status refreshes in the background.
+        container.adsManager.initializeIfAllowed()
+        container.consentManager.gather(this) { container.adsManager.initializeIfAllowed() }
 
         setContent {
             FootballQuizTheme {

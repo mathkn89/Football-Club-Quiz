@@ -214,5 +214,27 @@
     <string name="round_details">Rundendetails</string>
     <string name="round_not_found">Diese Runde wurde nicht gefunden.</string>
     <string name="round_details_missing">Fragedetails werden für Runden ab dieser Version gespeichert. Für diese Runde gibt es nur das Ergebnis.</string>
+    <!-- Settings, ads and the Remove ads purchase -->
+    <string name="settings">Einstellungen</string>
+    <string name="settings_section_general">Allgemein</string>
+    <string name="settings_section_privacy">Datenschutz &amp; Info</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="privacy_settings">Datenschutzeinstellungen</string>
+    <string name="privacy_settings_text">Deine Auswahl zu Werbung und Daten ändern</string>
+    <string name="ads_restoring">Käufe werden geprüft…</string>
+    <string name="ads_ad_free_title">Du bist werbefrei</string>
+    <string name="ads_ad_free_text">Danke, dass du Football Club Quiz unterstützt!</string>
+    <string name="ads_remove_title">Werbung entfernen</string>
+    <string name="ads_remove_text">Einmal zahlen, kein Abo. Keine Banner, keine Werbung zwischen den Runden, und die zweite Chance im Überleben-Modus ist gratis.</string>
+    <string name="ads_pending">Zahlung ausstehend…</string>
+    <string name="ads_remove_button_price">Werbung entfernen · %1$s</string>
+    <string name="ads_unavailable">Noch nicht verfügbar</string>
+    <string name="ads_restore">Kauf wiederherstellen</string>
+    <string name="ads_go_ad_free">Werbefrei spielen</string>
+    <string name="second_chance_title">Zweite Chance?</string>
+    <string name="second_chance_text">Spiel ab der nächsten Frage weiter. Einmal pro Durchgang.</string>
+    <string name="second_chance_free">Weiterspielen</string>
+    <string name="second_chance_watch">Kurzes Video ansehen und weiterspielen</string>
+
     <bool name="kit_shorts_plural">false</bool>
 </resources>

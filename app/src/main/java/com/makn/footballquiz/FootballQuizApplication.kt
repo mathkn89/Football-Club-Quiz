@@ -37,5 +37,7 @@ class FootballQuizApplication : Application() {
                 .build()
         )
         SyncScheduler.schedulePeriodicSync(this)
+        // Checks "Remove ads" ownership with Play on every start (also restores it on reinstall).
+        container.billingManager.start()
     }
 }

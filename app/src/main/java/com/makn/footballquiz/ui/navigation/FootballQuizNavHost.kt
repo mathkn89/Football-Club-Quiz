@@ -1,6 +1,7 @@
 package com.makn.footballquiz.ui.navigation
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
@@ -17,7 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -36,6 +39,8 @@ import com.makn.footballquiz.ui.clubs.ClubDetailScreen
 import com.makn.footballquiz.ui.clubs.ClubDetailViewModel
 import com.makn.footballquiz.ui.clubs.ClubListScreen
 import com.makn.footballquiz.ui.clubs.ClubListViewModel
+import com.makn.footballquiz.ui.common.AdBanner
+import com.makn.footballquiz.ui.common.findActivity
 import com.makn.footballquiz.ui.common.rememberQuizStrings
 import com.makn.footballquiz.ui.core.ViewModelFactory
 import com.makn.footballquiz.ui.history.AttemptDetailScreen
@@ -47,6 +52,9 @@ import com.makn.footballquiz.ui.picker.PickerUiState
 import com.makn.footballquiz.ui.picker.PickerViewModel
 import com.makn.footballquiz.ui.quiz.QuizScreen
 import com.makn.footballquiz.ui.quiz.QuizViewModel
+import com.makn.footballquiz.ui.quiz.ResultsMonetization
+import com.makn.footballquiz.ui.settings.SettingsScreen
+import com.makn.footballquiz.ui.settings.SettingsViewModel
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -54,6 +62,7 @@ private const val ROUTE_PICKER = "picker"
 private const val ROUTE_QUIZ = "quiz/{mode}/{roundSize}/{categories}/{league}/{difficulty}"
 private const val ROUTE_HISTORY = "history"
 private const val ROUTE_ATTEMPT_DETAIL = "history/{attemptId}"
+private const val ROUTE_SETTINGS = "settings"
 private const val ROUTE_CLUBS = "clubs"
 private const val ROUTE_CLUB_DETAIL = "clubs/{clubId}"
 private const val ARG_DEFAULT_ROUND_SIZE = 10
@@ -95,26 +104,34 @@ fun FootballQuizNavHost(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentTab = TAB_FOR_ROUTE[backStackEntry?.destination?.route]
+    val adsEnabled by container.adsManager.adsEnabled.collectAsStateWithLifecycle()
+    val purchase by container.billingManager.state.collectAsStateWithLifecycle()
+    val rewardedReady by container.adsManager.rewardedReady.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     fun startQuiz(route: String) = navController.navigate(route)
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
         bottomBar = {
             if (currentTab != null) {
-                NavigationBar {
-                    TopLevelDestination.entries.forEach { tab ->
-                        NavigationBarItem(
-                            selected = tab == currentTab,
-                            onClick = {
-                                navController.navigate(tab.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = { Icon(tab.icon, contentDescription = null) },
-                            label = { Text(stringResource(tab.label)) },
-                        )
+                Column {
+                    // Banner on browsing screens only — never on a question or the results screen.
+                    if (adsEnabled) AdBanner()
+                    NavigationBar {
+                        TopLevelDestination.entries.forEach { tab ->
+                            NavigationBarItem(
+                                selected = tab == currentTab,
+                                onClick = {
+                                    navController.navigate(tab.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = { Icon(tab.icon, contentDescription = null) },
+                                label = { Text(stringResource(tab.label)) },
+                            )
+                        }
                     }
                 }
             }
@@ -142,7 +159,7 @@ fun FootballQuizNavHost(
             composable(ROUTE_HISTORY) {
                 val historyViewModel: HistoryViewModel = viewModel(
                     factory = ViewModelFactory {
-                        HistoryViewModel(container.quizAttemptDao, container.userProfilePreferences, container.playProgressPreferences)
+                        HistoryViewModel(container.quizAttemptDao, container.userProfilePreferences)
                     },
                 )
                 HistoryScreen(
@@ -150,8 +167,18 @@ fun FootballQuizNavHost(
                         startQuiz(quizRoute(QuizMode.STANDARD, PickerUiState.DEFAULT_ROUND_SIZE, categories, null, Difficulty.MEDIUM))
                     },
                     onAttemptSelected = { attemptId -> navController.navigate("history/$attemptId") },
+                    onOpenSettings = { navController.navigate(ROUTE_SETTINGS) },
                     viewModel = historyViewModel,
                 )
+            }
+
+            composable(ROUTE_SETTINGS) {
+                val settingsViewModel: SettingsViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        SettingsViewModel(container.billingManager, container.consentManager, container.playProgressPreferences)
+                    },
+                )
+                SettingsScreen(onBack = { navController.popBackStack() }, viewModel = settingsViewModel)
             }
 
             composable(
@@ -249,6 +276,22 @@ fun FootballQuizNavHost(
                     },
                     // Back to wherever the round was started from (Play tab, a club page or History).
                     onExit = { navController.popBackStack() },
+                    onLeaveResults = { then ->
+                        val activity = context.findActivity()
+                        if (activity == null) then() else container.adsManager.showInterstitialIfDue(activity, then)
+                    },
+                    onRoundCompleted = container.adsManager::onRoundCompleted,
+                    monetization = ResultsMonetization(
+                        adFree = purchase.adFree,
+                        showAdFreeOffer = adsEnabled,
+                        rewardedReady = rewardedReady,
+                        watchRewarded = { onRewarded ->
+                            context.findActivity()?.let { activity ->
+                                container.adsManager.showRewarded(activity, onRewarded, onUnavailable = {})
+                            }
+                        },
+                        onRemoveAds = { navController.navigate(ROUTE_SETTINGS) },
+                    ),
                 )
             }
         }

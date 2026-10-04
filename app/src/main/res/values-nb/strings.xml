@@ -214,5 +214,27 @@
     <string name="round_details">Rundedetaljer</string>
     <string name="round_not_found">Fant ikke denne runden.</string>
     <string name="round_details_missing">Spørsmålsdetaljer lagres for runder spilt fra denne versjonen. Denne runden har bare resultatet.</string>
+    <!-- Settings, ads and the Remove ads purchase -->
+    <string name="settings">Innstillinger</string>
+    <string name="settings_section_general">Generelt</string>
+    <string name="settings_section_privacy">Personvern og info</string>
+    <string name="settings_version">Versjon %1$s</string>
+    <string name="privacy_settings">Personverninnstillinger</string>
+    <string name="privacy_settings_text">Endre valgene dine om annonser og data</string>
+    <string name="ads_restoring">Sjekker kjøpene dine…</string>
+    <string name="ads_ad_free_title">Du er reklamefri</string>
+    <string name="ads_ad_free_text">Takk for at du støtter Football Club Quiz!</string>
+    <string name="ads_remove_title">Fjern reklame</string>
+    <string name="ads_remove_text">Én betaling, ikke abonnement. Ingen bannere, ingen reklame mellom rundene, og ekstrasjansen i overlevelse er gratis.</string>
+    <string name="ads_pending">Betaling venter…</string>
+    <string name="ads_remove_button_price">Fjern reklame · %1$s</string>
+    <string name="ads_unavailable">Ikke tilgjengelig ennå</string>
+    <string name="ads_restore">Gjenopprett kjøp</string>
+    <string name="ads_go_ad_free">Spill uten reklame</string>
+    <string name="second_chance_title">En sjanse til?</string>
+    <string name="second_chance_text">Fortsett rekken fra neste spørsmål. Én gang per runde.</string>
+    <string name="second_chance_free">Fortsett</string>
+    <string name="second_chance_watch">Se en kort video for å fortsette</string>
+
     <bool name="kit_shorts_plural">true</bool>
 </resources>

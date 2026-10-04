@@ -20,7 +20,6 @@ sealed interface HistoryUiState {
         val topicStats: List<TopicStat> = emptyList(),
         /** Up to three topics with enough answers and the lowest scores; empty = nothing to practise yet. */
         val weakTopics: Set<QuizCategory> = emptySet(),
-        val remindersEnabled: Boolean = false,
     ) : HistoryUiState {
         val isEmpty: Boolean get() = attempts.isEmpty()
 

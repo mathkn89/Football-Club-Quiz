@@ -27,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +55,10 @@ fun QuizScreen(
     /** Null when the round can't be replayed (the daily challenge). */
     onPlayAgain: (() -> Unit)?,
     onExit: () -> Unit,
+    /** Leaving the results screen; may show a between-rounds ad first. */
+    onLeaveResults: (then: () -> Unit) -> Unit = { it() },
+    monetization: ResultsMonetization = ResultsMonetization(),
+    onRoundCompleted: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showExitConfirm by remember { mutableStateOf(false) }
@@ -64,7 +69,14 @@ fun QuizScreen(
 
     val finished = uiState as? QuizUiState.Finished
     if (finished != null) {
-        RoundResults(state = finished, onPlayAgain = onPlayAgain, onDone = onExit)
+        LaunchedEffect(finished) { onRoundCompleted() }
+        RoundResults(
+            state = finished,
+            onPlayAgain = onPlayAgain?.let { playAgain -> { onLeaveResults(playAgain) } },
+            onDone = { onLeaveResults(onExit) },
+            monetization = monetization,
+            onContinueSurvival = viewModel::continueSurvival,
+        )
         return
     }
 

@@ -32,6 +32,19 @@ interface QuizAttemptDao {
     )
     fun observeCategoryStats(): Flow<List<CategoryStatRow>>
 
+    @Query("DELETE FROM quiz_attempts WHERE id = :id")
+    suspend fun deleteAttempt(id: String)
+
+    @Query("DELETE FROM answer_records WHERE attemptId = :attemptId")
+    suspend fun deleteAnswers(attemptId: String)
+
+    /** Survival second chance: the run continues, so its first recorded ending is replaced. */
+    @Transaction
+    suspend fun deleteWithAnswers(attemptId: String) {
+        deleteAnswers(attemptId)
+        deleteAttempt(attemptId)
+    }
+
     @Query("SELECT * FROM quiz_attempts WHERE id = :id")
     fun observeAttempt(id: String): Flow<QuizAttemptEntity?>
 
