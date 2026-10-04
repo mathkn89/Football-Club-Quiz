@@ -25,3 +25,8 @@ __pycache__/
 
 # Windows->WSL copy artifact (NTFS alternate data stream)
 *:Zone.Identifier
+
+# Release signing (upload key + passwords) — never commit
+release-signing/
+*.jks
+*.keystore
