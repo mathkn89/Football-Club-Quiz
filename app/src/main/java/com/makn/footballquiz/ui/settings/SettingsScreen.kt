@@ -1,6 +1,8 @@
 package com.makn.footballquiz.ui.settings
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
@@ -162,6 +165,18 @@ fun SettingsScreen(onBack: () -> Unit, viewModel: SettingsViewModel) {
                         onClick = { context.findActivity()?.let { viewModel.consent.showPrivacyOptions(it) } },
                     )
                 }
+            }
+            item {
+                SettingsRow(
+                    icon = Icons.Default.Description,
+                    title = stringResource(R.string.privacy_policy),
+                    subtitle = stringResource(R.string.privacy_policy_text),
+                    onClick = {
+                        runCatching {
+                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URL)))
+                        }
+                    },
+                )
             }
             item {
                 SettingsRow(

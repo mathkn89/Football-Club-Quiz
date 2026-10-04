@@ -221,6 +221,8 @@
     <string name="settings_version">Version %1$s</string>
     <string name="privacy_settings">Datenschutzeinstellungen</string>
     <string name="privacy_settings_text">Deine Auswahl zu Werbung und Daten ändern</string>
+    <string name="privacy_policy">Datenschutzerklärung</string>
+    <string name="privacy_policy_text">Wie die App mit deinen Daten umgeht</string>
     <string name="ads_restoring">Käufe werden geprüft…</string>
     <string name="ads_ad_free_title">Du bist werbefrei</string>
     <string name="ads_ad_free_text">Danke, dass du Football Club Quiz unterstützt!</string>

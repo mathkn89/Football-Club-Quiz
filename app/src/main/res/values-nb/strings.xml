@@ -221,6 +221,8 @@
     <string name="settings_version">Versjon %1$s</string>
     <string name="privacy_settings">Personverninnstillinger</string>
     <string name="privacy_settings_text">Endre valgene dine om annonser og data</string>
+    <string name="privacy_policy">Personvernerklæring</string>
+    <string name="privacy_policy_text">Hvordan appen håndterer dataene dine</string>
     <string name="ads_restoring">Sjekker kjøpene dine…</string>
     <string name="ads_ad_free_title">Du er reklamefri</string>
     <string name="ads_ad_free_text">Takk for at du støtter Football Club Quiz!</string>

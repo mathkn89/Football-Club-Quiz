@@ -22,6 +22,7 @@ android {
         val seedDataVersion = file("seed_data_version.txt").readText().trim().toInt()
         buildConfigField("int", "SEED_DATA_VERSION", seedDataVersion.toString())
 
+        buildConfigField("String", "PRIVACY_POLICY_URL", "\"https://mathkn89.github.io/Football-Club-Quiz/privacy.html\"")
         // Play Console in-app product for the one-time "Remove ads" purchase.
         buildConfigField("String", "REMOVE_ADS_PRODUCT_ID", "\"remove_ads\"")
     }

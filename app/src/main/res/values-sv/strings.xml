@@ -221,6 +221,8 @@
     <string name="settings_version">Version %1$s</string>
     <string name="privacy_settings">Integritetsinställningar</string>
     <string name="privacy_settings_text">Ändra dina val om annonser och data</string>
+    <string name="privacy_policy">Integritetspolicy</string>
+    <string name="privacy_policy_text">Hur appen hanterar dina uppgifter</string>
     <string name="ads_restoring">Kontrollerar dina köp…</string>
     <string name="ads_ad_free_title">Du är reklamfri</string>
     <string name="ads_ad_free_text">Tack för att du stöttar Football Club Quiz!</string>
