@@ -1,0 +1,223 @@
+"""
+Google Play store listing texts in five languages. Run this file to check Play's length limits
+and write store-listing/listing.md (copy-paste source for Play Console → Main store listing).
+
+Limits: title 30, short description 80, full description 4000, release notes 500 characters.
+"""
+
+from pathlib import Path
+
+LISTING = {
+"en-GB": {
+"title": "Football Club Quiz",
+"short": "Quiz yourself on 116 English football clubs, from the top flight to tier five.",
+"full": """How well do you really know English football? Football Club Quiz tests you on 116 clubs across the top five tiers of the English game — from the biggest stadiums in the country to non-league grounds you've only heard of.
+
+DAILY CHALLENGE
+10 new questions every day, the same for every player. Keep your streak going and share your result with friends.
+
+PLAY YOUR WAY
+• Classic – choose the number of questions, topics and league
+• Survival – keep going until your first wrong answer
+• 2 players – take turns on one phone with the same questions
+• Easy, Medium or Hard – from well-known clubs and obvious wrong answers to near-identical options and a 10-second timer
+
+QUESTIONS THAT MAKE YOU THINK
+• Stadiums, nicknames, founding years and managers
+• Home kits – guess the club from its colours
+• Which league clubs play in, and where they're based
+• Classic derbies and rivalries, famous cup finals and great moments in English football history
+
+LEARN AS YOU PLAY
+• See the right answer and a short explanation after every question
+• Review your mistakes after each round, and look back at any round you've played
+• Topic stats show where you're strong – then practise your weakest topics in one tap
+
+CLUB DIRECTORY
+Browse every club: stadium, capacity, city, founding year, manager and home kit colours. Search by club, city or stadium.
+
+ALSO
+• Available in English, German, French, Norwegian and Swedish
+• Club data updates automatically – no app update needed
+• Optional daily reminder
+• No account needed – your history stays on your phone
+• Remove ads with a one-time purchase
+
+Football Club Quiz is an independent fan quiz. It is not affiliated with, endorsed by or connected to any football club, league or governing body. Club names are used for identification only; club colours are shown as simple drawings.""",
+"release_notes": "First release: 116 clubs, daily challenge, survival and 2-player modes, three difficulty levels and five languages.",
+},
+"de-DE": {
+"title": "Football Club Quiz",
+"short": "Teste dein Wissen über 116 englische Fußballvereine, von der 1. bis zur 5. Liga.",
+"full": """Wie gut kennst du den englischen Fußball wirklich? Football Club Quiz fragt dich zu 116 Vereinen aus den fünf höchsten englischen Ligen ab – von den größten Stadien des Landes bis zu Amateurplätzen, von denen du nur gehört hast.
+
+TAGESQUIZ
+Jeden Tag 10 neue Fragen, für alle Spieler gleich. Halte deine Serie am Leben und teile dein Ergebnis mit Freunden.
+
+SPIEL, WIE DU WILLST
+• Klassisch – wähle Anzahl der Fragen, Themen und Liga
+• Überleben – weiter bis zur ersten falschen Antwort
+• 2 Spieler – abwechselnd an einem Handy mit denselben Fragen
+• Leicht, Mittel oder Schwer – von bekannten Klubs und eindeutigen falschen Antworten bis zu fast gleichen Optionen und 10 Sekunden Zeit
+
+FRAGEN, DIE DICH FORDERN
+• Stadien, Spitznamen, Gründungsjahre und Trainer
+• Heimtrikots – erkenne den Verein an seinen Farben
+• In welcher Liga Vereine spielen und wo sie zu Hause sind
+• Klassische Derbys und Rivalitäten, berühmte Pokalfinals und große Momente der englischen Fußballgeschichte
+
+LERNEN BEIM SPIELEN
+• Nach jeder Frage die richtige Antwort mit kurzer Erklärung
+• Fehler nach jeder Runde ansehen und jede gespielte Runde im Verlauf nachlesen
+• Themenstatistiken zeigen deine Stärken – schwache Themen übst du mit einem Tipp
+
+VEREINSVERZEICHNIS
+Alle Vereine auf einen Blick: Stadion, Kapazität, Stadt, Gründungsjahr, Trainer und Heimtrikotfarben. Suche nach Verein, Stadt oder Stadion.
+
+AUSSERDEM
+• Auf Deutsch, Englisch, Französisch, Norwegisch und Schwedisch
+• Vereinsdaten aktualisieren sich automatisch – ohne App-Update
+• Optionale tägliche Erinnerung
+• Kein Konto nötig – dein Verlauf bleibt auf deinem Handy
+• Werbung per Einmalkauf entfernen
+
+Football Club Quiz ist ein unabhängiges Fan-Quiz und steht in keiner Verbindung zu Vereinen, Ligen oder Verbänden und wird von diesen nicht unterstützt. Vereinsnamen dienen nur der Bezeichnung; Vereinsfarben werden als einfache Zeichnungen gezeigt.""",
+"release_notes": "Erste Version: 116 Vereine, Tagesquiz, Überleben- und 2-Spieler-Modus, drei Schwierigkeitsstufen und fünf Sprachen.",
+},
+"fr-FR": {
+"title": "Football Club Quiz",
+"short": "Teste tes connaissances sur 116 clubs de football anglais, de l'élite à la D5.",
+"full": """Connais-tu vraiment le football anglais ? Football Club Quiz te questionne sur 116 clubs des cinq premières divisions anglaises – des plus grands stades du pays aux terrains amateurs dont tu as seulement entendu parler.
+
+DÉFI DU JOUR
+10 nouvelles questions chaque jour, les mêmes pour tous les joueurs. Entretiens ta série et partage ton résultat avec tes amis.
+
+JOUE À TA FAÇON
+• Classique – choisis le nombre de questions, les thèmes et le championnat
+• Survie – continue jusqu'à ta première erreur
+• 2 joueurs – chacun son tour sur un seul téléphone, avec les mêmes questions
+• Facile, Moyen ou Difficile – des clubs connus et des réponses évidentes jusqu'aux options presque identiques avec 10 secondes pour répondre
+
+DES QUESTIONS QUI FONT RÉFLÉCHIR
+• Stades, surnoms, années de fondation et entraîneurs
+• Maillots domicile – reconnais le club à ses couleurs
+• Dans quel championnat jouent les clubs et où ils sont basés
+• Derbys et rivalités mythiques, finales de coupe célèbres et grands moments de l'histoire du football anglais
+
+APPRENDS EN JOUANT
+• La bonne réponse et une courte explication après chaque question
+• Revois tes erreurs après chaque manche et retrouve toutes tes manches dans l'historique
+• Les statistiques par thème montrent tes points forts – travaille tes thèmes faibles en un geste
+
+ANNUAIRE DES CLUBS
+Tous les clubs : stade, capacité, ville, année de fondation, entraîneur et couleurs du maillot domicile. Recherche par club, ville ou stade.
+
+ET AUSSI
+• En français, anglais, allemand, norvégien et suédois
+• Les données des clubs se mettent à jour automatiquement, sans mise à jour de l'app
+• Rappel quotidien facultatif
+• Aucun compte nécessaire – ton historique reste sur ton téléphone
+• Supprime les pubs avec un achat unique
+
+Football Club Quiz est un quiz de fans indépendant. Il n'est affilié à aucun club, championnat ou instance du football, ni approuvé par eux. Les noms des clubs servent uniquement à les identifier ; leurs couleurs sont représentées par de simples dessins.""",
+"release_notes": "Première version : 116 clubs, défi du jour, modes survie et 2 joueurs, trois niveaux de difficulté et cinq langues.",
+},
+"no-NO": {
+"title": "Football Club Quiz",
+"short": "Test deg selv på 116 engelske fotballklubber, fra toppdivisjonen til nivå fem.",
+"full": """Hvor godt kjenner du egentlig engelsk fotball? Football Club Quiz tester deg på 116 klubber fra de fem øverste nivåene i England – fra landets største stadioner til amatørbaner du bare har hørt om.
+
+DAGENS UTFORDRING
+10 nye spørsmål hver dag, like for alle. Hold rekken i live og del resultatet med vennene dine.
+
+SPILL SOM DU VIL
+• Klassisk – velg antall spørsmål, temaer og liga
+• Overlevelse – fortsett til første feil svar
+• 2 spillere – bytt på én telefon med de samme spørsmålene
+• Lett, Middels eller Vanskelig – fra kjente klubber og opplagte feil svar til nesten like alternativer og 10 sekunder på deg
+
+SPØRSMÅL SOM FÅR DEG TIL Å TENKE
+• Stadioner, kallenavn, stiftelsesår og managere
+• Hjemmedrakter – gjett klubben ut fra fargene
+• Hvilken liga klubbene spiller i, og hvor de holder til
+• Klassiske derbyer og rivaliseringer, kjente cupfinaler og store øyeblikk i engelsk fotballhistorie
+
+LÆR MENS DU SPILLER
+• Se riktig svar og en kort forklaring etter hvert spørsmål
+• Gå gjennom feilene etter hver runde, og se tilbake på alle rundene du har spilt
+• Temastatistikk viser hvor du er sterk – øv på de svakeste temaene med ett trykk
+
+KLUBBOVERSIKT
+Bla gjennom alle klubbene: stadion, kapasitet, by, stiftelsesår, manager og farger på hjemmedrakten. Søk etter klubb, by eller stadion.
+
+I TILLEGG
+• På norsk, engelsk, tysk, fransk og svensk
+• Klubbdata oppdateres automatisk – uten appoppdatering
+• Valgfri daglig påminnelse
+• Ingen konto nødvendig – historikken din blir på telefonen
+• Fjern reklame med ett enkelt kjøp
+
+Football Club Quiz er en uavhengig fan-quiz. Den er ikke tilknyttet, godkjent av eller knyttet til noen fotballklubb, liga eller organisasjon. Klubbnavn brukes kun til identifisering; klubbfarger vises som enkle tegninger.""",
+"release_notes": "Første versjon: 116 klubber, dagens utfordring, overlevelse og 2 spillere, tre vanskelighetsgrader og fem språk.",
+},
+"sv-SE": {
+"title": "Football Club Quiz",
+"short": "Testa dig på 116 engelska fotbollsklubbar, från högsta ligan ner till nivå fem.",
+"full": """Hur bra kan du egentligen engelsk fotboll? Football Club Quiz testar dig på 116 klubbar från de fem högsta nivåerna i England – från landets största arenor till amatörplaner du bara hört talas om.
+
+DAGENS UTMANING
+10 nya frågor varje dag, samma för alla. Håll sviten vid liv och dela ditt resultat med vänner.
+
+SPELA SOM DU VILL
+• Klassisk – välj antal frågor, ämnen och liga
+• Överlevnad – fortsätt tills du svarar fel
+• 2 spelare – turas om på en telefon med samma frågor
+• Lätt, Medel eller Svår – från kända klubbar och uppenbart fel svar till nästan likadana alternativ och 10 sekunder på dig
+
+FRÅGOR SOM FÅR DIG ATT TÄNKA
+• Arenor, smeknamn, grundår och tränare
+• Hemmaställ – gissa klubben utifrån färgerna
+• Vilken liga klubbarna spelar i och var de hör hemma
+• Klassiska derbyn och rivaliteter, kända cupfinaler och stora ögonblick i engelsk fotbollshistoria
+
+LÄR DIG MEDAN DU SPELAR
+• Se rätt svar och en kort förklaring efter varje fråga
+• Gå igenom dina fel efter varje runda och se tillbaka på alla rundor du spelat
+• Ämnesstatistik visar var du är stark – öva på dina svagaste ämnen med ett tryck
+
+KLUBBREGISTER
+Bläddra bland alla klubbar: arena, kapacitet, stad, grundår, tränare och färger på hemmastället. Sök på klubb, stad eller arena.
+
+DESSUTOM
+• På svenska, engelska, tyska, franska och norska
+• Klubbdata uppdateras automatiskt – ingen appuppdatering behövs
+• Valfri daglig påminnelse
+• Inget konto behövs – din historik stannar på telefonen
+• Ta bort reklam med ett engångsköp
+
+Football Club Quiz är ett fristående fanquiz. Det är inte anslutet till, godkänt av eller kopplat till någon fotbollsklubb, liga eller organisation. Klubbnamn används endast för identifiering; klubbfärger visas som enkla teckningar.""",
+"release_notes": "Första versionen: 116 klubbar, dagens utmaning, överlevnad och 2 spelare, tre svårighetsgrader och fem språk.",
+},
+}
+
+LIMITS = {"title": 30, "short": 80, "full": 4000, "release_notes": 500}
+NAMES = {"en-GB": "English (UK) – default", "de-DE": "German", "fr-FR": "French",
+         "no-NO": "Norwegian", "sv-SE": "Swedish"}
+
+if __name__ == "__main__":
+    out = ["# Google Play store listing", "",
+           "Play Console → Grow users → Store presence → **Main store listing**. Set **English (UK)** as the",
+           "default language, then **Manage translations → Add your own translations** for German, French,",
+           "Norwegian and Swedish, and paste each block below. Release notes go into the release itself",
+           "(Test and release → create release → Release notes).", "",
+           "Generated by `listing_texts.py`, which checks Play's length limits.", ""]
+    for lang, texts in LISTING.items():
+        for key, limit in LIMITS.items():
+            assert len(texts[key]) <= limit, f"{lang} {key}: {len(texts[key])} > {limit}"
+        out += [f"## {NAMES[lang]} (`{lang}`)", "",
+                f"**App name** ({len(texts['title'])}/30)", "```", texts["title"], "```",
+                f"**Short description** ({len(texts['short'])}/80)", "```", texts["short"], "```",
+                f"**Full description** ({len(texts['full'])}/4000)", "```", texts["full"], "```",
+                f"**Release notes** ({len(texts['release_notes'])}/500)", "```", texts["release_notes"], "```", ""]
+        print(f"{lang}: title {len(texts['title'])}, short {len(texts['short'])}, full {len(texts['full'])}, notes {len(texts['release_notes'])}")
+    Path(__file__).with_name("listing.md").write_text("\n".join(out))
